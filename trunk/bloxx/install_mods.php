@@ -27,7 +27,7 @@ $dh = opendir(MODS_DIR);
 
 while (($file = readdir($dh)) !== false) {
 
-        if(is_file($file) && ($file != '.') && ($file != '..')){
+        if(is_file(MODS_DIR . $file) && ($file != '.') && ($file != '..')){
 
                 include_once(MODS_DIR . $file);
 

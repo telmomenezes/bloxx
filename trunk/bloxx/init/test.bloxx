@@ -1,0 +1,1574 @@
+[MODULE modulemanager]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[module_name]modulemanager[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[module_name]role[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]3[_id]
+[workflow][_workflow]
+[module_name]config[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]4[_id]
+[workflow][_workflow]
+[module_name]language[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]5[_id]
+[workflow][_workflow]
+[module_name]page[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]6[_id]
+[workflow][_workflow]
+[module_name]identity[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]7[_id]
+[workflow][_workflow]
+[module_name]admin[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]8[_id]
+[workflow][_workflow]
+[module_name]style[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]9[_id]
+[workflow][_workflow]
+[module_name]stylelink[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]10[_id]
+[workflow][_workflow]
+[module_name]headerfooter[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]11[_id]
+[workflow][_workflow]
+[module_name]resource[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]12[_id]
+[workflow][_workflow]
+[module_name]usergroup[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]13[_id]
+[workflow][_workflow]
+[module_name]grouplink[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]14[_id]
+[workflow][_workflow]
+[module_name]workflow[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]15[_id]
+[workflow][_workflow]
+[module_name]state[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]16[_id]
+[workflow][_workflow]
+[module_name]list[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]19[_id]
+[workflow][_workflow]
+[module_name]forum[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]21[_id]
+[workflow][_workflow]
+[module_name]news[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]22[_id]
+[workflow][_workflow]
+[module_name]poll[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]23[_id]
+[workflow][_workflow]
+[module_name]pollvote[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]24[_id]
+[workflow][_workflow]
+[module_name]personalinfo[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]26[_id]
+[workflow][_workflow]
+[module_name]mailcomment[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]27[_id]
+[workflow][_workflow]
+[module_name]topicalnews[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]28[_id]
+[workflow][_workflow]
+[module_name]topicalnewstopic[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]33[_id]
+[workflow][_workflow]
+[module_name]comment[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]39[_id]
+[workflow][_workflow]
+[module_name]datetime[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]46[_id]
+[workflow][_workflow]
+[module_name]menubar[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]47[_id]
+[workflow][_workflow]
+[module_name]photo[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]48[_id]
+[workflow][_workflow]
+[module_name]photogallery[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]49[_id]
+[workflow][_workflow]
+[module_name]rssdisplay[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]50[_id]
+[workflow][_workflow]
+[module_name]photonews[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]51[_id]
+[workflow][_workflow]
+[module_name]moduletemplate[_module_name]
+[version]1[_version]
+[_row]
+[_modulemanager]
+[MODULE role]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[rolename]Administrators[_rolename]
+[trust_base]6[_trust_base]
+[trust_modulemanager]6[_trust_modulemanager]
+[trust_role]6[_trust_role]
+[trust_config]6[_trust_config]
+[trust_language]6[_trust_language]
+[trust_page]6[_trust_page]
+[trust_identity]6[_trust_identity]
+[trust_admin]6[_trust_admin]
+[trust_style]6[_trust_style]
+[trust_stylelink]6[_trust_stylelink]
+[trust_headerfooter]6[_trust_headerfooter]
+[trust_resource]6[_trust_resource]
+[trust_usergroup]6[_trust_usergroup]
+[trust_grouplink]6[_trust_grouplink]
+[trust_workflow]6[_trust_workflow]
+[trust_state]6[_trust_state]
+[trust_list]6[_trust_list]
+[trust_forum]6[_trust_forum]
+[trust_news]6[_trust_news]
+[trust_poll]6[_trust_poll]
+[trust_pollvote]6[_trust_pollvote]
+[trust_personalinfo]6[_trust_personalinfo]
+[trust_mailcomment]6[_trust_mailcomment]
+[trust_topicalnews]6[_trust_topicalnews]
+[trust_topicalnewstopic]6[_trust_topicalnewstopic]
+[trust_comment]6[_trust_comment]
+[trust_datetime]6[_trust_datetime]
+[trust_menubar]6[_trust_menubar]
+[trust_photo]6[_trust_photo]
+[trust_photogallery]6[_trust_photogallery]
+[trust_rssdisplay]6[_trust_rssdisplay]
+[trust_photonews]6[_trust_photonews]
+[trust_moduletemplate]6[_trust_moduletemplate]
+[_row]
+[_role]
+[MODULE config]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[owner_module_id]3[_owner_module_id]
+[item_name]main_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]1[_item_value]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[owner_module_id]3[_owner_module_id]
+[item_name]default_language[_item_name]
+[item_type]STRING[_item_type]
+[item_value]EN[_item_value]
+[_row]
+[row]
+[id]3[_id]
+[workflow][_workflow]
+[owner_module_id]3[_owner_module_id]
+[item_name]admin_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]2[_item_value]
+[_row]
+[row]
+[id]4[_id]
+[workflow][_workflow]
+[owner_module_id]3[_owner_module_id]
+[item_name]site_name[_item_name]
+[item_type]STRING[_item_type]
+[item_value]Bloxx demo site[_item_value]
+[_row]
+[row]
+[id]6[_id]
+[workflow][_workflow]
+[owner_module_id]3[_owner_module_id]
+[item_name]page_title_separator[_item_name]
+[item_type]STRING[_item_type]
+[item_value],&nbsp;[_item_value]
+[_row]
+[row]
+[id]7[_id]
+[workflow][_workflow]
+[owner_module_id]21[_owner_module_id]
+[item_name]detailed_link[_item_name]
+[item_type]STRING[_item_type]
+[item_value]<p>Ler/Comentar[_item_value]
+[_row]
+[row]
+[id]8[_id]
+[workflow][_workflow]
+[owner_module_id]21[_owner_module_id]
+[item_name]detailed_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]4[_item_value]
+[_row]
+[row]
+[id]9[_id]
+[workflow][_workflow]
+[owner_module_id]6[_owner_module_id]
+[item_name]base_role[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]2[_item_value]
+[_row]
+[row]
+[id]10[_id]
+[workflow][_workflow]
+[owner_module_id]3[_owner_module_id]
+[item_name]site_url[_item_name]
+[item_type]STRING[_item_type]
+[item_value]bloxx.org[_item_value]
+[_row]
+[row]
+[id]11[_id]
+[workflow][_workflow]
+[owner_module_id]6[_owner_module_id]
+[item_name]confirm_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]10[_item_value]
+[_row]
+[row]
+[id]12[_id]
+[workflow][_workflow]
+[owner_module_id]6[_owner_module_id]
+[item_name]confirm_email[_item_name]
+[item_type]STRING[_item_type]
+[item_value]null@bloxx.org[_item_value]
+[_row]
+[row]
+[id]13[_id]
+[workflow][_workflow]
+[owner_module_id]33[_owner_module_id]
+[item_name]read_comments_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]4[_item_value]
+[_row]
+[row]
+[id]14[_id]
+[workflow][_workflow]
+[owner_module_id]33[_owner_module_id]
+[item_name]new_comment_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]12[_item_value]
+[_row]
+[row]
+[id]15[_id]
+[workflow][_workflow]
+[owner_module_id]33[_owner_module_id]
+[item_name]comment_header_color[_item_name]
+[item_type]STRING[_item_type]
+[item_value]#0044AD[_item_value]
+[_row]
+[row]
+[id]17[_id]
+[workflow][_workflow]
+[owner_module_id]19[_owner_module_id]
+[item_name]read_forum_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]23[_item_value]
+[_row]
+[row]
+[id]18[_id]
+[workflow][_workflow]
+[owner_module_id]22[_owner_module_id]
+[item_name]results_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]19[_item_value]
+[_row]
+[row]
+[id]19[_id]
+[workflow][_workflow]
+[owner_module_id]22[_owner_module_id]
+[item_name]bar_color[_item_name]
+[item_type]STRING[_item_type]
+[item_value]#0044AD[_item_value]
+[_row]
+[row]
+[id]20[_id]
+[workflow][_workflow]
+[owner_module_id]24[_owner_module_id]
+[item_name]edit_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]20[_item_value]
+[_row]
+[row]
+[id]21[_id]
+[workflow][_workflow]
+[owner_module_id]24[_owner_module_id]
+[item_name]info_page[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]22[_item_value]
+[_row]
+[row]
+[id]22[_id]
+[workflow][_workflow]
+[owner_module_id]50[_owner_module_id]
+[item_name]max_thumb_width[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]50[_item_value]
+[_row]
+[row]
+[id]23[_id]
+[workflow][_workflow]
+[owner_module_id]50[_owner_module_id]
+[item_name]max_thumb_height[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]50[_item_value]
+[_row]
+[row]
+[id]24[_id]
+[workflow][_workflow]
+[owner_module_id]50[_owner_module_id]
+[item_name]max_photo_width[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]150[_item_value]
+[_row]
+[row]
+[id]25[_id]
+[workflow][_workflow]
+[owner_module_id]50[_owner_module_id]
+[item_name]max_photo_height[_item_name]
+[item_type]NUMBER[_item_type]
+[item_value]150[_item_value]
+[_row]
+[_config]
+[MODULE language]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[code]PT[_code]
+[language_name]Portugues[_language_name]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[code]EN[_code]
+[language_name]English[_language_name]
+[_row]
+[_language]
+[MODULE page]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[title_LANG_PT]Início[_title_LANG_PT]
+[title_LANG_EN]Home[_title_LANG_EN]
+[content_LANG_PT]Site de dominstração do Bloxx[_content_LANG_PT]
+[content_LANG_EN]Bloxx demo site[_content_LANG_EN]
+[headerfooter]2[_headerfooter]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[title_LANG_PT]Backend[_title_LANG_PT]
+[title_LANG_EN]Backend[_title_LANG_EN]
+[content_LANG_PT]<bloxx_mod module="admin" view="from_url" param="-1"></bloxx_mod>
+                [_content_LANG_PT]
+[content_LANG_EN]<bloxx_mod module="admin" view="from_url" param="-1"></bloxx_mod>[_content_LANG_EN]
+[headerfooter]1[_headerfooter]
+[_row]
+[_page]
+[MODULE identity]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[realname][_realname]
+[username]admin[_username]
+[password]064e80d11f73e88c051ba4614faea06e[_password]
+[email]telmo@telmomenezes.net[_email]
+[confirm_hash]64a3869e1d99f0ba36e71a064b988ee3[_confirm_hash]
+[confirmed]1[_confirmed]
+[role]1[_role]
+[_row]
+[_identity]
+[MODULE admin]
+[_admin]
+[MODULE style]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[title_LANG_PT]Geral[_title_LANG_PT]
+[title_LANG_EN]General[_title_LANG_EN]
+[css].SmallFormLabel{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-size:10;
+	color:#000000;
+}
+
+.SmallFormField{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-size:10;
+	color:#000000;
+}
+
+.SmallFormButton{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-size:10;
+	color:#000000;
+}
+
+.SmallFormText{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-size:12;
+	color:#000000;
+}
+
+.NormalText{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:normal;
+	font-size:12;
+	color:#2a2a2a;
+	text-decoration:none;
+}
+
+.NormalTitle{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:normal;
+	font-size:14;
+	color:#000000;
+	text-decoration:none;
+}
+
+.NormalLink a:link{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	font-size:12;
+	color:#0044AD;
+	text-decoration:none;
+}
+
+.NormalLink a:visited{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	font-size:12;
+	color:#0044AD;
+	text-decoration:none;
+}
+
+.NormalLink{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	font-size:12;
+	color:#0044AD;
+	text-decoration:none;
+}
+
+.NormalLink a:hover{
+	font-family:verdana, arial,helvetica,sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	font-size:12;
+	color:#0044AD;
+	text-decoration:underline;
+}
+
+.SmallText{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	font-size:10;
+	color:#000000;
+	text-decoration:none;
+}
+
+.CommentTitle{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	font-size:14;
+	color:#000000;
+	text-decoration:none;
+}
+
+.CommentInfo{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	font-size:10;
+	color:#000000;
+	text-decoration:none;
+}
+
+.NewsTitle{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-weight:bold;
+	font-size:18;
+	color:#0044AD;
+	text-decoration:none;
+}
+
+.Menuitem a{
+	text-decoration:none;
+	display:block;
+	position:relative;
+}
+
+.Submenu{
+	font-family:verdana, arial, helvetica,sans-serif;
+	font-style:normal;
+	font-weight:bold;
+	font-size:12;
+	color:#ffffff;
+	background-color:#FFFFFF;
+	text-decoration:none;
+	border-top-width:1px;
+	border-right-width:1px;
+	border-bottom-width:1px;
+	border-left-width:1px;
+	border-color:#000000;
+	border-style:dashed;	display:block;
+	position:absolute;
+	top:0;
+	left:0;
+	visibility:hidden;
+}
+
+.Submenuframe{
+	border-top-width:1px;
+	border-right-width:1px;
+	border-bottom-width:1px;
+	border-left-width:1px;
+	border-color:#000000;
+	display:block;
+	position:relative;
+}
+
+.Submenuitem{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-style:normal;
+	font-size:12;
+	background-color:#FFFFFF;
+	text-align:left;
+	white-space:nowrap;
+	position:relative;
+}
+
+.Submenuitem a{
+	text-decoration:none;
+	padding-right:10px;
+	padding-left:10px;
+	display:block;
+	position:relative;
+}
+
+.Submenuitem a:link{
+	color:#000000;
+}
+
+.Submenuitem a:visited{
+	color:#000000;
+}
+
+.Submenuitem a:hover{
+	color:#FFFFFF;
+	background-color:#0044AD;
+}
+
+.CommentHeader{
+	background-color:#E0E0E0;
+	margin-top:5px;
+	margin-right:5px;
+	margin-bottom:5px;
+	margin-left:5px;
+	padding-top:5px;
+	padding-right:5px;
+	padding-bottom:5px;
+	padding-left:5px;
+	display:block;
+}
+
+.CommentBlock{
+	background-color:#FFFFFF;
+	margin-top:10px;
+	margin-bottom:10px;
+	border-top-width:1px;
+	border-right-width:1px;
+	border-bottom-width:1px;
+	border-left-width:1px;
+	border-color:#E0E0E0;
+	border-style:solid;
+	display:block;
+}
+
+.CommentContent{
+	padding-top:5px;
+	padding-right:5px;
+	padding-bottom:5px;
+	padding-left:5px;
+	display:block;
+}
+
+.map_title{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:30px;
+	color:#6DAAD5;
+}
+
+.site_menu{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#999999;
+}
+
+.data_hora{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#666666;
+}
+
+.place_title{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size:16px;
+	color:#6DAAD5;
+}
+
+.hapa_text{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#666666;
+}
+
+.credits{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:9px;
+	color:#999999;
+}
+
+.target_link a{
+	font-family:Verdana, Arial, Helvetica,sans-serif;
+	font-size:12px;
+	color:#445271;
+	background-color:#E0E9E9;
+	text-decoration:none;
+	margin-top:0px;
+	margin-right:0px;
+	margin-bottom:0px;
+	margin-left:0px;
+	padding-top:5px;
+	padding-right:5px;
+	padding-bottom:5px;
+	padding-left:5px;
+	border-top-width:thin;
+	border-right-width:thin;
+	border-bottom-width:thin;
+	border-left-width:thin;
+	border-color:#FFFFFF;
+	border-style:solid;
+	display:block;
+}
+
+.target_link{
+}
+
+.target_link a:hover{
+	background-color:#D0D9D9;
+}
+
+.form_no_br{
+	display:inline;
+}
+
+.ReturnLink{
+}
+
+.ReturnLink a{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#FFFFFF;
+	background-color:#909090;
+	text-decoration:none;
+	margin-top:0px;
+	margin-right:0px;
+	margin-bottom:0px;
+	margin-left:0px;
+	padding-top:5px;
+	padding-right:5px;
+	padding-bottom:5px;
+	padding-left:5px;
+	border-top-width:thin;
+	border-right-width:thin;
+	border-bottom-width:thin;
+	border-left-width:thin;
+	border-color:#FFFFFF;
+	border-style:solid;
+	display:block;
+}[_css]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[title_LANG_PT]Backend[_title_LANG_PT]
+[title_LANG_EN]Backend[_title_LANG_EN]
+[css].AdminFormLabel{
+	font-family:verdana, arial,helvetica,sans-serif;
+	font-weight:bold;
+	font-size:12;
+	color:#FFFFFF;
+}
+
+.AdminFormField{
+	font-family:verdana, arial, helvetica,sans-serif;
+	font-weight:bold;
+	font-size:12;
+	color:#000000;
+}
+
+.AdminFormButton{
+	font-family:verdana, arial, helvetica,sans-serif;
+	font-weight:bold;
+	font-size:13;
+	color:#A30030;
+}
+
+.AdminLink{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:bold;
+	font-size:13;
+	color:#A30030;
+}
+
+.AdminLink a:link{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:bold;
+	font-size:18;
+	color:#FFFFFF;
+	text-decoration:none;
+}
+
+.AdminLink a:visited{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:bold;
+	font-size:18;
+	color:#FFFFFF;
+	text-decoration:none;
+}
+
+.AdminLink a:hover{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:bold;
+	font-size:18;
+	color:#FEA63E;
+	text-decoration:none;
+}
+
+.AdminNavigator{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-weight:bold;
+	font-size:16;
+	color:#FFFFFF;
+}
+
+.AdminNavigator a{
+	font-family:verdana, arial, helvetica,sans-serif;
+	font-weight:bold;
+	font-size:16;
+	color:#FFFFFF;
+}[_css]
+[_row]
+[_style]
+[MODULE stylelink]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[module_id]6[_module_id]
+[module_style]Label[_module_style]
+[global_style]SmallFormLabel[_global_style]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[module_id]6[_module_id]
+[module_style]Field[_module_style]
+[global_style]SmallFormField[_global_style]
+[_row]
+[row]
+[id]3[_id]
+[workflow][_workflow]
+[module_id]6[_module_id]
+[module_style]Button[_module_style]
+[global_style]SmallFormButton[_global_style]
+[_row]
+[row]
+[id]4[_id]
+[workflow][_workflow]
+[module_id]6[_module_id]
+[module_style]Text[_module_style]
+[global_style]SmallFormText[_global_style]
+[_row]
+[row]
+[id]5[_id]
+[workflow][_workflow]
+[module_id]7[_module_id]
+[module_style]Label[_module_style]
+[global_style]AdminFormLabel[_global_style]
+[_row]
+[row]
+[id]6[_id]
+[workflow][_workflow]
+[module_id]7[_module_id]
+[module_style]Field[_module_style]
+[global_style]AdminFormField[_global_style]
+[_row]
+[row]
+[id]7[_id]
+[workflow][_workflow]
+[module_id]7[_module_id]
+[module_style]Button[_module_style]
+[global_style]AdminFormButton[_global_style]
+[_row]
+[row]
+[id]8[_id]
+[workflow][_workflow]
+[module_id]7[_module_id]
+[module_style]Link[_module_style]
+[global_style]AdminLink[_global_style]
+[_row]
+[row]
+[id]9[_id]
+[workflow][_workflow]
+[module_id]7[_module_id]
+[module_style]Navigator[_module_style]
+[global_style]AdminNavigator[_global_style]
+[_row]
+[row]
+[id]21[_id]
+[workflow][_workflow]
+[module_id]49[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]22[_id]
+[workflow][_workflow]
+[module_id]49[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]23[_id]
+[workflow][_workflow]
+[module_id]49[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]75[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]Title[_module_style]
+[global_style]CommentTitle[_global_style]
+[_row]
+[row]
+[id]76[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]77[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]78[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]Info[_module_style]
+[global_style]CommentInfo[_global_style]
+[_row]
+[row]
+[id]79[_id]
+[workflow][_workflow]
+[module_id]21[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]80[_id]
+[workflow][_workflow]
+[module_id]21[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]81[_id]
+[workflow][_workflow]
+[module_id]21[_module_id]
+[module_style]Title[_module_style]
+[global_style]NewsTitle[_global_style]
+[_row]
+[row]
+[id]100[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]103[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]Info[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]104[_id]
+[workflow][_workflow]
+[module_id]19[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]105[_id]
+[workflow][_workflow]
+[module_id]19[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]106[_id]
+[workflow][_workflow]
+[module_id]19[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]127[_id]
+[workflow][_workflow]
+[module_id]21[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]151[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]Title[_module_style]
+[global_style]NewsTitle[_global_style]
+[_row]
+[row]
+[id]152[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]153[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]154[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]SmallTitle[_module_style]
+[global_style]SmallText[_global_style]
+[_row]
+[row]
+[id]155[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]SmallText[_module_style]
+[global_style]SmallText[_global_style]
+[_row]
+[row]
+[id]156[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]SmallLink[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]157[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]Field[_module_style]
+[global_style]SmallFormField[_global_style]
+[_row]
+[row]
+[id]158[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]Button[_module_style]
+[global_style]SmallFormButton[_global_style]
+[_row]
+[row]
+[id]174[_id]
+[workflow][_workflow]
+[module_id]24[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]175[_id]
+[workflow][_workflow]
+[module_id]24[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]176[_id]
+[workflow][_workflow]
+[module_id]24[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]177[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]180[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]SmallTitle[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]181[_id]
+[workflow][_workflow]
+[module_id]22[_module_id]
+[module_style]SmallText[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]188[_id]
+[workflow][_workflow]
+[module_id]46[_module_id]
+[module_style]Menubar[_module_style]
+[global_style]Menubar[_global_style]
+[_row]
+[row]
+[id]189[_id]
+[workflow][_workflow]
+[module_id]46[_module_id]
+[module_style]Menuitem[_module_style]
+[global_style]Menuitem[_global_style]
+[_row]
+[row]
+[id]190[_id]
+[workflow][_workflow]
+[module_id]46[_module_id]
+[module_style]Submenu[_module_style]
+[global_style]Submenu[_global_style]
+[_row]
+[row]
+[id]191[_id]
+[workflow][_workflow]
+[module_id]46[_module_id]
+[module_style]Subframe[_module_style]
+[global_style]Submenuframe[_global_style]
+[_row]
+[row]
+[id]192[_id]
+[workflow][_workflow]
+[module_id]46[_module_id]
+[module_style]Item[_module_style]
+[global_style]Submenuitem[_global_style]
+[_row]
+[row]
+[id]210[_id]
+[workflow][_workflow]
+[module_id]46[_module_id]
+[module_style]Arrow[_module_style]
+[global_style]MenuArrow[_global_style]
+[_row]
+[row]
+[id]228[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]HeaderBlock[_module_style]
+[global_style]CommentHeader[_global_style]
+[_row]
+[row]
+[id]229[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]BodyBlock[_module_style]
+[global_style]CommentBlock[_global_style]
+[_row]
+[row]
+[id]230[_id]
+[workflow][_workflow]
+[module_id]33[_module_id]
+[module_style]ContentBlock[_module_style]
+[global_style]CommentContent[_global_style]
+[_row]
+[row]
+[id]232[_id]
+[workflow][_workflow]
+[module_id]14[_module_id]
+[module_style]Button[_module_style]
+[global_style]SmallFormButton[_global_style]
+[_row]
+[row]
+[id]233[_id]
+[workflow][_workflow]
+[module_id]14[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]249[_id]
+[workflow][_workflow]
+[module_id]26[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]250[_id]
+[workflow][_workflow]
+[module_id]26[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]251[_id]
+[workflow][_workflow]
+[module_id]26[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]252[_id]
+[workflow][_workflow]
+[module_id]26[_module_id]
+[module_style]Info[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]253[_id]
+[workflow][_workflow]
+[module_id]26[_module_id]
+[module_style]HeaderBlock[_module_style]
+[global_style]CommentHeader[_global_style]
+[_row]
+[row]
+[id]254[_id]
+[workflow][_workflow]
+[module_id]26[_module_id]
+[module_style]BodyBlock[_module_style]
+[global_style]CommentBlock[_global_style]
+[_row]
+[row]
+[id]255[_id]
+[workflow][_workflow]
+[module_id]26[_module_id]
+[module_style]ContentBlock[_module_style]
+[global_style]CommentContent[_global_style]
+[_row]
+[row]
+[id]279[_id]
+[workflow][_workflow]
+[module_id]27[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]280[_id]
+[workflow][_workflow]
+[module_id]27[_module_id]
+[module_style]Info[_module_style]
+[global_style]NormalInfo[_global_style]
+[_row]
+[row]
+[id]281[_id]
+[workflow][_workflow]
+[module_id]27[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]282[_id]
+[workflow][_workflow]
+[module_id]27[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[row]
+[id]283[_id]
+[workflow][_workflow]
+[module_id]28[_module_id]
+[module_style]Title[_module_style]
+[global_style]NormalTitle[_global_style]
+[_row]
+[row]
+[id]284[_id]
+[workflow][_workflow]
+[module_id]28[_module_id]
+[module_style]Text[_module_style]
+[global_style]NormalText[_global_style]
+[_row]
+[row]
+[id]285[_id]
+[workflow][_workflow]
+[module_id]28[_module_id]
+[module_style]Link[_module_style]
+[global_style]NormalLink[_global_style]
+[_row]
+[_stylelink]
+[MODULE headerfooter]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[title]Backend[_title]
+[header_html_LANG_PT]<body marginwidth=0 marginheight=0 topmargin=0 leftmargin=0 bgcolor="#A30030">
+    <table width="100%" cellpadding=0 cellspacing=0 border=0>
+        <tr bgcolor="#FEA63E">
+            <td>
+                <img src="res/system/bloxx_logo.gif"></img>
+            </td>
+            <td width="100%"></td>
+            <td>
+                <a href="http://www.cognitiva-systems.com">
+                   <img src="res/system/bloxx_cog.gif" border=0></img>
+                </a>
+            </td>
+            <td width="20"><img src="res/system/transparent_pixel.gif" width="20"></img></td>
+        </tr>
+        <tr bgcolor="#FEA63E">
+            <td>
+                <CENTER>
+                   <bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
+<b>  (</b>
+                   <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
+<b> )</b>
+                </CENTER>
+                <br>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <table width="100%" cellpadding=0 cellspacing=0 border=0>
+            <tr bgcolor="#A30030" valign="top">
+            <td>
+                <table width="100%" cellpadding=0 cellspacing=0 border=0>
+                    <tr height="10">
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                        <td width="100%"></td>
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>
+
+
+                <bloxx_mod module="identity" view="loginbox_admin" param=0></bloxx_mod>                                
+
+<bloxx_private module="admin" trust="ADMINISTRATOR">
+
+<bloxx_mod module="admin" view="menu_saveall" param=0></bloxx_mod>
+<bloxx_mod module="admin" view="menu_home" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_site" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_change_password" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_install_mod" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_uninstall_mod" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_update_mod" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_about" param=0></bloxx_mod>                                         
+ 
+</bloxx_private>
+                        
+
+                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr height="10">
+                        <td width="10"></td>
+                        <td></td>
+                        <td width="10"></td>
+                    </tr>
+                </table>
+            </td>
+            <td width="100%">
+                <table width="100%" cellpadding=0 cellspacing=0 border=0>
+                    <tr height="10">
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                        <td width="100%"></td>
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>                
+                
+                <bloxx_mod module="admin" view="navigator" param=0></bloxx_mod>
+                <br><br>[_header_html_LANG_PT]
+[header_html_LANG_EN]<body marginwidth=0 marginheight=0 topmargin=0 leftmargin=0 bgcolor="#A30030">
+    <table width="100%" cellpadding=0 cellspacing=0 border=0>
+        <tr bgcolor="#FEA63E">
+            <td>
+                <img src="res/system/bloxx_logo.gif"></img>
+            </td>
+            <td width="100%"></td>
+            <td>
+                <a href="http://www.cognitiva-systems.com">
+                   <img src="res/system/bloxx_cog.gif" border=0></img>
+                </a>
+            </td>
+            <td width="20"><img src="res/system/transparent_pixel.gif" width="20"></img></td>
+        </tr>
+        <tr bgcolor="#FEA63E">
+            <td>
+                <CENTER>
+                   <bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
+<b>  (</b>
+                   <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
+<b> )</b>
+                </CENTER>
+                <br>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <table width="100%" cellpadding=0 cellspacing=0 border=0>
+            <tr bgcolor="#A30030" valign="top">
+            <td>
+                <table width="100%" cellpadding=0 cellspacing=0 border=0>
+                    <tr height="10">
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                        <td width="100%"></td>
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>
+
+
+                <bloxx_mod module="identity" view="loginbox_admin" param=0></bloxx_mod>                                
+
+<bloxx_private module="admin" trust="ADMINISTRATOR">
+
+<bloxx_mod module="admin" view="menu_saveall" param=0></bloxx_mod>
+<bloxx_mod module="admin" view="menu_home" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_site" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_change_password" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_install_mod" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_uninstall_mod" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_update_mod" param=0></bloxx_mod>                                        
+<bloxx_mod module="admin" view="menu_about" param=0></bloxx_mod>                                         
+ 
+</bloxx_private>
+                        
+
+                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr height="10">
+                        <td width="10"></td>
+                        <td></td>
+                        <td width="10"></td>
+                    </tr>
+                </table>
+            </td>
+            <td width="100%">
+                <table width="100%" cellpadding=0 cellspacing=0 border=0>
+                    <tr height="10">
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                        <td width="100%"></td>
+                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>                
+                
+                <bloxx_mod module="admin" view="navigator" param=0></bloxx_mod>
+                <br><br>[_header_html_LANG_EN]
+[footer_html_LANG_PT]                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr height="10">
+                        <td width="10"></td>
+                        <td></td>
+                        <td width="10"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>[_footer_html_LANG_PT]
+[footer_html_LANG_EN]                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr height="10">
+                        <td width="10"></td>
+                        <td></td>
+                        <td width="10"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>[_footer_html_LANG_EN]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[title]Demo[_title]
+[header_html_LANG_PT][_header_html_LANG_PT]
+[header_html_LANG_EN][_header_html_LANG_EN]
+[footer_html_LANG_PT][_footer_html_LANG_PT]
+[footer_html_LANG_EN][_footer_html_LANG_EN]
+[_row]
+[_headerfooter]
+[MODULE resource]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[resourcename]system[_resourcename]
+[_row]
+[_resource]
+[MODULE usergroup]
+[_usergroup]
+[MODULE grouplink]
+[_grouplink]
+[MODULE workflow]
+[_workflow]
+[MODULE state]
+[_state]
+[MODULE list]
+[_list]
+[MODULE forum]
+[_forum]
+[MODULE news]
+[_news]
+[MODULE poll]
+[_poll]
+[MODULE pollvote]
+[_pollvote]
+[MODULE personalinfo]
+[_personalinfo]
+[MODULE mailcomment]
+[_mailcomment]
+[MODULE topicalnews]
+[_topicalnews]
+[MODULE topicalnewstopic]
+[_topicalnewstopic]
+[MODULE comment]
+[_comment]
+[MODULE datetime]
+[_datetime]
+[MODULE menubar]
+[_menubar]
+[MODULE photo]
+[_photo]
+[MODULE photogallery]
+[_photogallery]
+[MODULE rssdisplay]
+[_rssdisplay]
+[MODULE photonews]
+[_photonews]
+[MODULE moduletemplate]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]module_list[_view]
+[template]<bloxx_item name="main"></bloxx_item>[_template]
+[_row]
+[_moduletemplate]

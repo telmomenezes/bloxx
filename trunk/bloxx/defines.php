@@ -23,7 +23,7 @@
 define('DATABASE_DSN', 'mysql://:@localhost/test');
 define('MAIN_DIR', '');
 define('CORE_DIR', MAIN_DIR . 'core/');
-define('INIT_FILE', MAIN_DIR . 'init/teste.bloxx');
+define('INIT_FILE', MAIN_DIR . 'init/test.bloxx');
 define('MODS_DIR', MAIN_DIR . 'mods/');
 define('LANG_DIR', MAIN_DIR . 'lang/');
 define('JAVASCRIPT_DIR', MAIN_DIR . 'javascript/');

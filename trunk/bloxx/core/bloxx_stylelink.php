@@ -82,9 +82,9 @@ class Bloxx_StyleLink extends Bloxx_Module
         {
                 $stlink = new Bloxx_StyleLink();
         
-                $stlink->insertWhereCondition("module_id=" . $module);
-                $stlink->insertWhereCondition("module_style='" . $module_style . "'");
-                $stlink->insertWhereCondition("global_style='" . $global_style . "'");
+                $stlink->insertWhereCondition('module_id', '=', $module);
+                $stlink->insertWhereCondition('module_style', '=', $module_style);
+                $stlink->insertWhereCondition('global_style', '=', $global_style);
                 
                 $stlink->runSelect();
                 

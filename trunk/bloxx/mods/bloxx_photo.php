@@ -180,7 +180,7 @@ class Bloxx_Photo extends Bloxx_Module
                 
                 if(isset($_GET['gallery'])){
                 
-                        $this->insertWhereCondition('gallery = ' . $_GET['gallery']);
+                        $this->insertWhereCondition('gallery', '=', $_GET['gallery']);
                 }
         }
 }

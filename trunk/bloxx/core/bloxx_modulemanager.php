@@ -47,7 +47,7 @@ class Bloxx_ModuleManager extends Bloxx_Module
         function register($module, $version)
         {
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("module_name='" . $module . "'");
+                $this->insertWhereCondition('module_name', '=', $module);
                 $this->runSelect();
                 
                 if($this->nextRow()){
@@ -74,7 +74,7 @@ class Bloxx_ModuleManager extends Bloxx_Module
         function getModuleID($module)
         {
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("module_name='" . $module . "'");
+                $this->insertWhereCondition('module_name', '=', $module);
                 $this->runSelect();
                 
                 if($this->nextRow()){

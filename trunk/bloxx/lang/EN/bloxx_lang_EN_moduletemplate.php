@@ -22,5 +22,6 @@
 
 define('F_LANG_MODULETEMPLATE_MODULEID', 'Module');
 define('F_LANG_MODULETEMPLATE_VIEW', 'View');
+define('F_LANG_MODULETEMPLATE_OPTIONAL_NAME', 'Optional Name');
 define('F_LANG_MODULETEMPLATE_TEMPLATE', 'Template');
 ?>

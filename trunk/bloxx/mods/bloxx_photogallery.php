@@ -89,7 +89,7 @@ class Bloxx_PhotoGallery extends Bloxx_Module
                         include_module_once('photo');
                         $img = new Bloxx_Photo();
                         $img->clearWhereCondition();
-                        $img->insertWhereCondition('gallery=' . $id);
+                        $img->insertWhereCondition('gallery', '=', $id);
                         $img->runSelect();
 
                         $counter = 0;

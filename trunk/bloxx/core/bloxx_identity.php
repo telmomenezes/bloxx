@@ -60,7 +60,8 @@ class Bloxx_Identity extends Bloxx_Module
         {
                 return array(
                         'loginbox' => TRUST_GUEST,
-                        'loginbox_admin' => TRUST_GUEST,
+                        'logout_button' => TRUST_GUEST,
+                        'welcome' => TRUST_GUEST,
                         'register' => TRUST_GUEST,
                         'change_password' => TRUST_USER,
                         'change_data' => TRUST_USER,
@@ -77,165 +78,95 @@ class Bloxx_Identity extends Bloxx_Module
                 );
         }
         
-        function getStyleList()
+        function doRender($mode, $id, $target, $mt)
         {
-                return array(
-                        'Label' => 'SmallFormLabel',
-                        'Field' => 'SmallFormField',
-                        'Button' => 'SmallFormButton',
-                        'Text' => 'SmallFormText'
-                );
-        }
-        
-        function doRender($mode, $id, $target)
-        {
-                include_once(CORE_DIR.'bloxx_form.php');
-                include_once(CORE_DIR.'bloxx_style.php');
-                
+                include_once(CORE_DIR . 'bloxx_form.php');
                 
                 global $_COOKIE;
                 
                 if($mode == 'loginbox'){
-        
-                        $id = $this->id();
-                
-                        if($id == -1){
                         
-                                $style = new Bloxx_Style();
-                                $style_small_form_label = $this->getGlobalStyle('Label');
-                                $style_small_form_field = $this->getGlobalStyle('Field');
-                                $style_small_form_button = $this->getGlobalStyle('Button');
-                        
-                                $form = new Bloxx_Form();
-                                $html_out = $form->renderHeader($this->name, 'login');
-                                $html_out .= $style->renderStyleHeader($style_small_form_label);
-                                $html_out .=  LANG_IDENTITY_USERNAME;
-                                $html_out .= $style->renderStyleFooter($style_small_form_label);
-                                $html_out .= $style->renderStyleHeader($style_small_form_field);
-                                $html_out .= $form->renderInput('username', '', '', $style_small_form_field);
-                                $html_out .= $style->renderStyleFooter($style_small_form_field);
-                                $html_out .= '<br>';
-                                $html_out .= $style->renderStyleHeader($style_small_form_label);
-                                $html_out .=  LANG_IDENTITY_PASSWORD;
-                                $html_out .= $style->renderStyleFooter($style_small_form_label);
-                                $html_out .= $style->renderStyleHeader($style_small_form_field);
-                                $html_out .= $form->renderInput('password', 'password', '', $style_small_form_field);
-                                $html_out .= $style->renderStyleFooter($style_small_form_field);
-                                $html_out .= '<br>';
-                                $html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGIN, $style_small_form_button);
-                                $html_out .= $form->renderFooter();
-                                
-                                return $html_out;
-                        }
-                        else{
-                        
-                                $form = new Bloxx_Form();
-                                $style_small_form_button = $this->getGlobalStyle('Button');
-                                $style_small_form_label = $this->getGlobalStyle('Label');
-                                $style_small_text = $this->getGlobalStyle('Text');
+                        $form = new Bloxx_Form();
+                        $html_out = $form->renderHeader($this->name, 'login');
+                        $mt->setItem('header', $html_out);
 
-                                global $_GET;
-                                unset($_GET['return_id']);
-                                unset($_GET['id']);
-                        
-                                $html_out = $form->renderHeader($this->name, 'logout');
-                        
-                                $style = new Bloxx_Style();
+                        $html_out =  LANG_IDENTITY_USERNAME;
+                        $mt->setItem('username_label', $html_out);
 
-                                $html_out .= $style->renderStyleHeader($style_small_text);
-                                $html_out .=  LANG_IDENTITY_WELCOME . ' ' . $_COOKIE["login"];
-                                $html_out .= $style->renderStyleFooter($style_small_text);
+                        $html_out = $form->renderInput('username', '', '');
+                        $mt->setItem('username', $html_out);
+
+                        $html_out =  LANG_IDENTITY_PASSWORD;
+                        $mt->setItem('password_label', $html_out);
+
+                        $html_out = $form->renderInput('password', 'password', '');
+                        $mt->setItem('password', $html_out);
+
+                        $html_out = $form->renderSubmitButton(LANG_IDENTITY_LOGIN);
+                        $mt->setItem('button', $html_out);
                         
-                                $html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGOUT, $style_small_form_button);
-                        
-                                $html_out .= $form->renderFooter();
+                        $html_out = $form->renderFooter();
+                        $mt->setItem('footer', $html_out);
                                 
-                                return $html_out;
-                        }
+                        return $mt->renderView();
                 }
-                else if($mode == 'loginbox_admin'){
+                else if($mode == 'logout_button'){
+                        
+                        $form = new Bloxx_Form();
 
-                        include_once(CORE_DIR.'bloxx_admin.php');
-
-                        $id = $this->id();
-
-                        if($id == -1){
-
-                                $style = new Bloxx_Style();
-                                $admin = new Bloxx_Admin();
-                                $style_small_form_label = $admin->getGlobalStyle('Label');
-                                $style_small_form_field = $admin->getGlobalStyle('Field');
-                                $style_small_form_button = $admin->getGlobalStyle('Button');
-
-                                $form = new Bloxx_Form();
-                                $html_out = $form->renderHeader($this->name, 'login');
-                                $html_out .= $style->renderStyleHeader($style_small_form_label);
-                                $html_out .=  LANG_IDENTITY_USERNAME;
-                                $html_out .= $style->renderStyleFooter($style_small_form_label);
-                                $html_out .= $form->renderInput('username', '', '', $style_small_form_field);
-                                $html_out .= $style->renderStyleHeader($style_small_form_label);
-                                $html_out .=  LANG_IDENTITY_PASSWORD;
-                                $html_out .= $style->renderStyleFooter($style_small_form_label);
-                                $html_out .= $form->renderInput('password', 'password', '', $style_small_form_field);
-                                $html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGIN, $style_small_form_button);
-                                $html_out .= $form->renderFooter();
-                                
-                                echo $html_out;
-                        }
-                        else{
-
-                                $style = new Bloxx_Style();
-                                $admin = new Bloxx_Admin();
-                                $form = new Bloxx_Form();
-                                $style_small_form_button = $admin->getGlobalStyle('Button');
-                                $style_small_form_label = $admin->getGlobalStyle('Label');
-                                $style_small_text = $admin->getGlobalStyle('Text');
-
-                                $html_out = $form->renderHeader($this->name, 'logout');
-
-                                $style = new Bloxx_Style();
-
-                                $html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGOUT, $style_small_form_button);
-                                $html_out .= $form->renderFooter();
-                                
-                                return $html_out;
-                        }
+                        global $_GET;
+                        unset($_GET['return_id']);
+                        //unset($_GET['id']);
+                        
+                        $html_out = $form->renderHeader($this->name, 'logout');
+                        $html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGOUT);
+                        $html_out .= $form->renderFooter();
+                        
+                        $mt->setItem('button', $html_out);
+                        return $mt->renderView();
                 }
-                if($mode == 'change_password'){
+                else if($mode == 'welcome'){
+
+                        $html_out =  LANG_IDENTITY_WELCOME . ' ' . $_COOKIE["login"];
+                        $mt->setItem('welcome', $html_out);
+
+                        return $mt->renderView();
+                }
+                else if($mode == 'change_password'){
 
                         $id = $this->id();
 
                         if($id != -1){
 
-                                $style = new Bloxx_Style();
-                                $style_small_form_label = $this->getGlobalStyle('Label');
-                                $style_small_form_field = $this->getGlobalStyle('Field');
-                                $style_small_form_button = $this->getGlobalStyle('Button');
-
                                 $form = new Bloxx_Form();
                                 $html_out = $form->renderHeader($this->name, 'change_password');
-                                $html_out .= $style->renderStyleHeader($style_small_form_label);
-                                $html_out .=  LANG_IDENTITY_OLD_PASSWORD;
-                                $html_out .= $style->renderStyleFooter($style_small_form_label);
-                                $html_out .= '<br>';
-                                $html_out .= $form->renderInput('old_password', 'password', '', $style_small_form_field);
-                                $html_out .= '<br>';
-                                $html_out .= $style->renderStyleHeader($style_small_form_label);
-                                $html_out .=  LANG_IDENTITY_NEW_PASSWORD;
-                                $html_out .= $style->renderStyleFooter($style_small_form_label);
-                                $html_out .= '<br>';
-                                $html_out .= $form->renderInput('new_password', 'password', '', $style_small_form_field);
-                                $html_out .= '<br>';
-                                $html_out .= $style->renderStyleHeader($style_small_form_label);
-                                $html_out .=  LANG_IDENTITY_NEW_PASSWORD_AGAIN;
-                                $html_out .= $style->renderStyleFooter($style_small_form_label);
-                                $html_out .= '<br>';
-                                $html_out .= $form->renderInput('new_password_again', 'password', '', $style_small_form_field);
-                                $html_out .= '<br><br>';
-                                $html_out .= $form->renderSubmitButton(LANG_IDENTITY_CHANGE_PASSWORD, $style_small_form_button);
-                                $html_out .= $form->renderFooter();
+                                $mt->setItem('header', $html_out);
 
-                                return $html_out;
+                                $html_out =  LANG_IDENTITY_OLD_PASSWORD;
+                                $mt->setItem('old_password_label', $html_out);
+
+                                $html_out = $form->renderInput('old_password', 'password', '');
+                                $mt->setItem('old_password', $html_out);
+
+                                $html_out =  LANG_IDENTITY_NEW_PASSWORD;
+                                $mt->setItem('new_password_label', $html_out);
+
+                                $html_out = $form->renderInput('new_password', 'password', '');
+                                $mt->setItem('new_password', $html_out);
+
+                                $html_out =  LANG_IDENTITY_NEW_PASSWORD_AGAIN;
+                                $mt->setItem('new_password_again_label', $html_out);
+
+                                $html_out = $form->renderInput('new_password_again', 'password', '');
+                                $mt->setItem('new_password_again', $html_out);
+
+                                $html_out = $form->renderSubmitButton(LANG_IDENTITY_CHANGE_PASSWORD);
+                                $mt->setItem('button', $html_out);
+                                
+                                $html_out = $form->renderFooter();
+                                $mt->setItem('footer', $html_out);
+
+                                return $mt->renderView();
                         }
                 }
                 else if($mode == 'register'){
@@ -243,23 +174,20 @@ class Bloxx_Identity extends Bloxx_Module
                         global $_GET;
                         unset($_GET['return_id']);
                         unset($_GET['id']);
-                        return $this->renderForm(-1, false);
+                        return $this->renderForm(-1, false, $mt);
                 }
                 else if($mode == 'change_data'){
 
                         global $_GET;
                         unset($_GET['return_id']);
                         unset($_GET['id']);
-                        return $this->renderForm($this->id(), false);
+                        return $this->renderForm($this->id(), false, $mt);
                 }
                 else if($mode == 'confirm'){
 
                         global $_GET;
                         
-                        $style = new Bloxx_Style();
-                        $style_small_text = $this->getGlobalStyle('Text');
-                        
-                        $this->insertWhereCondition("confirm_hash='" . $_GET['code'] . "'");
+                        $this->insertWhereCondition('confirm_hash', '=', $_GET['code']);
                         $this->runSelect();
 
                         if ($this->nextRow() && ($this->confirmed == 0) && ($this->email == $_GET['email'])){
@@ -267,14 +195,13 @@ class Bloxx_Identity extends Bloxx_Module
                                 $this->confirmed = 1;
                                 $this->updateRow();
 
-                                $html_out .= $style->renderStyleHeader($style_small_text);
-                                $html_out .= LANG_IDENTITY_CONFIRMATION_MESSAGE;
-                                $html_out .= $style->renderStyleFooter($style_small_text);
+                                $html_out = LANG_IDENTITY_CONFIRMATION_MESSAGE;
+                                $mt->setItem('message', $html_out);
                         }
                         
                         //Give no information on failure type for security reasons.
                         
-                        return $html_out;
+                        return $mt->renderView();
                 }
         }
         
@@ -337,8 +264,8 @@ class Bloxx_Identity extends Bloxx_Module
                         //$password=strtolower($password);
                         
                         $this->clearWhereCondition();
-                        $this->insertWhereCondition("username='" . $login . "'");
-                        $this->insertWhereCondition("password='" . md5($password) . "'");
+                        $this->insertWhereCondition('username', '=', $login);
+                        $this->insertWhereCondition('password', '=', md5($password));
                         $this->runSelect();
                         
                         if (!$this->nextRow()){
@@ -508,7 +435,7 @@ class Bloxx_Identity extends Bloxx_Module
                 
                         $username = $_COOKIE["login"];
                         $this->clearWhereCondition();
-                        $this->insertWhereCondition("username='" . $username . "'");
+                        $this->insertWhereCondition('username', '=', $username);
                         $this->runSelect();
                         
                         if($this->nextRow()){
@@ -534,7 +461,7 @@ class Bloxx_Identity extends Bloxx_Module
                 
                 $gl = new Bloxx_GroupLink();
                 $gl->clearWhereCondition();
-                $gl->insertWhereCondition("identity_id=" . $id);
+                $gl->insertWhereCondition('identity_id', '=', $id);
                 $gl->runSelect();
                 
                 $glist = null;
@@ -562,7 +489,7 @@ class Bloxx_Identity extends Bloxx_Module
 
                 $gl = new Bloxx_GroupLink();
                 $gl->clearWhereCondition();
-                $gl->insertWhereCondition("identity_id=" . $id);
+                $gl->insertWhereCondition('identity_id', '=', $id);
                 $gl->runSelect();
 
                 if($gl->nextRow()){
@@ -581,7 +508,7 @@ class Bloxx_Identity extends Bloxx_Module
 
                 $gl = new Bloxx_GroupLink();
                 $gl->clearWhereCondition();
-                $gl->insertWhereCondition("identity_id=" . $id);
+                $gl->insertWhereCondition('identity_id', '=', $id);
                 $gl->runSelect();
 
                 while($gl->nextRow()){
@@ -595,45 +522,5 @@ class Bloxx_Identity extends Bloxx_Module
                 return false;
         }
 }
-
-/*
-
-function user_lost_password ($email,$user_name) {
-        global $feedback,$hidden_hash_var;
-        global $cifroes_system_mail_address;
-        if ($email && $user_name) {
-                $user_name=strtolower($user_name);
-                $sql="SELECT * FROM cliente WHERE numero_contribuinte='$user_name' AND email='$email'";
-                $result=db_query($sql);
-                if (!$result || db_numrows($result) < 1) {
-                        //no matching user found
-                        $feedback .= ' Número de contribuinte ou email incorrecto ';
-                        return false;
-                } else {
-                        //create a secure, new password
-                        $new_pass=strtolower(substr(md5(time().$user_name.$hidden_hash_var),1,14));
-
-                        //update the database to include the new password
-                        $sql="UPDATE cliente SET password='". md5($new_pass) ."' WHERE numero_contribuinte='$user_name'";
-                        $result=db_query($sql);
-                        //send a simple email with the new password
-                        mail ($email,'Recuperação de Password','A sua Password '.
-                                'foi alterada para: '.$new_pass,'From: '.$cifroes_system_mail_address);
-                        $feedback .= ' A nova password foi enviada para o seu email. ';
-                        return true;
-                }
-        } else {
-                $feedback .= ' Tem que inserir o seu número de contribuinte e email. ';
-                return false;
-        }
-}
-
-function validate_email ($address) {
-        return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'. '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.' . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
-}
-
-        var $hidden_hash_var;
-        var $is_loged_in;
-}*/
 
 ?>

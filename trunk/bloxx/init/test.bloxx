@@ -452,8 +452,8 @@
 [private_content]0[_private_content]
 [title_LANG_PT]Início[_title_LANG_PT]
 [title_LANG_EN]Home[_title_LANG_EN]
-[content_LANG_PT]Site de dominstração do Bloxx[_content_LANG_PT]
-[content_LANG_EN]Bloxx demo site[_content_LANG_EN]
+[content_LANG_PT]Site de dominstração do Bloxx...[_content_LANG_PT]
+[content_LANG_EN]Bloxx demo site...[_content_LANG_EN]
 [headerfooter]2[_headerfooter]
 [_row]
 [row]
@@ -1189,11 +1189,11 @@
 [addr][_addr]
 [_row]
 [row]
-[id]287[_id]
+[id]286[_id]
 [workflow][_workflow]
 [login]admin[_login]
-[session]cf68fa2c4a5888fde0f0b4446f93569e[_session]
-[timelimit]1110660055[_timelimit]
+[session]08714a4a7c9ab8e9850cde2c22c17642[_session]
+[timelimit]1111156997[_timelimit]
 [addr]127.0.0.1[_addr]
 [_row]
 [_session]
@@ -2209,6 +2209,55 @@
 [template]<bloxx_item name="warning"></bloxx_item>
 <bloxx_item name="button"></bloxx_item>[_template]
 [_row]
+[row]
+[id]20[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]logout_button[_view]
+[template]<bloxx_item name="button"></bloxx_item>[_template]
+[_row]
+[row]
+[id]21[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]loginbox[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="username_label"></bloxx_item>
+<bloxx_item name="username"></bloxx_item>
+<bloxx_item name="password_label"></bloxx_item>
+<bloxx_item name="password"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]22[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]change_password[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="old_password_label"></bloxx_item>
+<bloxx_item name="old_password"></bloxx_item>
+<br><br>
+<bloxx_item name="new_password_label"></bloxx_item>
+<bloxx_item name="new_password"></bloxx_item>
+<br><br>
+<bloxx_item name="new_password_again_label"></bloxx_item>
+<bloxx_item name="new_password_again"></bloxx_item>
+<br><br>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]23[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]confirm[_view]
+[template]<bloxx_item name="message"></bloxx_item>[_template]
+[_row]
 [_moduletemplate]
 [MODULE headerfooter]
 [row]
@@ -2248,9 +2297,12 @@
 <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
 <br>
 
-                <bloxx_mod module="identity" view="loginbox_admin" param=0></bloxx_mod>                                
+<bloxx_discard module="admin" trust="ADMINISTRATOR">
+<bloxx_mod module="identity" view="loginbox" param=0></bloxx_mod>                               
+</bloxx_discard> 
 
 <bloxx_private module="admin" trust="ADMINISTRATOR">
+<bloxx_mod module="identity" view="logout_button" param=0></bloxx_mod>                             
 <bloxx_mod module="admin" view="menu" param=0></bloxx_mod>
 </bloxx_private>
                         
@@ -2296,9 +2348,12 @@
 <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
 <br>
 
-                <bloxx_mod module="identity" view="loginbox_admin" param=0></bloxx_mod>                                
+<bloxx_discard module="admin" trust="ADMINISTRATOR">
+<bloxx_mod module="identity" view="loginbox" param=0></bloxx_mod>                               
+</bloxx_discard> 
 
 <bloxx_private module="admin" trust="ADMINISTRATOR">
+<bloxx_mod module="identity" view="logout_button" param=0></bloxx_mod>                             
 <bloxx_mod module="admin" view="menu" param=0></bloxx_mod>
 </bloxx_private>
                         
@@ -2562,5 +2617,54 @@
 [view]uninstall_mod_confirm[_view]
 [template]<bloxx_item name="warning"></bloxx_item>
 <bloxx_item name="button"></bloxx_item>[_template]
+[_row]
+[row]
+[id]20[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]logout_button[_view]
+[template]<bloxx_item name="button"></bloxx_item>[_template]
+[_row]
+[row]
+[id]21[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]loginbox[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="username_label"></bloxx_item>
+<bloxx_item name="username"></bloxx_item>
+<bloxx_item name="password_label"></bloxx_item>
+<bloxx_item name="password"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]22[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]change_password[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="old_password_label"></bloxx_item>
+<bloxx_item name="old_password"></bloxx_item>
+<br><br>
+<bloxx_item name="new_password_label"></bloxx_item>
+<bloxx_item name="new_password"></bloxx_item>
+<br><br>
+<bloxx_item name="new_password_again_label"></bloxx_item>
+<bloxx_item name="new_password_again"></bloxx_item>
+<br><br>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]23[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]6[_moduleid]
+[view]confirm[_view]
+[template]<bloxx_item name="message"></bloxx_item>[_template]
 [_row]
 [_moduletemplate]

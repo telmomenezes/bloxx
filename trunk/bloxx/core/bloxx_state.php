@@ -76,9 +76,9 @@ class Bloxx_State extends Bloxx_Module
                 $ident = new Bloxx_Identity();
         
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("owner_identity='" . $ident->id() . "'");
-                $this->insertWhereCondition("item_name='" . $item . "'");
-                $this->insertWhereCondition("owner_module='" . $module_id . "'");
+                $this->insertWhereCondition('owner_identity', '=', $ident->id());
+                $this->insertWhereCondition('item_name', '=', $item);
+                $this->insertWhereCondition('owner_module', '=', $module_id);
                 $this->runSelect();
                 
                 if (!$this->nextRow()){
@@ -114,9 +114,9 @@ class Bloxx_State extends Bloxx_Module
                 $ident = new Bloxx_Identity();
 
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("owner_identity='" . $ident->id() . "'");
-                $this->insertWhereCondition("item_name='" . $item . "'");
-                $this->insertWhereCondition("owner_module='" . $module_id . "'");
+                $this->insertWhereCondition('owner_identity', '=', $ident->id());
+                $this->insertWhereCondition('item_name', '=', $item);
+                $this->insertWhereCondition('owner_module', '=', $module_id);
                 $this->runSelect();
 
                 if (!$this->nextRow()){
@@ -145,9 +145,9 @@ class Bloxx_State extends Bloxx_Module
                 $ident = new Bloxx_Identity();
 
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("owner_identity='" . $ident->id() . "'");
-                $this->insertWhereCondition("item_name='" . $item . "'");
-                $this->insertWhereCondition("owner_module='" . $module_id . "'");
+                $this->insertWhereCondition('owner_identity', '=', $ident->id());
+                $this->insertWhereCondition('item_name', '=', $item);
+                $this->insertWhereCondition('owner_module', '=', $module_id);
                 $this->runSelect();
 
                 if ($this->nextRow()){

@@ -34,7 +34,7 @@ $mod = "Bloxx_" . $mod;
 $mod_inst = new $mod();
 
 $mod_inst->clearWhereCondition();
-$mod_inst->insertWhereCondition("id=" . $id);
+$mod_inst->insertWhereCondition('id', '=', $id);
 $mod_inst->runSelect();
 
 if($mod_inst->nextRow()){

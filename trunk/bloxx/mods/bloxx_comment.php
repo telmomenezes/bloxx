@@ -87,8 +87,8 @@ class Bloxx_Comment extends Bloxx_Module
                 $comm = new Bloxx_Comment();
 
                 $comm->clearWhereCondition();
-                $comm->insertWhereCondition("parent_id='" . $id . "'");
-                $comm->insertWhereCondition("parent_type='" . $target . "'");
+                $comm->insertWhereCondition('parent_id', '=', $id);
+                $comm->insertWhereCondition('parent_type', '=', $target);
                 $comm->runSelect();
                 
                 $html_out = '';
@@ -125,8 +125,8 @@ class Bloxx_Comment extends Bloxx_Module
                 $comm = new Bloxx_Comment();
 
                 $comm->clearWhereCondition();
-                $comm->insertWhereCondition("parent_id='" . $id . "'");
-                $comm->insertWhereCondition("parent_type='" . $target . "'");
+                $comm->insertWhereCondition('parent_id', '=', $id);
+                $comm->insertWhereCondition('parent_type', '=', $target);
                 $comm->runSelect();
 
                 while($comm->nextRow()){

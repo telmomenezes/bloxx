@@ -26,14 +26,28 @@ require_once 'PEAR.php';
 
 class Bloxx_DBObject
 {
+
+        var $name;
+        var $N = 0;
+        var $_database_dsn = DATABASE_DSN;
+        var $_database = '';
+        var $_results = '';
+        var $_condition = '';
+        var $_group_by = '';
+        var $_order_by = '';
+        var $_having = '';
+        var $_limit = '';
+        var $_data_select = '*';
+        var $_join = '';
+        
         //Abstract function to be implemented in child classes
         function tableDefinition(){}
 
         //telmo
         function getRowByID($id, $all_lang_fields = false)
         {
-                $this->insertWhereCondition(false);
-                $this->insertWhereCondition('id=' . $id);
+        
+                $this->insertWhereCondition('id', '=', $id);
         
                 $ret = $this->runSelect();
                 
@@ -146,23 +160,53 @@ class Bloxx_DBObject
         }
     
         //telmo
-        function insertWhereCondition($cond, $logic = 'AND')
+        function insertIsNullCondition($field, $logic = 'AND')
         {
 
-                if (!trim($cond)) {
-        
-                        return false;
-                }
+                $cond = $field . ' IS NULL';
         
                 if ($this->_condition) {
         
-                        $this->_condition .= " {$logic} {$cond}";
+                        $this->_condition .= ' ' . $logic . ' ' . $cond;
             
                         return true;
                 }
         
-                $this->_condition = " WHERE {$cond}";
+                $this->_condition = ' WHERE ' . $cond;
         
+                return true;
+        }
+        
+        //telmo
+        function insertWhereCondition($field, $op, $value, $logic = 'AND')
+        {
+
+                // Value must be filtered for sql injection
+
+                $def = $this->getTableDefinition();
+
+                if(isset($def[$field])){
+
+                        $fdef = $def[$field];
+                        $type = $fdef['TYPE'];
+
+                        if($this->needsQuotes($type)){
+
+                                $value = '"' . $value . '"';
+                        }
+                }
+
+                $cond = $field . $op . $value;
+
+                if ($this->_condition) {
+
+                        $this->_condition .= ' ' . $logic . ' ' . $cond;
+
+                        return true;
+                }
+
+                $this->_condition = ' WHERE ' . $cond;
+
                 return true;
         }
 
@@ -567,7 +611,7 @@ class Bloxx_DBObject
                 }
         }
 
-        function _build_condition($keys, $filter = array(),$negative_filter=array())
+        function _build_condition($keys, $filter = array(), $negative_filter = array())
         {
                 $this->_connect();
 
@@ -596,11 +640,11 @@ class Bloxx_DBObject
                         
                         if (strtolower($this->$k) === 'null') {
                 
-                                $this->insertWhereCondition(" {$this->name}.{$k}  IS NULL");
+                                $this->insertIsNullCondition($k);
                         }
                         else{
 
-                                $this->insertWhereCondition(" {$this->name}.{$k}  = " . $this->prepareValue($this->$k, $v['TYPE']) );
+                                $this->insertWhereCondition($k, '=', $this->$k);
                         }
                 }
         }
@@ -756,10 +800,6 @@ class Bloxx_DBObject
 
                         $out = $this->_database->quote($value) . " ";
                 }
-                else if(is_numeric($value)) {
-
-                        $out = ' ' . $value . ' ';
-                }
                 else{
 
                         $out = ' ' . $value . ' ';
@@ -784,18 +824,5 @@ class Bloxx_DBObject
                 
                 return false;
         }
-    
-        var $name;
-        var $N = 0;
-        var $_database_dsn = DATABASE_DSN;
-        var $_database = '';
-        var $_results = '';
-        var $_condition = '';
-        var $_group_by = '';
-        var $_order_by = '';
-        var $_having = '';
-        var $_limit = '';
-        var $_data_select = '*';
-        var $_join = '';
 }
 ?>

@@ -117,8 +117,8 @@ class Bloxx_MailComment extends Bloxx_Module
                 $comm = new Bloxx_MailComment();
 
                 $comm->clearWhereCondition();
-                $comm->insertWhereCondition("parent_id='" . $id . "'");
-                $comm->insertWhereCondition("parent_type='" . $target . "'");
+                $comm->insertWhereCondition('parent_id', '=', $id);
+                $comm->insertWhereCondition('parent_type', '=', $target);
                 $comm->setOrderBy('publish_date', true);
                 $comm->setLimit(25);
                 $comm->runSelect();
@@ -155,8 +155,8 @@ class Bloxx_MailComment extends Bloxx_Module
                 $comm = new Bloxx_MailComment();
 
                 $comm->clearWhereCondition();
-                $comm->insertWhereCondition("parent_id='" . $id . "'");
-                $comm->insertWhereCondition("parent_type='" . $target . "'");
+                $comm->insertWhereCondition('parent_id', '=', $id);
+                $comm->insertWhereCondition('parent_type', '=', $target);
                 $comm->runSelect();
 
                 while($comm->nextRow()){
@@ -780,9 +780,9 @@ class Bloxx_MailComment extends Bloxx_Module
                         
                                 $mc = new Bloxx_MailComment();
                                 $mc->clearWhereCondition();
-                                $mc->insertWhereCondition("parent_id=" . $insertPoint);
-                                $mc->insertWhereCondition("parent_type='mailcomment'");
-                                $mc->insertWhereCondition("subject like '" . $subject . "%'");
+                                $mc->insertWhereCondition('parent_id', '=', $insertPoint);
+                                $mc->insertWhereCondition('parent_type', '=', 'mailcomment');
+                                $mc->insertWhereCondition('subject', 'like', $subject . '%');
                                 $mc->setOrderBy('publish_date', true);
                                 $mc->runSelect();
 
@@ -804,9 +804,9 @@ class Bloxx_MailComment extends Bloxx_Module
                 
                         $mc = new Bloxx_MailComment();
                         $mc->clearWhereCondition();
-                        $mc->insertWhereCondition("parent_id=1");
-                        $mc->insertWhereCondition("parent_type='dummy'");
-                        $mc->insertWhereCondition("subject='" . $subject . "'");
+                        $mc->insertWhereCondition('parent_id', '=', '1');
+                        $mc->insertWhereCondition('parent_type', '=', 'dummy');
+                        $mc->insertWhereCondition('subject', '=', $subject);
                         $mc->setOrderBy('publish_date', true);
                         $mc->runSelect();
                         

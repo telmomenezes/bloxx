@@ -88,6 +88,10 @@ class Bloxx_Module extends Bloxx_DBObject
         */
         function render($mode, $id, $target=null)
         {
+                include_module_once('moduletemplate');
+                $mt = new Bloxx_ModuleTemplate();
+                $mt->getTemplate($this, $mode);
+        
                 if($this->isGenericRender($mode)){
                 
                         return $this->doGenericRender($mode, $id, $target);
@@ -97,7 +101,7 @@ class Bloxx_Module extends Bloxx_DBObject
                 
                 if(isset($trusts[$mode]) && $this->verifyTrust($trusts[$mode], $id)){
                 
-                        return $this->doRender($mode, $id, $target);
+                        return $this->doRender($mode, $id, $target, $mt);
                 }
         }
         
@@ -641,8 +645,8 @@ class Bloxx_Module extends Bloxx_DBObject
                 $mm = new Bloxx_ModuleManager();
                 
                 $stylelink->clearWhereCondition();
-                $stylelink->insertWhereCondition("module_id=" . $mm->getModuleID($this->name) . "");
-                $stylelink->insertWhereCondition("module_style='" . $module_style . "'");
+                $stylelink->insertWhereCondition('module_id', '=', $mm->getModuleID($this->name));
+                $stylelink->insertWhereCondition('module_style', '=', $module_style);
                 $stylelink->runSelect();
 
                 if (!$stylelink->nextRow()){
@@ -829,7 +833,7 @@ class Bloxx_Module extends Bloxx_DBObject
                 
                         include_module_once('language');
                         $lang = new Bloxx_Language();
-                        $lang->insertWhereCondition('code="' . $lang_code . '"');
+                        $lang->insertWhereCondition('code', '=', $lang_code);
                         $lang->runSelect();
 
                         if($lang->nextRow()){
@@ -963,7 +967,7 @@ class Bloxx_Module extends Bloxx_DBObject
         function submissionCount()
         {
                 $this->clearWhereCondition();
-                $this->insertWhereCondition('workflow <= 0');
+                $this->insertWhereCondition('workflow', '<=', '0');
                 return $this->runSelect();
         }
         
@@ -996,7 +1000,7 @@ class Bloxx_Module extends Bloxx_DBObject
         {
         
                 $this->clearWhereCondition();
-                $this->insertWhereCondition('id >= ' . $start_id);
+                $this->insertWhereCondition('id', '>=', $start_id);
                 $this->insertListConditions();
                 $this->setOrderBy('id');
                 $this->runSelect();
@@ -1048,7 +1052,7 @@ class Bloxx_Module extends Bloxx_DBObject
         {
 
                 $this->clearWhereCondition();
-                $this->insertWhereCondition('id >= ' . $start_id);
+                $this->insertWhereCondition('id', '>=', $start_id);
                 $this->insertListConditions();
                 $this->setOrderBy('id');
                 $this->runSelect();
@@ -1075,7 +1079,7 @@ class Bloxx_Module extends Bloxx_DBObject
         {
 
                 $this->clearWhereCondition();
-                $this->insertWhereCondition('id <= ' . $start_id);
+                $this->insertWhereCondition('id', '<=', $start_id);
                 $this->insertListConditions();
                 $this->setOrderBy('id', true);
                 $this->runSelect();

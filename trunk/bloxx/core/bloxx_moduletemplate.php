@@ -53,8 +53,8 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
                 return array(
                         'moduleid' => array('TYPE' => 'BLOXX_MODULEMANAGER', 'SIZE' => -1, 'NOTNULL' => true),
                         'view' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true),
-                        'template' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => true),
-
+                        'optional_name' => array('TYPE' => 'STRING', 'SIZE' => 100),
+                        'template' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => true)
                 );
         }
         
@@ -309,8 +309,8 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
                 $mod_id = $mod->getModID();
                 
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("moduleid=" . $mod_id);
-                $this->insertWhereCondition("view='" . $view . "'");
+                $this->insertWhereCondition('moduleid', '=', $mod_id);
+                $this->insertWhereCondition('view', '=', $view);
                 $this->runSelect();
 
                 if (!$this->nextRow()){

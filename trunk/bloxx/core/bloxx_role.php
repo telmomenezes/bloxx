@@ -74,7 +74,7 @@ class Bloxx_Role extends Bloxx_Module
         function registerRole($rolename, $trust_base)
         {
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("rolename='" . $rolename . "'");
+                $this->insertWhereCondition('rolename', '=', $rolename);
                 $this->runSelect();
                 
                 if ($this->nextRow()) {

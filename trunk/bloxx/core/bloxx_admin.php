@@ -70,42 +70,26 @@ class Bloxx_Admin extends Bloxx_Module
                 return array(
                         'change' => TRUST_USER,      //special case, trust is checked in update()
                         'create' => TRUST_GUEST,     //special case, trust is checked in create()
-                        'edit' => TRUST_ADMINISTRATOR,
                         'delete' => TRUST_ADMINISTRATOR,
                         'save_db' => TRUST_ADMINISTRATOR,
                         'saveall' => TRUST_ADMINISTRATOR,
+                        'edit' => TRUST_ADMINISTRATOR,
                         'dummy' => TRUST_ADMINISTRATOR,
                         'uninstall_mod' => TRUST_ADMINISTRATOR,
                         'install_mod' => TRUST_ADMINISTRATOR,
                         'module_list' => TRUST_ADMINISTRATOR
                 );
         }
-        
-        function getStyleList()
-        {
-                return array(
-                        'Label' => 'AdminFormLabel',
-                        'Field' => 'AdminFormField',
-                        'Button' => 'AdminFormButton',
-                        'Link' => 'AdminLink',
-                        'Navigator' => 'AdminNavigator'
-                );
-        }
 
-        function doRender($mode, $id, $target)
+        function doRender($mode, $id, $target, $mt)
         {
 
                 global $_POST;
-
 
                 if(!$this->verifyTrust(TRUST_ADMINISTRATOR, $id)){
 
                         return $this->renderAdminLogin();
                 }
-                
-                include_module_once('moduletemplate');
-                $mt = new Bloxx_ModuleTemplate();
-                $mt->getTemplate($this, $mode);
 
                 if($mode == 'module_list'){
                         

@@ -276,11 +276,11 @@ class Bloxx_Poll extends Bloxx_Module
                 include_module_once('pollvote');
                 $vote = new Bloxx_PollVote();
                 $vote->clearWhereCondition();
-                $vote->insertWhereCondition('poll_id=' . $this->id);
+                $vote->insertWhereCondition('poll_id', '=', $this->id);
                 
                 if($opt != null){
                 
-                        $vote->insertWhereCondition('vote=' . $opt);
+                        $vote->insertWhereCondition('vote', '=', $opt);
                 }
                 
                 return $vote->runSelect();
@@ -291,8 +291,8 @@ class Bloxx_Poll extends Bloxx_Module
                 include_module_once('pollvote');
                 $vote = new Bloxx_PollVote();
                 $vote->clearWhereCondition();
-                $vote->insertWhereCondition('user_id=' . $user_id);
-                $vote->insertWhereCondition('poll_id=' . $poll_id);
+                $vote->insertWhereCondition('user_id', '=', $user_id);
+                $vote->insertWhereCondition('poll_id', '=', $poll_id);
 
                 return ($vote->runSelect() > 0);
         }

@@ -123,7 +123,7 @@ class Bloxx_Workflow extends Bloxx_Module
                         $mod = $mm->getModuleInstance();
                 
                         $mod->clearWhereCondition();
-                        $mod->insertWhereCondition('workflow <= 0');
+                        $mod->insertWhereCondition('workflow', '<=', '0');
                         $mod->runSelect();
                         
                         while($mod->nextRow()){

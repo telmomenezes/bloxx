@@ -56,8 +56,8 @@ class Bloxx_Session extends Bloxx_Module {
                 if(isset($_COOKIE["login"]) && isset($_COOKIE["session"])) {
                                         
                         $this->clearWhereCondition();
-                        $this->insertWhereCondition("login='" . $_COOKIE["login"] . "'");
-                        $this->insertWhereCondition("session='" . $_COOKIE["session"] . "'");
+                        $this->insertWhereCondition('login', '=', $_COOKIE["login"]);
+                        $this->insertWhereCondition('session', '=', $_COOKIE["session"]);
                         $this->runSelect();
                 
                         if($this->nextRow()) {
@@ -81,8 +81,8 @@ class Bloxx_Session extends Bloxx_Module {
                 if(isset($_COOKIE["login"]) && isset($_COOKIE["session"])) {
                         
                         $this->clearWhereCondition();
-                        $this->insertWhereCondition("login='" . $_COOKIE["login"] . "'");
-                        $this->insertWhereCondition("session='" . $_COOKIE["session"] . "'");
+                        $this->insertWhereCondition('login', '=', $_COOKIE["login"]);
+                        $this->insertWhereCondition('session', '=', $_COOKIE["session"]);
                         $this->runSelect();
 
                         if($this->nextRow()) {

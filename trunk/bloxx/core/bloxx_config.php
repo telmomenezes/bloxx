@@ -53,8 +53,8 @@ class Bloxx_Config extends Bloxx_Module
         function getValue($module_id, $item)
         {
                 $this->clearWhereCondition();
-                $this->insertWhereCondition("item_name='" . $item . "'");
-                $this->insertWhereCondition("owner_module_id='" . $module_id . "'");
+                $this->insertWhereCondition('item_name', '=', $item);
+                $this->insertWhereCondition('owner_module_id', '=', $module_id);
                 $this->runSelect();
                 
                 if (!$this->nextRow()){

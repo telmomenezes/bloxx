@@ -112,7 +112,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                                 
                                 $info = new Bloxx_PersonalInfo();
                                 $info->clearWhereCondition();
-                                $info->insertWhereCondition('user_id=' . $ident->id());
+                                $info->insertWhereCondition('user_id', '=', $ident->id());
                                 $info->runSelect();
                                 $info->nextRow();
                 
@@ -134,7 +134,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                         include_module_once('grouplink');
                         $link = new Bloxx_GroupLink();
                         $link->clearWhereCondition();
-                        $link->insertWhereCondition('group_id='.$id);
+                        $link->insertWhereCondition('group_id', '=', $id);
                         
                         $link->runSelect();
                         
@@ -142,7 +142,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                         
                                 $info = new Bloxx_PersonalInfo();
                                 $info->clearWhereCondition();
-                                $info->insertWhereCondition('user_id=' . $link->identity_id);
+                                $info->insertWhereCondition('user_id', '=', $link->identity_id);
                                 $info->runSelect();
 
                                 include_module_once('identity');
@@ -169,7 +169,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
         
                 $info = new Bloxx_PersonalInfo();
                 $info->clearWhereCondition();
-                $info->insertWhereCondition('user_id=' . $ident->id());
+                $info->insertWhereCondition('user_id', '=', $ident->id());
 
                 return ($info->runSelect() > 0);
         }

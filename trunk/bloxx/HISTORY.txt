@@ -7,7 +7,7 @@ Version 0.6 -
 - Coding standards document created;
 - Code cleanup to support the coding standards started;
 - Installation/database configuration script;
--
+- Configurable timeout of login cookies;
 
 Version 0.5 - 17/Fev/2005
 =========================

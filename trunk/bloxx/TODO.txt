@@ -31,7 +31,9 @@ Core Functionalities
 - Configurable textarea width;
 - Bug: Malformed html destroies render of textarea;
 - Lost email recovery;
-- Check if dbobject is handling caracters like ";";
+- Check if all user input are being filtered;
+- Review identity because the use of deprecated hidden hash var;
+- Log system;
 
 Documentation
 

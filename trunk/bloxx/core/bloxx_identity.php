@@ -18,9 +18,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
-//          Silas Francisco <draft@dog.kicks-ass.com>
+//          Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_identity.php,v 1.6 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_identity.php,v 1.7 2005-02-23 21:08:23 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');

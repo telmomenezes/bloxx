@@ -27,7 +27,7 @@ $dh = opendir(MODS_DIR);
 
 while (($file = readdir($dh)) !== false) {
 
-        if(($file != '.') && ($file != '..')){
+        if(is_file($file) && ($file != '.') && ($file != '..')){
 
                 include_once(MODS_DIR . $file);
 
@@ -43,7 +43,7 @@ $dh = opendir(MODS_DIR);
 
 while (($file = readdir($dh)) !== false) {
 
-        if(($file != '.') && ($file != '..')){
+        if(is_file($file) && ($file != '.') && ($file != '..')){
         
                 $mod_name = substr($file, 0, -4);
                 $mod = new $mod_name();

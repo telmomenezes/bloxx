@@ -31,7 +31,7 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
         {
                 $this->name = 'moduletemplate';
                 $this->module_version = 1;
-                $this->label_field = 'title';
+                $this->label_field = 'view';
                 $this->use_init_file = true;
                 
                 $this->items = array();

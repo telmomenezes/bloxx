@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_session.php,v 1.9 2005-02-25 03:29:14 secretdraft Exp $
+// $Id: bloxx_session.php,v 1.10 2005-02-26 00:36:18 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -27,7 +27,7 @@ require_once(CORE_DIR . 'bloxx_module.php');
  * Bloxx_Session Handles everything about user sessions.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_session.php,v 1.9 2005-02-25 03:29:14 secretdraft Exp $
+ * @version   $Id: bloxx_session.php,v 1.10 2005-02-26 00:36:18 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -89,7 +89,7 @@ class Bloxx_Session extends Bloxx_Module
                         $this->createCookie('session', $this->session, $this->timelimit);
                 }
 
-                $this->writeLog(LOG_INFO, $login . ' has logged in.');
+                $this->writeLog(LOG_NOTICE, $login . ' has logged in.');
         }
         
 		/**
@@ -113,7 +113,7 @@ class Bloxx_Session extends Bloxx_Module
                         {                        
                                 $this->deleteRowByID($this->id);
 
-                				$this->writeLog(LOG_INFO, $_COOKIE['login'] . ' has logged out.');
+                				$this->writeLog(LOG_NOTICE, $_COOKIE['login'] . ' has logged out.');
                         }
                 		
                         $this->removeCookie('login');

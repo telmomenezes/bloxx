@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_logs.php,v 1.4 2005-02-25 22:24:53 secretdraft Exp $
+// $Id: bloxx_logs.php,v 1.5 2005-02-26 00:36:18 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -27,7 +27,7 @@ require_once(CORE_DIR . 'bloxx_module.php');
  * Bloxx_Logs Implements log system.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_logs.php,v 1.4 2005-02-25 22:24:53 secretdraft Exp $
+ * @version   $Id: bloxx_logs.php,v 1.5 2005-02-26 00:36:18 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -60,7 +60,7 @@ class Bloxx_Logs extends Bloxx_Module
         function getRenderTrusts()
         {
                 return array(
-                        'logs' => TRUST_GUEST
+                        'logs' => TRUST_ADMINISTRATOR
                 );
         }
 
@@ -74,18 +74,14 @@ class Bloxx_Logs extends Bloxx_Module
 				
 				$html_out = $form->renderHeader($this->name, 'view');
 				$html_out .= $form->startSelect('priority', '1');
-				$html_out .= $form->addSelectItem(LOG_EMERG, 'LOG_EMERG');
-				$html_out .= $form->addSelectItem(LOG_ALERT, 'LOG_ALERT');
-				$html_out .= $form->addSelectItem(LOG_CRIT, 'LOG_CRIT');
-				$html_out .= $form->addSelectItem(LOG_ERR, 'LOG_ERR');
-				$html_out .= $form->addSelectItem(LOG_WARNING, 'LOG_WARNING');
-				$html_out .= $form->addSelectItem(LOG_NOTICE, 'LOG_NOTICE');
-				$html_out .= $form->addSelectItem(LOG_INFO, 'LOG_INFO');
-				$html_out .= $form->addSelectItem(LOG_DEBUG, 'LOG_DEBUG');
+				$html_out .= $form->addSelectItem(LOG_CRIT, $this->getPriorityName(LOG_CRIT));
+				$html_out .= $form->addSelectItem(LOG_ERR, $this->getPriorityName(LOG_ERR));
+				$html_out .= $form->addSelectItem(LOG_WARNING, $this->getPriorityName(LOG_WARNING));
+				$html_out .= $form->addSelectItem(LOG_NOTICE, $this->getPriorityName(LOG_NOTICE));
 				$html_out .= $form->endSelect();
 				$html_out .= $form->renderSubmitButton('Show');	
 				$html_out .= $form->renderFooter();
-				$mt->setItem('priority', $html_out);
+				$mt->setItem('loglevel', $html_out);
 											
 				if (isset($_POST['priority']))
 				{
@@ -95,10 +91,15 @@ class Bloxx_Logs extends Bloxx_Module
 					
 					$html_out = '';
 					
+					include_module_once('manager');
+					$mm = new Bloxx_ModuleManager();
+					
 					while ($this->nextRow())
 					{
-						$html_out .= $this->timestamp . ' ' . $this->ownerModuleId . ': '
-							. '[' . $this->addr . '] ' . $this->priority . ' ' . $this->message . "\n";
+						$html_out .= '[' . $this->addr . '] ' . '[' . $mm->getModuleName($this->ownerModuleId) . '] '
+							. ' [' . date('r', $this->timestamp) . '] ' 
+							. '[' . $this->getPriorityName($this->priority) . '] '
+							. $this->message . "<br>";
 					}
 					
 					$mt->setItem('logs', $html_out);
@@ -112,7 +113,7 @@ class Bloxx_Logs extends Bloxx_Module
 		/**
 		 * writeLog Logs a message.
 		 *
-		 * @param int    $priority Message priority (syslog constants).
+		 * @param int    $priority Message priority (LOG_CRIT LOG_ERR LOG_WARNING LOG_NOTICE).
 		 * @param string $message  Message to log.
 		 *
 		 * @access public
@@ -128,6 +129,27 @@ class Bloxx_Logs extends Bloxx_Module
 				$this->message   = $message;
 			
 				$this->insertRow();
+			}
+		}
+		
+		/**
+		 * getPriorityName Translates priority number to priority name.
+		 * 
+		 * @param int $priority Priority number.
+		 * 
+		 * @return string Priority name.
+		 * 
+		 * @access public
+		 */
+		function getPriorityName($priority)
+		{
+			switch ($priority)
+			{
+				case LOG_CRIT: 	  return 'critical';
+				case LOG_ERR:     return 'error';
+				case LOG_WARNING: return 'warning';
+				case LOG_NOTICE:  return 'notice';
+				default: return '';
 			}
 		}
 }

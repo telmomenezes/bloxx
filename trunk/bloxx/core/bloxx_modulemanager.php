@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_modulemanager.php,v 1.4 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_modulemanager.php,v 1.5 2005-02-26 00:36:18 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -81,6 +81,22 @@ class Bloxx_ModuleManager extends Bloxx_Module
                 if($this->nextRow()){
 
                         return $this->id;
+                }
+                else{
+
+                        return -1;
+                }
+        }
+        
+        function getModuleName($moduleId)
+        {
+                $this->clearWhereCondition();
+                $this->insertWhereCondition('id', '=', $moduleId);
+                $this->runSelect();
+                
+                if($this->nextRow()){
+
+                        return $this->module_name;
                 }
                 else{
 

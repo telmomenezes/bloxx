@@ -98,7 +98,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         function doRender($mode, $id, $target)
         {
-                global $HTTP_POST_VARS;
+                global $_POST;
 
                 if(!$this->verifyTrust(TRUST_ADMINISTRATOR, $id)){
 
@@ -170,7 +170,7 @@ class Bloxx_Admin extends Bloxx_Module
                         $modname = 'Bloxx_' . $id;
 
                         $item = new $modname();
-                        $html_out = $item->renderForm($HTTP_POST_VARS['item']);
+                        $html_out = $item->renderForm($_POST['item']);
                         
                         return $html_out;
                 }
@@ -369,14 +369,14 @@ class Bloxx_Admin extends Bloxx_Module
                 }
                 else if($mode == 'new_edit_delete'){
 
-                        if(!isset($HTTP_POST_VARS['item'])){
+                        if(!isset($_POST['item'])){
                         
-                                $HTTP_POST_VARS['item'] = null;
+                                $_POST['item'] = null;
                         }
 
                         $html_out = '';
 
-                        if($HTTP_POST_VARS['submit'] == LANG_ADMIN_NEW){
+                        if($_POST['submit'] == LANG_ADMIN_NEW){
                         
                                 include_module_once($id);
                                 $modname = 'Bloxx_' . $id;
@@ -384,15 +384,15 @@ class Bloxx_Admin extends Bloxx_Module
                                 $item = new $modname();
                                 $html_out .= $item->renderForm(-1);
                         }
-                        else if($HTTP_POST_VARS['submit'] == LANG_ADMIN_EDIT){
+                        else if($_POST['submit'] == LANG_ADMIN_EDIT){
                         
                                 include_module_once($id);
                                 $modname = 'Bloxx_' . $id;
 
                                 $item = new $modname();
-                                $html_out .= $item->renderForm($HTTP_POST_VARS['item']);
+                                $html_out .= $item->renderForm($_POST['item']);
                         }
-                        else if($HTTP_POST_VARS['submit'] == LANG_ADMIN_DELETE){
+                        else if($_POST['submit'] == LANG_ADMIN_DELETE){
                         
                                 include_once(CORE_DIR.'bloxx_style.php');
 
@@ -406,7 +406,7 @@ class Bloxx_Admin extends Bloxx_Module
                                 $modname = 'Bloxx_' . $id;
                                 
                                 $modinst = new $modname();
-                                $modinst->getRowByID($HTTP_POST_VARS['item'], false);
+                                $modinst->getRowByID($_POST['item'], false);
                                 $label_field = $modinst->label_field;
 
                                 $html_out .= $style->renderStyleHeader($style_admin_form_label);
@@ -431,7 +431,7 @@ class Bloxx_Admin extends Bloxx_Module
                                 $form->setParam($id);
 
                                 $html_out .= $form->renderHeader('admin', 'delete');
-                                $html_out .= $form->renderInput('item', 'hidden', $HTTP_POST_VARS['item'], $style_admin_form_field);
+                                $html_out .= $form->renderInput('item', 'hidden', $_POST['item'], $style_admin_form_field);
                                 $html_out .= $form->renderInput('target_module', 'hidden', $id, $style_admin_form_field);
                                 $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM, $style_admin_form_button);
                                 $html_out .= $form->renderFooter();
@@ -547,11 +547,11 @@ class Bloxx_Admin extends Bloxx_Module
                         $style_admin_form_field = $this->getGlobalStyle('Field');
                         $style_admin_form_button = $this->getGlobalStyle('Button');
 
-                        global $HTTP_POST_VARS;
+                        global $_POST;
 
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
-                        $mm->getRowByID($HTTP_POST_VARS['module_to_uninstall']);
+                        $mm->getRowByID($_POST['module_to_uninstall']);
 
                         $html_out = $style->renderStyleHeader($style_admin_form_label);
                         $html_out .= LANG_ADMIN_UNISTALL_MOD_WARNING1;
@@ -567,7 +567,7 @@ class Bloxx_Admin extends Bloxx_Module
                         //$form->setParam($id);
 
                         $html_out .= $form->renderHeader('admin', 'uninstall_mod');
-                        $html_out .= $form->renderInput('module_to_uninstall', 'hidden', $HTTP_POST_VARS['module_to_uninstall'], $style_admin_form_field);
+                        $html_out .= $form->renderInput('module_to_uninstall', 'hidden', $_POST['module_to_uninstall'], $style_admin_form_field);
                         $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM, $style_admin_form_button);
                         
                         return $html_out;
@@ -601,26 +601,26 @@ class Bloxx_Admin extends Bloxx_Module
                 }
                 else if($mode == 'navigator'){
 
-                        global $HTTP_GET_VARS;
+                        global $_GET;
 
-                        if(isset($HTTP_GET_VARS['mode'])){
+                        if(isset($_GET['mode'])){
                         
-                                if($HTTP_GET_VARS['mode'] == 'module'){
+                                if($_GET['mode'] == 'module'){
                                 
-                                        $html_out = $this->renderNavigator($HTTP_GET_VARS['param']);
+                                        $html_out = $this->renderNavigator($_GET['param']);
                                         return $html_out;
                                 }
 
-                                if($HTTP_GET_VARS['mode'] == 'new_edit_delete'){
+                                if($_GET['mode'] == 'new_edit_delete'){
 
-                                        if(isset($HTTP_POST_VARS['item'])){
+                                        if(isset($_POST['item'])){
                                         
-                                                $html_out = $this->renderNavigator($HTTP_GET_VARS['param'], $HTTP_POST_VARS['item']);
+                                                $html_out = $this->renderNavigator($_GET['param'], $_POST['item']);
                                                 return $html_out;
                                         }
                                         else{
                                         
-                                                $html_out = $this->renderNavigator($HTTP_GET_VARS['param']);
+                                                $html_out = $this->renderNavigator($_GET['param']);
                                                 return $html_out;
                                         }
                                 }
@@ -634,7 +634,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         function doProcessForm($command)
         {
-                global $HTTP_POST_VARS;
+                global $_POST;
 
                 if($command == 'edit'){
 
@@ -654,25 +654,25 @@ class Bloxx_Admin extends Bloxx_Module
                 }
                 else if($command == 'change'){
 
-                        include_module_once($HTTP_POST_VARS['target_module']);
+                        include_module_once($_POST['target_module']);
 
-                        $modname = 'Bloxx_' . $HTTP_POST_VARS['target_module'];
+                        $modname = 'Bloxx_' . $_POST['target_module'];
                         $item = new $modname();
                         
                         $item->update();
                 }
                 else if($command == 'create'){
 
-                        include_module_once($HTTP_POST_VARS['target_module']);
+                        include_module_once($_POST['target_module']);
 
-                        $modname = 'Bloxx_' . $HTTP_POST_VARS['target_module'];
+                        $modname = 'Bloxx_' . $_POST['target_module'];
                         $item = new $modname();
 
                         $item->create();
                 }
                 else if($command == 'save_db'){
 
-                        $file_name = $HTTP_POST_VARS['save_dir'] . '.bloxx';
+                        $file_name = $_POST['save_dir'] . '.bloxx';
                         $handle = fopen($file_name, "w");
                         fclose($handle);
                 
@@ -689,25 +689,25 @@ class Bloxx_Admin extends Bloxx_Module
                                 include_module_once($name);
                                 $name = 'Bloxx_' . $name;
                                 $mod_inst = new $name();
-                                $mod_inst->saveDataToFile($HTTP_POST_VARS['save_dir']);
+                                $mod_inst->saveDataToFile($_POST['save_dir']);
                         }
                 }
                 else if($command == 'delete'){
 
-                        include_module_once($HTTP_POST_VARS['target_module']);
+                        include_module_once($_POST['target_module']);
 
-                        $modname = 'Bloxx_' . $HTTP_POST_VARS['target_module'];
+                        $modname = 'Bloxx_' . $_POST['target_module'];
                         $item = new $modname();
                         
-                        $item->deleteRowByID($HTTP_POST_VARS['item']);
+                        $item->deleteRowByID($_POST['item']);
                 }
                 else if($command == 'uninstall_mod'){
                 
-                        global $HTTP_POST_VARS;
+                        global $_POST;
 
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
-                        $mm->getRowByID($HTTP_POST_VARS['module_to_uninstall']);
+                        $mm->getRowByID($_POST['module_to_uninstall']);
                         
                         $mname = $mm->module_name;
                         include_module_once($mname);
@@ -717,9 +717,9 @@ class Bloxx_Admin extends Bloxx_Module
                 }
                 else if($command == 'install_mod'){
 
-                        global $HTTP_POST_VARS;
+                        global $_POST;
 
-                        $mname = $HTTP_POST_VARS['module_to_install'];
+                        $mname = $_POST['module_to_install'];
                         $mname = substr($mname, 1);
                         $mname = substr($mname, 0, -1);
                         include_module_once($mname);

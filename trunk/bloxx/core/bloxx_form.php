@@ -52,39 +52,39 @@ class Bloxx_Form
         
         function setFromGlobals()
         {
-                global $HTTP_GET_VARS;
+                global $_GET;
         
-                if(isset($HTTP_GET_VARS['return_mode'])){
+                if(isset($_GET['return_mode'])){
                 
-                        $this->mode = $HTTP_GET_VARS['return_mode'];
+                        $this->mode = $_GET['return_mode'];
                 }
-                else if(isset($HTTP_GET_VARS['mode'])){
+                else if(isset($_GET['mode'])){
 
-                        $this->mode = $HTTP_GET_VARS['mode'];
-                }
-                
-                if(isset($HTTP_GET_VARS['return_param'])){
-
-                        $this->param = $HTTP_GET_VARS['return_param'];
-                }
-                else if(isset($HTTP_GET_VARS['param'])){
-
-                        $this->param = $HTTP_GET_VARS['param'];
+                        $this->mode = $_GET['mode'];
                 }
                 
-                if(isset($HTTP_GET_VARS['return_target'])){
+                if(isset($_GET['return_param'])){
 
-                        $this->target = $HTTP_GET_VARS['return_target'];
+                        $this->param = $_GET['return_param'];
                 }
-                else if(isset($HTTP_GET_VARS['target'])){
+                else if(isset($_GET['param'])){
 
-                        $this->target = $HTTP_GET_VARS['target'];
+                        $this->param = $_GET['param'];
+                }
+                
+                if(isset($_GET['return_target'])){
+
+                        $this->target = $_GET['return_target'];
+                }
+                else if(isset($_GET['target'])){
+
+                        $this->target = $_GET['target'];
                 }
         }
         
         function renderHeader($module, $command, $id = -1, $style = null)
         {
-                global $HTTP_GET_VARS;
+                global $_GET;
                 
                 $html_out = '<form enctype="multipart/form-data"';
                 
@@ -102,13 +102,13 @@ class Bloxx_Form
                 
                         $url_params['id'] = $id;
                 }
-                else if(isset($HTTP_GET_VARS['return_id'])){
+                else if(isset($_GET['return_id'])){
 
-                        $url_params['id'] = $HTTP_GET_VARS['return_id'];
+                        $url_params['id'] = $_GET['return_id'];
                 }
-                else if(isset($HTTP_GET_VARS['id'])){
+                else if(isset($_GET['id'])){
                 
-                        $url_params['id'] = $HTTP_GET_VARS['id'];
+                        $url_params['id'] = $_GET['id'];
                 }
                 
                 if(isset($this->mode)){

@@ -92,7 +92,7 @@ class Bloxx_Identity extends Bloxx_Module
                 include_once(CORE_DIR.'bloxx_style.php');
                 
                 
-                global $HTTP_COOKIE_VARS;
+                global $_COOKIE;
                 
                 if($mode == 'loginbox'){
         
@@ -133,16 +133,16 @@ class Bloxx_Identity extends Bloxx_Module
                                 $style_small_form_label = $this->getGlobalStyle('Label');
                                 $style_small_text = $this->getGlobalStyle('Text');
 
-                                global $HTTP_GET_VARS;
-                                unset($HTTP_GET_VARS['return_id']);
-                                unset($HTTP_GET_VARS['id']);
+                                global $_GET;
+                                unset($_GET['return_id']);
+                                unset($_GET['id']);
                         
                                 $html_out = $form->renderHeader($this->name, 'logout');
                         
                                 $style = new Bloxx_Style();
 
                                 $html_out .= $style->renderStyleHeader($style_small_text);
-                                $html_out .=  LANG_IDENTITY_WELCOME . ' ' . $HTTP_COOKIE_VARS["login"];
+                                $html_out .=  LANG_IDENTITY_WELCOME . ' ' . $_COOKIE["login"];
                                 $html_out .= $style->renderStyleFooter($style_small_text);
                         
                                 $html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGOUT, $style_small_form_button);
@@ -239,29 +239,29 @@ class Bloxx_Identity extends Bloxx_Module
                 }
                 else if($mode == 'register'){
 
-                        global $HTTP_GET_VARS;
-                        unset($HTTP_GET_VARS['return_id']);
-                        unset($HTTP_GET_VARS['id']);
+                        global $_GET;
+                        unset($_GET['return_id']);
+                        unset($_GET['id']);
                         return $this->renderForm(-1, false);
                 }
                 else if($mode == 'change_data'){
 
-                        global $HTTP_GET_VARS;
-                        unset($HTTP_GET_VARS['return_id']);
-                        unset($HTTP_GET_VARS['id']);
+                        global $_GET;
+                        unset($_GET['return_id']);
+                        unset($_GET['id']);
                         return $this->renderForm($this->id(), false);
                 }
                 else if($mode == 'confirm'){
 
-                        global $HTTP_GET_VARS;
+                        global $_GET;
                         
                         $style = new Bloxx_Style();
                         $style_small_text = $this->getGlobalStyle('Text');
                         
-                        $this->insertWhereCondition("confirm_hash='" . $HTTP_GET_VARS['code'] . "'");
+                        $this->insertWhereCondition("confirm_hash='" . $_GET['code'] . "'");
                         $this->runSelect();
 
-                        if ($this->nextRow() && ($this->confirmed == 0) && ($this->email == $HTTP_GET_VARS['email'])){
+                        if ($this->nextRow() && ($this->confirmed == 0) && ($this->email == $_GET['email'])){
 
                                 $this->confirmed = 1;
                                 $this->updateRow();
@@ -279,11 +279,11 @@ class Bloxx_Identity extends Bloxx_Module
         
         function doProcessForm($command)
         {
-                global $HTTP_POST_VARS, $warningmessage;
+                global $_POST, $warningmessage;
 
                 if($command == 'login'){
 
-                        $this->login($HTTP_POST_VARS['username'], $HTTP_POST_VARS['password']);
+                        $this->login($_POST['username'], $_POST['password']);
                 }
                 else if($command == 'logout'){
 
@@ -291,19 +291,19 @@ class Bloxx_Identity extends Bloxx_Module
                 }
                 else if($command == 'change_password'){
 
-                        if(!$this->checkPassword($this->id(), $HTTP_POST_VARS['old_password'])){
+                        if(!$this->checkPassword($this->id(), $_POST['old_password'])){
                         
                                 $warningmessage = LANG_IDENTITY_ERROR_WRONG_PASSWORD;
                                 return;
                         }
                         
-                        if($HTTP_POST_VARS['new_password'] != $HTTP_POST_VARS['new_password_again']){
+                        if($_POST['new_password'] != $_POST['new_password_again']){
                         
                                 $warningmessage = LANG_IDENTITY_ERROR_NEW_PASSWORD_MISMATCH;
                                 return;
                         }
                         
-                        $this->password = md5($HTTP_POST_VARS['new_password']);
+                        $this->password = md5($_POST['new_password']);
                         
                         if($this->updateRow()){
                         
@@ -378,18 +378,18 @@ class Bloxx_Identity extends Bloxx_Module
 
         function logout()
         {
-                global $HTTP_COOKIE_VARS;
+                global $_COOKIE;
 
                 setcookie('login','',(time()+2592000),'/','',0);
                 setcookie('id_hash','',(time()+2592000),'/','',0);
                 
-                unset($HTTP_COOKIE_VARS["login"]);
-                unset($HTTP_COOKIE_VARS["id_hash"]);
+                unset($_COOKIE["login"]);
+                unset($_COOKIE["id_hash"]);
         }
         
         function setTokens($login_in) {
                 
-                global $HTTP_COOKIE_VARS;
+                global $_COOKIE;
                 
                 if (!$login_in) {
                 
@@ -403,13 +403,13 @@ class Bloxx_Identity extends Bloxx_Module
                 setcookie('login', $login, (time()+2592000),'/','',0);
                 setcookie('id_hash', $id_hash, (time()+2592000),'/','',0);
                 
-                $HTTP_COOKIE_VARS["login"] = $login;
-                $HTTP_COOKIE_VARS["id_hash"] = $id_hash;
+                $_COOKIE["login"] = $login;
+                $_COOKIE["id_hash"] = $id_hash;
         }
         
         function isLoggedIn() {
         
-                global $HTTP_COOKIE_VARS;
+                global $_COOKIE;
                 
                 //have we already run the hash checks? 
                 //If so, return the pre-set var
@@ -417,11 +417,11 @@ class Bloxx_Identity extends Bloxx_Module
                 
                         return true;
                 }
-                if (isset($HTTP_COOKIE_VARS["login"]) && isset($HTTP_COOKIE_VARS["id_hash"])) {
+                if (isset($_COOKIE["login"]) && isset($_COOKIE["id_hash"])) {
                 
-                        $hash = md5($HTTP_COOKIE_VARS["login"].$this->hidden_hash_var);
+                        $hash = md5($_COOKIE["login"].$this->hidden_hash_var);
                         
-                        if ($hash == $HTTP_COOKIE_VARS["id_hash"]) {
+                        if ($hash == $_COOKIE["id_hash"]) {
                         
                                 $this->is_loged_in = true;
                                 return true;
@@ -441,21 +441,21 @@ class Bloxx_Identity extends Bloxx_Module
         
         function create()
         {
-                global $HTTP_POST_VARS;
+                global $_POST;
                 
-                if($HTTP_POST_VARS['password'] != $HTTP_POST_VARS['password_again']){
+                if($_POST['password'] != $_POST['password_again']){
 
                         $warningmessage = LANG_IDENTITY_ERROR_NEW_PASSWORD_MISMATCH;
                         return false;
                 }
 
 
-                $this->username = $HTTP_POST_VARS['username'];
-                $this->realname = $HTTP_POST_VARS['realname'];
-                $this->email = $HTTP_POST_VARS['email'];
+                $this->username = $_POST['username'];
+                $this->realname = $_POST['realname'];
+                $this->email = $_POST['email'];
                 
-                $this->password = md5($HTTP_POST_VARS['password']);
-                $this->confirm_hash = md5($HTTP_POST_VARS['email'].$this->hidden_hash_var);
+                $this->password = md5($_POST['password']);
+                $this->confirm_hash = md5($_POST['email'].$this->hidden_hash_var);
                 $this->confirmed = 0;
                 
                 $this->role = $this->getConfig('base_role');
@@ -468,8 +468,8 @@ class Bloxx_Identity extends Bloxx_Module
                 }
                 
                 $message = LANG_IDENTITY_CONFIRM_EMAIL . "\n\n";
-                $message .= 'Username: ' . $HTTP_POST_VARS['username'] . "\n";
-                $message .= 'Password: ' . $HTTP_POST_VARS['password'] . "\n\n";
+                $message .= 'Username: ' . $_POST['username'] . "\n";
+                $message .= 'Password: ' . $_POST['password'] . "\n\n";
                 
                 $config = new Bloxx_Config();
                 $site_url = $config->getConfig('site_url');
@@ -489,21 +489,21 @@ class Bloxx_Identity extends Bloxx_Module
         
         function update()
         {
-                global $HTTP_POST_VARS;
+                global $_POST;
 
                 //Allow only admins or indentity owners
                 if((!$this->verifyTrust(TRUST_ADMINISTRATOR))
-                && ($this->id() != $HTTP_POST_VARS['id'])){
+                && ($this->id() != $_POST['id'])){
 
                         return false;
                 }
 
-                if(!$this->getRowByID($HTTP_POST_VARS['id'])){
+                if(!$this->getRowByID($_POST['id'])){
 
                         return false;
                 }
 
-                if(isset($HTTP_POST_VARS['password']) && ($HTTP_POST_VARS['password'] != $this->password)){
+                if(isset($_POST['password']) && ($_POST['password'] != $this->password)){
 
                         return false;
                 }
@@ -514,9 +514,9 @@ class Bloxx_Identity extends Bloxx_Module
 
                 foreach($def as $k => $v){
 
-                        if(isset($HTTP_POST_VARS[$k])){
+                        if(isset($_POST[$k])){
 
-                                $this->$k = $HTTP_POST_VARS[$k];
+                                $this->$k = $_POST[$k];
                         }
                 }
                 
@@ -543,11 +543,11 @@ class Bloxx_Identity extends Bloxx_Module
         
         function id()
         {
-                global $HTTP_COOKIE_VARS;
+                global $_COOKIE;
         
                 if ($this->isLoggedIn()){
                 
-                        $username = $HTTP_COOKIE_VARS["login"];
+                        $username = $_COOKIE["login"];
                         $this->clearWhereCondition();
                         $this->insertWhereCondition("username='" . $username . "'");
                         $this->runSelect();

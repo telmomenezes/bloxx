@@ -72,9 +72,9 @@ class Bloxx_Photo extends Bloxx_Module
 
                 if($mode == 'form'){
 
-                        global $HTTP_GET_VARS;
-                        unset($HTTP_GET_VARS['return_id']);
-                        unset($HTTP_GET_VARS['id']);
+                        global $_GET;
+                        unset($_GET['return_id']);
+                        unset($_GET['id']);
                         $html_out = $this->renderForm(-1, false);
 
                         return $html_out;
@@ -176,11 +176,11 @@ class Bloxx_Photo extends Bloxx_Module
         //Condition to list photos by gallery
         function insertListConditions()
         {
-                global $HTTP_GET_VARS;
+                global $_GET;
                 
-                if(isset($HTTP_GET_VARS['gallery'])){
+                if(isset($_GET['gallery'])){
                 
-                        $this->insertWhereCondition('gallery = ' . $HTTP_GET_VARS['gallery']);
+                        $this->insertWhereCondition('gallery = ' . $_GET['gallery']);
                 }
         }
 }

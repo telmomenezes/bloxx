@@ -68,7 +68,7 @@ class Bloxx_Workflow extends Bloxx_Module
 
         function doRender($mode, $id, $target)
         {
-                global $HTTP_POST_VARS;
+                global $_POST;
 
                 $style = new Bloxx_Style();
                 $style_button = $this->getGlobalStyle('Button');
@@ -166,29 +166,29 @@ class Bloxx_Workflow extends Bloxx_Module
 
         function doProcessForm($command)
         {
-                global $HTTP_POST_VARS;
+                global $_POST;
 
                 if($command == 'accept_reject'){
 
-                        if($HTTP_POST_VARS['submit'] == LANG_WORKFLOW_ACCEPT){
+                        if($_POST['submit'] == LANG_WORKFLOW_ACCEPT){
                         
                                 include_module_once('modulemanager');
                                 $mm = new Bloxx_ModuleManager();
-                                $mm->getRowByID($HTTP_POST_VARS['moduleid']);
+                                $mm->getRowByID($_POST['moduleid']);
                                 $mod = $mm->getModuleInstance();
                                 
-                                $mod->getRowByID($HTTP_POST_VARS['itemid']);
+                                $mod->getRowByID($_POST['itemid']);
                                 $mod->workflow = 1;
                                 $mod->updateRow(true);
                         }
-                        else if($HTTP_POST_VARS['submit'] == LANG_WORKFLOW_REJECT){
+                        else if($_POST['submit'] == LANG_WORKFLOW_REJECT){
                         
                                 include_module_once('modulemanager');
                                 $mm = new Bloxx_ModuleManager();
-                                $mm->getRowByID($HTTP_POST_VARS['moduleid']);
+                                $mm->getRowByID($_POST['moduleid']);
                                 $mod = $mm->getModuleInstance();
 
-                                $mod->deleteRowByID($HTTP_POST_VARS['itemid']);
+                                $mod->deleteRowByID($_POST['itemid']);
                         }
                 }
         }

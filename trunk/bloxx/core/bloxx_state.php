@@ -51,16 +51,16 @@ class Bloxx_State extends Bloxx_Module
         
         function getValue($module, $item)
         {
-                global $HTTP_COOKIE_VARS;
+                global $_COOKIE;
         
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
                 
                 if($ident->id() == -1){
 
-                        if(isset($HTTP_COOKIE_VARS['bloxx_state' . $module . $item])){
+                        if(isset($_COOKIE['bloxx_state' . $module . $item])){
                         
-                                return $HTTP_COOKIE_VARS['bloxx_state' . $module . $item];
+                                return $_COOKIE['bloxx_state' . $module . $item];
                         }
                         else{
                         
@@ -93,13 +93,13 @@ class Bloxx_State extends Bloxx_Module
         
         function setValue($module, $item, $value)
         {
-                global $HTTP_COOKIE_VARS;
+                global $_COOKIE;
 
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
 
                 setcookie('bloxx_state' . $module . $item, $value, (time()+2592000),'/','',0);
-                $HTTP_COOKIE_VARS['bloxx_state' . $module . $item] = $value;
+                $_COOKIE['bloxx_state' . $module . $item] = $value;
                 
                 if($ident->id() == -1){
                 

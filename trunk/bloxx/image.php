@@ -23,11 +23,11 @@
 require_once('defines.php');
 require_once('functions.php');
 
-global $HTTP_GET_VARS;
+global $_GET;
 
-$mod = $HTTP_GET_VARS['module'];
-$id = $HTTP_GET_VARS['id'];
-$field = $HTTP_GET_VARS['field'];
+$mod = $_GET['module'];
+$id = $_GET['id'];
+$field = $_GET['field'];
 
 include_module_once($mod);
 $mod = "Bloxx_" . $mod;

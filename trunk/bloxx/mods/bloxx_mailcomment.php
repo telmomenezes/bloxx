@@ -383,15 +383,15 @@ class Bloxx_MailComment extends Bloxx_Module
                         return false;
                 }
                 
-                global $HTTP_POST_VARS;
+                global $_POST;
 
                 $def = $this->tableDefinitionLangComplete();
 
                 foreach($def as $k => $v){
 
-                        if(isset($HTTP_POST_VARS[$k])){
+                        if(isset($_POST[$k])){
 
-                                $this->$k = $HTTP_POST_VARS[$k];
+                                $this->$k = $_POST[$k];
                         }
                 }
                 

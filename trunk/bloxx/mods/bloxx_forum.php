@@ -114,9 +114,9 @@ class Bloxx_Forum extends Bloxx_Module
                 }
                 else if($mode == 'form'){
 
-                        global $HTTP_GET_VARS;
-                        unset($HTTP_GET_VARS['return_id']);
-                        unset($HTTP_GET_VARS['id']);
+                        global $_GET;
+                        unset($_GET['return_id']);
+                        unset($_GET['id']);
                         
                         $html_out .= $this->renderForm(-1, false);
 

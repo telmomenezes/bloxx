@@ -181,9 +181,9 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
                 
-                global $HTTP_POST_VARS;
+                global $_POST;
 
-                if($HTTP_POST_VARS['user_id'] != $ident->id()){
+                if($_POST['user_id'] != $ident->id()){
                 
                         if(!$this->verifyTrust(TRUST_ADMINISTRATOR)){
 
@@ -201,9 +201,9 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
 
-                global $HTTP_POST_VARS;
+                global $_POST;
 
-                if($HTTP_POST_VARS['user_id'] != $ident->id()){
+                if($_POST['user_id'] != $ident->id()){
 
                         if(!$this->verifyTrust(TRUST_ADMINISTRATOR)){
 

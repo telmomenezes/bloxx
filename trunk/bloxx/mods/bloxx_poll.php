@@ -235,11 +235,11 @@ class Bloxx_Poll extends Bloxx_Module
         
         function doProcessForm($command)
         {
-                global $HTTP_POST_VARS, $warningmessage;
+                global $_POST, $warningmessage;
 
                 if($command == 'vote'){
 
-                        if($HTTP_POST_VARS['option'] == 0){
+                        if($_POST['option'] == 0){
 
                                 $warningmessage = LANG_POLL_ERROR_NO_OPTION_SELECTED;
                                 return false;
@@ -254,7 +254,7 @@ class Bloxx_Poll extends Bloxx_Module
                                 return false;
                         }
                         
-                        if($this->voted($ident->id(), $HTTP_POST_VARS['poll_id'])){
+                        if($this->voted($ident->id(), $_POST['poll_id'])){
 
                                 $warningmessage = LANG_POLL_ERROR_CANT_VOTE_TWICE;
                                 return false;
@@ -263,9 +263,9 @@ class Bloxx_Poll extends Bloxx_Module
                         include_module_once('pollvote');
                         $vote = new Bloxx_PollVote();
                         
-                        $vote->poll_id = $HTTP_POST_VARS['poll_id'];
+                        $vote->poll_id = $_POST['poll_id'];
                         $vote->user_id = $ident->id();
-                        $vote->vote = $HTTP_POST_VARS['option'];
+                        $vote->vote = $_POST['option'];
                         
                         $vote->insertRow();
                 }

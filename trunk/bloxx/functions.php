@@ -100,7 +100,7 @@ function include_enum_once($enum)
 
 function build_link($id, $view, $param, $target, $link_text, $return, $vars = null)
 {
-        global $HTTP_GET_VARS;
+        global $_GET;
 
         $param_before = false;
 
@@ -151,47 +151,47 @@ function build_link($id, $view, $param, $target, $link_text, $return, $vars = nu
         
         if($return == true){
 
-                if(isset($HTTP_GET_VARS['id'])){
+                if(isset($_GET['id'])){
                 
                         if($param_before){
 
                                 $html_out .= '&';
                         }
 
-                        $html_out .= 'return_id=' . $HTTP_GET_VARS['id'];
+                        $html_out .= 'return_id=' . $_GET['id'];
 
                         $param_before = true;
                 }
-                if(isset($HTTP_GET_VARS['view'])){
+                if(isset($_GET['view'])){
 
                         if($param_before){
 
                                 $html_out .= '&';
                         }
 
-                        $html_out .= 'return_view=' . $HTTP_GET_VARS['view'];
+                        $html_out .= 'return_view=' . $_GET['view'];
 
                         $param_before = true;
                 }
-                if(isset($HTTP_GET_VARS['param'])){
+                if(isset($_GET['param'])){
 
                         if($param_before){
 
                                 $html_out .= '&';
                         }
 
-                        $html_out .= 'return_param=' . $HTTP_GET_VARS['param'];
+                        $html_out .= 'return_param=' . $_GET['param'];
 
                         $param_before = true;
                 }
-                if(isset($HTTP_GET_VARS['target'])){
+                if(isset($_GET['target'])){
 
                         if($param_before){
 
                                 $html_out .= '&';
                         }
 
-                        $html_out .= 'return_target=' . $HTTP_GET_VARS['target'];
+                        $html_out .= 'return_target=' . $_GET['target'];
 
                         $param_before = true;
                 }
@@ -219,10 +219,10 @@ function build_link($id, $view, $param, $target, $link_text, $return, $vars = nu
 
 function getExtraGetVars()
 {
-        global $HTTP_GET_VARS;
+        global $_GET;
         $extra_vars = array();
         
-        foreach($HTTP_GET_VARS as $k => $v){
+        foreach($_GET as $k => $v){
         
                 if(($k != 'id')
                         && ($k != 'mode')

@@ -93,7 +93,7 @@ class Bloxx_Search extends Bloxx_Module
                 }
                 else if($mode == 'next'){
                 
-                        global $HTTP_GET_VARS;
+                        global $_GET;
                         
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
@@ -107,7 +107,7 @@ class Bloxx_Search extends Bloxx_Module
 
                         if($next_id != -1){
                 
-                                $html_out = build_link($HTTP_GET_VARS['id'],
+                                $html_out = build_link($_GET['id'],
                                                 null,
                                                 null,
                                                 $next_id,
@@ -124,7 +124,7 @@ class Bloxx_Search extends Bloxx_Module
                 }
                 else if($mode == 'prev'){
 
-                        global $HTTP_GET_VARS;
+                        global $_GET;
 
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
@@ -138,7 +138,7 @@ class Bloxx_Search extends Bloxx_Module
                         
                         if($prev_id != $target){
 
-                                $html_out = build_link($HTTP_GET_VARS['id'],
+                                $html_out = build_link($_GET['id'],
                                                 null,
                                                 null,
                                                 $prev_id,

@@ -30,32 +30,32 @@ unset($warningmessage);
 
 $page = new Bloxx_Page();
 
-global $HTTP_POST_VARS;
-global $HTTP_GET_VARS;
+global $_POST;
+global $_GET;
 
 //Hack para remover o irritante comportamento das magic quotes
 //Será a melhor maneira?
-//Precisa de ser aplicado também a $HTTP_GET_VARS?
+//Precisa de ser aplicado também a $_GET?
 if(get_magic_quotes_gpc()){
 
-        $HTTP_POST_VARS = array_map("stripslashes", $HTTP_POST_VARS);
+        $_POST = array_map("stripslashes", $_POST);
 }
         
-if(isset($HTTP_POST_VARS['module']) && $HTTP_POST_VARS['module'] != ''){
+if(isset($_POST['module']) && $_POST['module'] != ''){
 
-        $modname = 'bloxx_'.$HTTP_POST_VARS['module'];
+        $modname = 'bloxx_'.$_POST['module'];
         
-        include_module_once($HTTP_POST_VARS['module']);
+        include_module_once($_POST['module']);
 
         $mod = new $modname();
-        $mod->processForm($HTTP_POST_VARS['command']);
+        $mod->processForm($_POST['command']);
 }
 
 $id = 1;
 
-if(isset($HTTP_GET_VARS['id'])){
+if(isset($_GET['id'])){
 
-        $id = $HTTP_GET_VARS['id'];
+        $id = $_GET['id'];
 }
 else{
 

@@ -60,7 +60,7 @@ class Bloxx_Page extends Bloxx_Module
                 include_once(CORE_DIR.'bloxx_style.php');
                 include_once(CORE_DIR.'bloxx_headerfooter.php');
                 
-                global $HTTP_GET_VARS;
+                global $_GET;
                 
                 $this->getRowByID($id);
                 
@@ -206,7 +206,7 @@ class Bloxx_Page extends Bloxx_Module
         
         function preParseBloxx($bloxx_html, &$html_out)
         {
-                global $HTTP_GET_VARS;
+                global $_GET;
                 
                 if(substr($bloxx_html, 0, 13) == "bloxx_private"){
                         
@@ -264,7 +264,7 @@ class Bloxx_Page extends Bloxx_Module
         
         function parseBloxx($bloxx_html, &$html_out, &$javascript_out)
         {
-                global $HTTP_GET_VARS;
+                global $_GET;
                 
                 $target = null;
 
@@ -300,9 +300,9 @@ class Bloxx_Page extends Bloxx_Module
 
                         if($view == 'from_url'){
 
-                                if(isset($HTTP_GET_VARS['mode'])){
+                                if(isset($_GET['mode'])){
 
-                                        $view = $HTTP_GET_VARS['mode'];
+                                        $view = $_GET['mode'];
                                 }
                                 else{
 
@@ -312,9 +312,9 @@ class Bloxx_Page extends Bloxx_Module
 
                         if($target == 'from_url'){
 
-                                if(isset($HTTP_GET_VARS['target'])){
+                                if(isset($_GET['target'])){
 
-                                        $target = $HTTP_GET_VARS['target'];
+                                        $target = $_GET['target'];
                                 }
                                 else{
 
@@ -326,9 +326,9 @@ class Bloxx_Page extends Bloxx_Module
                                 ereg('last-(.*)', $target, $regs);
                                 $varname = $regs[1];
                                 
-                                if(isset($HTTP_GET_VARS[$varname])){
+                                if(isset($_GET[$varname])){
 
-                                        $target = $HTTP_GET_VARS[$varname];
+                                        $target = $_GET[$varname];
                                 }
                                 else{
 
@@ -340,9 +340,9 @@ class Bloxx_Page extends Bloxx_Module
                         
                                 if(($param == -1) || ($param == 'from_url')){
 
-                                        if(isset($HTTP_GET_VARS['param'])){
+                                        if(isset($_GET['param'])){
 
-                                                $param = $HTTP_GET_VARS['param'];
+                                                $param = $_GET['param'];
                                         }
                                         else{
 
@@ -382,9 +382,9 @@ class Bloxx_Page extends Bloxx_Module
                                         ereg('var_(.*)', $param, $regs);
                                         $varname = $regs[1];
 
-                                        if(isset($HTTP_GET_VARS[$varname])){
+                                        if(isset($_GET[$varname])){
 
-                                                $param = $HTTP_GET_VARS[$varname];
+                                                $param = $_GET[$varname];
                                         }
                                         else{
 

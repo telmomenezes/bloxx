@@ -503,7 +503,7 @@ class Bloxx_Module extends Bloxx_DBObject
         function assignValuesFromPost($new)
         {
 
-                global $HTTP_POST_VARS;
+                global $_POST;
         
                 $def = $this->tableDefinitionLangComplete();
 
@@ -511,12 +511,12 @@ class Bloxx_Module extends Bloxx_DBObject
 
                         if($v['TYPE'] == 'DATE'){
 
-                                if(isset($HTTP_POST_VARS[$k . '__month'])
-                                && isset($HTTP_POST_VARS[$k . '__day'])
-                                && isset($HTTP_POST_VARS[$k . '__year'])
+                                if(isset($_POST[$k . '__month'])
+                                && isset($_POST[$k . '__day'])
+                                && isset($_POST[$k . '__year'])
                                 ){
 
-                                        $this->$k = mktime(0, 0, 0, $HTTP_POST_VARS[$k . '__month'], $HTTP_POST_VARS[$k . '__day'], $HTTP_POST_VARS[$k . '__year']);
+                                        $this->$k = mktime(0, 0, 0, $_POST[$k . '__month'], $_POST[$k . '__day'], $_POST[$k . '__year']);
                                 }
                         }
                         else if($new && ($v['TYPE'] == 'CREATIONDATETIME')){
@@ -548,9 +548,9 @@ class Bloxx_Module extends Bloxx_DBObject
                         }
                         else{
 
-                                if(isset($HTTP_POST_VARS[$k])){
+                                if(isset($_POST[$k])){
 
-                                        $this->$k = $HTTP_POST_VARS[$k];
+                                        $this->$k = $_POST[$k];
                                 }
                         }
                 }
@@ -586,7 +586,7 @@ class Bloxx_Module extends Bloxx_DBObject
         
         function update($verify_trust = true)
         {
-                global $HTTP_POST_VARS;
+                global $_POST;
         
                 if($verify_trust){
                 
@@ -596,7 +596,7 @@ class Bloxx_Module extends Bloxx_DBObject
                         }
                 }
                 
-                if(!$this->getRowByID($HTTP_POST_VARS['id'])){
+                if(!$this->getRowByID($_POST['id'])){
                 
                         return false;
                 }
@@ -669,11 +669,11 @@ class Bloxx_Module extends Bloxx_DBObject
         
         function getCurrentPageID()
         {
-                global $HTTP_GET_VARS;
+                global $_GET;
         
-                if(isset($HTTP_GET_VARS['id'])){
+                if(isset($_GET['id'])){
 
-                        return $HTTP_GET_VARS['id'];
+                        return $_GET['id'];
                 }
                 else{
 

@@ -20,7 +20,7 @@
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
 //
-// $Id: wizard.php,v 1.3 2005-02-22 22:10:38 secretdraft Exp $
+// $Id: wizard.php,v 1.4 2005-02-22 22:24:21 secretdraft Exp $
  
 require_once 'DB.php';
 require_once 'PEAR.php';
@@ -53,8 +53,8 @@ if (!file_exists('defines.php')) {
 		}
 		else {
 
-			if (isset($_POST['overwritedb']) && ($_POST['overwritedb'] == 1)) {
-				
+			if (isset($_POST['overwritedb'])) {
+
 				$mysqlHost->query('DROP DATABASE ' . $_POST['database']);
 			}
 					
@@ -119,7 +119,7 @@ if (!file_exists('defines.php')) {
     	';
     	
     	$html_out .= '<br>
-    	<input name="' . 'overwritedb' . '" type="checkbox" value="1"> overwrite old database';
+    	<input name="' . 'overwritedb' . '" type="checkbox"> overwrite old database';
     	
                 
 		$html_out .= '</form></body></html>';

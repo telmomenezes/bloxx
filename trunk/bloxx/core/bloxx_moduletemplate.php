@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_moduletemplate.php,v 1.6 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_moduletemplate.php,v 1.7 2005-02-26 20:26:03 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -304,7 +304,7 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
                 }
         }
         
-        function getTemplate($mod, $view)
+        function getTemplate($mod, $view, $template)
         {
         
                 $mod_id = $mod->getModID();
@@ -312,6 +312,12 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
                 $this->clearWhereCondition();
                 $this->insertWhereCondition('moduleid', '=', $mod_id);
                 $this->insertWhereCondition('view', '=', $view);
+                
+                if ($template != null)
+                {
+                	$this->insertWhereCondition('optional_name', '=', $template);
+                }
+                
                 $this->runSelect();
 
                 if (!$this->nextRow()){

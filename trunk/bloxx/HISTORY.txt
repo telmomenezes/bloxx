@@ -9,7 +9,8 @@ Version 0.6 -
 - Installation/database configuration script;
 - Configurable timeout of login cookies;
 - Log system;
--
+- Bug correction: use_init_file no longer ignored;
+- 
 
 Version 0.5 - 17/Fev/2005
 =========================

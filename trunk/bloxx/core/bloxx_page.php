@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_page.php,v 1.5 2005-02-24 04:51:30 secretdraft Exp $
+// $Id: bloxx_page.php,v 1.6 2005-02-26 20:26:03 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -396,7 +396,15 @@ class Bloxx_Page extends Bloxx_Module
                         }
 
                         $javascript_out .= $module_inst->renderJavaScript($view, $param, $target);
-                        $html_out .= $module_inst->render($view, $param, $target);
+                        
+                        if (isset($template))
+                        {
+                        	$html_out .= $module_inst->render($view, $param, $target, $template);                        
+                        }
+                        else
+                        {
+                        	$html_out .= $module_inst->render($view, $param, $target);
+                        }
                 }
         }
 }

@@ -44,5 +44,4 @@ Documentation
 - Web site development;
 - Module development;
 - Language plug-in development;
-- Bloxx development guidelines;
 - Bloxx philosophy;

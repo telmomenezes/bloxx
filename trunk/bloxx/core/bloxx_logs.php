@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_logs.php,v 1.3 2005-02-25 15:10:59 tmenezes Exp $
+// $Id: bloxx_logs.php,v 1.4 2005-02-25 22:24:53 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -27,7 +27,7 @@ require_once(CORE_DIR . 'bloxx_module.php');
  * Bloxx_Logs Implements log system.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_logs.php,v 1.3 2005-02-25 15:10:59 tmenezes Exp $
+ * @version   $Id: bloxx_logs.php,v 1.4 2005-02-25 22:24:53 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -69,7 +69,24 @@ class Bloxx_Logs extends Bloxx_Module
 			include_once(CORE_DIR . 'bloxx_form.php');
 			
 			if ($mode == 'logs')
-			{				
+			{	
+				$form = new Bloxx_Form();
+				
+				$html_out = $form->renderHeader($this->name, 'view');
+				$html_out .= $form->startSelect('priority', '1');
+				$html_out .= $form->addSelectItem(LOG_EMERG, 'LOG_EMERG');
+				$html_out .= $form->addSelectItem(LOG_ALERT, 'LOG_ALERT');
+				$html_out .= $form->addSelectItem(LOG_CRIT, 'LOG_CRIT');
+				$html_out .= $form->addSelectItem(LOG_ERR, 'LOG_ERR');
+				$html_out .= $form->addSelectItem(LOG_WARNING, 'LOG_WARNING');
+				$html_out .= $form->addSelectItem(LOG_NOTICE, 'LOG_NOTICE');
+				$html_out .= $form->addSelectItem(LOG_INFO, 'LOG_INFO');
+				$html_out .= $form->addSelectItem(LOG_DEBUG, 'LOG_DEBUG');
+				$html_out .= $form->endSelect();
+				$html_out .= $form->renderSubmitButton('Show');	
+				$html_out .= $form->renderFooter();
+				$mt->setItem('priority', $html_out);
+											
 				if (isset($_POST['priority']))
 				{
 					$this->clearWhereCondition();

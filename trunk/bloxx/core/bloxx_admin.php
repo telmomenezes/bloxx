@@ -107,9 +107,14 @@ class Bloxx_Admin extends Bloxx_Module
 
                 if($mode == 'module_list'){
 
-                        include_once(CORE_DIR.'bloxx_modulemanager.php');
+                        include_module_once('moduletemplate');
+                        $mt = new Bloxx_ModuleTemplate();
+                        $mt->getTemplate($this, $mode);
+                        
+                        include_module_once('modulemanager');
                         $module_manager = new Bloxx_ModuleManager();
-                        $html_out = $module_manager->render('module_list', -1);
+                        $mt->setItem('main', $module_manager->render('module_list', -1));
+                        $html_out = $mt->renderView();
                         
                         return $html_out;
                 }

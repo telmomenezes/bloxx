@@ -70,6 +70,7 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
 
                 $html_out = '';
                 $bloxx_content = '';
+                $waiting_for_bloxx_end = false;
 
                 while($tok){
 
@@ -130,6 +131,23 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
                 }
 
                 $html_out .= $this->items[$name];
+        }
+        
+        function getTemplate($mod, $view)
+        {
+                $mod_id = $mod->getModID();
+                
+                $this->clearWhereCondition();
+                $this->insertWhereCondition("moduleid=" . $mod_id);
+                $this->insertWhereCondition("view='" . $view . "'");
+                $this->runSelect();
+
+                if (!$this->nextRow()){
+                
+                        return false;
+                }
+                
+                return true;
         }
 }
 ?>

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photonews.php,v 1.2 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_photonews.php,v 1.3 2005-02-22 23:03:38 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -56,30 +56,13 @@ class Bloxx_PhotoNews extends Bloxx_Module
         {
                 return array(
                         'news_header' => TRUST_GUEST,
-                        'news' => TRUST_GUEST,
-                        'news_title' => TRUST_GUEST,
-                        'news_intro' => TRUST_GUEST,
-                        'news_detailed_link' => TRUST_GUEST,
-                        'news_datetime' => TRUST_GUEST,
+                        'news' => TRUST_GUEST,                        
                         'news_form' => TRUST_EDITOR
                 );
-        }
+        }       
 
-        function getStyleList()
-        {
-                return array(
-                        'Title' => 'NormalTitle',
-                        'Text' => 'NormalText',
-                        'Link' => 'NormalLink'
-                );
-        }
-
-        function doRender($mode, $id, $target)
-        {
-                $style = new Bloxx_Style();
-                $style_title = $this->getGlobalStyle('Title');
-                $style_text = $this->getGlobalStyle('Text');
-                $style_link = $this->getGlobalStyle('Link');
+        function doRender($mode, $id, $target, $mt)
+        {                
                 
                 $html_out = '';
 
@@ -89,97 +72,57 @@ class Bloxx_PhotoNews extends Bloxx_Module
                         $detailed_page = $this->getConfig('detailed_page');
 
                         $this->getRowByID($id);
-
-                        $html_out = $style->renderStyleHeader($style_title);
-                        $html_out .= $this->title;
-                        $html_out .= $style->renderStyleFooter($style_title);
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= getDateAndTimeString($this->publish_date);
-                        $html_out .= $style->renderStyleFooter($style_text);
-                        $html_out .= '<p>';
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= $this->renderImage('thumb', 'left');
-                        $html_out .= $this->renderAutoText($this->intro);
-                        $html_out .= $style->renderStyleFooter($style_text);
-                        $html_out .= '<p>';
-                        $html_out .= $style->renderStyleHeader($style_link);
-                        $html_out .= '<a href="index.php?id=' . $detailed_page . '&param=' . $id . '&target=news">';
+                        
+                        $html_out = $this->title;
+                        $mt->setItem('title', $html_out);
+                        
+                        $html_out = getDateAndTimeString($this->publish_date);
+                        $mt->setItem('datetime', $html_out);
+                                                
+                        if ($this->image != 'empty') {
+                        	
+                        	$html_out = $this->renderImage('thumb', 'left');                        
+                        	$mt->setItem('thumb', $html_out);                        	
+                        }
+                        
+                        $html_out = $this->renderAutoText($this->intro);
+                        $mt->setItem('intro', $html_out);
+                        
+                        $html_out = '<a href="index.php?id=' . $detailed_page . '&param=' . $id . '&target=news">';
                         $html_out .= $detailed_link;
                         $html_out .= '</a>';
-                        $html_out .= $style->renderStyleFooter($style_link);
-
-                        return $html_out;
+                        $mt->setItem('detailed_link', $html_out);
+                                                
+                        return $mt->renderView();
                 }
                 else if($mode == 'news'){
 
                         $this->getRowByID($id);
+                        
+                        $html_out = $this->title;
+                        $mt->setItem('title', $html_out);
+                                                
+                        $html_out = getDateAndTimeString($this->publish_date);
+                        $mt->setItem('datetime', $html_out);
 
-                        $html_out = $style->renderStyleHeader($style_title);
-                        $html_out .= $this->title;
-                        $html_out .= $style->renderStyleFooter($style_title);
-                        $html_out .= '<p>';
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= getDateAndTimeString($this->publish_date);
-                        $html_out .= $style->renderStyleFooter($style_text);
-                        $html_out .= '<p>';
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= $this->renderAutoText($this->intro);
-                        $html_out .= $style->renderStyleFooter($style_text);
-                        $html_out .= '<p>';
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= $this->renderAutoText($this->extended);
-                        $html_out .= $style->renderStyleFooter($style_text);
+						$html_out = $this->renderImage('image', 'left');
+                        $mt->setItem('image', $html_out);
+                        
+                        $html_out = $this->renderAutoText($this->intro);
+                        $mt->setItem('intro', $html_out);
+                        
+                        $html_out = $this->renderAutoText($this->extended);
+                        $mt->setItem('extended', $html_out);                        
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'news_form'){
 
                         $this->publish_date = time();
-                        $html_out .= $this->renderForm(-1, false);
+                        $html_out .= $this->renderForm(-1, false, $mt);
 
                         return $html_out;
-                }
-                else if($mode == 'news_title'){
-
-                        $this->getRowByID($id);
-
-                        $html_out .= $this->title;
-
-                        return $html_out;
-                }
-                else if($mode == 'news_datetime'){
-
-                        $this->getRowByID($id);
-
-                        $html_out .= getDateAndTimeString($this->publish_date);
-
-                        return $html_out;
-                }
-                else if($mode == 'news_intro'){
-
-                        $this->getRowByID($id);
-
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= $this->renderAutoText($this->intro);
-                        $html_out .= $style->renderStyleFooter($style_text);
-
-                        return $html_out;
-                }
-                else if($mode == 'news_detailed_link'){
-
-                        $detailed_link = $config->getConfig('detailed_link');
-                        $detailed_page = $config->getConfig('detailed_page');
-
-                        $this->getRowByID($id);
-
-                        $html_out .= $style->renderStyleHeader($style_link);
-                        $html_out .= '<a href="index.php?id=' . $detailed_page . '&param=' . $id . '&target=news">';
-                        $html_out .= $detailed_link;
-                        $html_out .= '</a>';
-                        $html_out .= $style->renderStyleFooter($style_link);
-
-                        return $html_out;
-                }
+                }                
         }
         
         function create()
@@ -220,6 +163,11 @@ class Bloxx_PhotoNews extends Bloxx_Module
                                         $this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_photo_height);
                                 }
                         }
+                }
+                else {
+                	
+                	$this->image = 'empty';
+                	$this->thumb = 'empty';
                 }
 
                 $new_id = Bloxx_Module::create();

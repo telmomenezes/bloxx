@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_poll.php,v 1.5 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_poll.php,v 1.6 2005-02-22 23:03:38 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -73,82 +73,53 @@ class Bloxx_Poll extends Bloxx_Module
                 );
         }
 
-        function getStyleList()
+        function doRender($mode, $id, $target, $mt)
         {
-                return array(
-                        'Title' => 'NormalTitle',
-                        'Text' => 'NormalText',
-                        'Link' => 'NormalLink',
-                        'SmallTitle' => 'NormalTitle',
-                        'SmallText' => 'NormalText',
-                        'SmallLink' => 'NormalLink',
-                        'Field' => 'SmallFormField',
-                        'Button' => 'SmallFormButton',
-                );
-        }
-
-        function doRender($mode, $id, $target)
-        {
-                $style = new Bloxx_Style();
-                $style_title = $this->getGlobalStyle('Title');
-                $style_text = $this->getGlobalStyle('Text');
-                $style_link = $this->getGlobalStyle('Link');
-                $style_smalltitle = $this->getGlobalStyle('SmallTitle');
-                $style_smalltext = $this->getGlobalStyle('SmallText');
-                $style_smalllink = $this->getGlobalStyle('SmallLink');
-                $style_button = $this->getGlobalStyle('Button');
-                $style_field = $this->getGlobalStyle('Field');
 
                 if($mode == 'vote'){
 
                         $this->getRowByID($id);
                         
                         $results_page = $this->getConfig('results_page');
-
-                        $html_out = $style->renderStyleHeader($style_smalltitle);
-                        $html_out .= $this->question;
-                        $html_out .= $style->renderStyleFooter($style_smalltitle);
-                        $html_out .= '<br><br>';
                         
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $html_out = $this->question;
+                        $mt->setItem('question', $html_out);
+                        
+                        include_once(CORE_DIR . 'bloxx_form.php');
                         $form = new Bloxx_Form();
                         $form->setParam($this->id);
-                        $html_out .= $form->renderHeader('poll', 'vote', $results_page);
+                        $html_out = $form->renderHeader('poll', 'vote', $results_page);                        
+                        $html_out .= $form->renderInput('poll_id', 'hidden', $this->id);
+                        $mt->setItem('header', $html_out);                                               
                         
-                        $html_out .= $form->renderInput('poll_id', 'hidden', $this->id, $style_field);
-                        
-                        $html_out .= '<table border="0" cellspacing="0" cellpadding="0">';
+                        $mt->startLoop('options');
                         
                         for($n = 1; $n <= 10; $n++){
 
+								$mt->nextLoopIteration();
+								
                                 $opt = 'option' . $n;
                                 
                                 if($this->$opt != ''){
-
-                                        $html_out .= '<tr><td valign="top">';
-                                        $html_out .= $form->renderInput('option', 'radio', $n, $style_field);
-                                        $html_out .= '</td><td>';
-
-                                        $html_out .= '<td valign="top">';
-                                        $html_out .= $style->renderStyleHeader($style_smalltext);
-                                        $html_out .= $this->$opt;
-                                        $html_out .= $style->renderStyleFooter($style_smalltext);
-                                        $html_out .= '</td></tr>';
+                                        
+                                        $html_out = $form->renderInput('option', 'radio', $n);
+                                        $mt->setLoopItem('radio', $html_out);                                        
+                                                                               
+                                        $html_out = $this->$opt;
+                                        $mt->setLoopItem('label', $html_out);                                        
                                 }
-                        }
+                        }                                               
                         
-                        $html_out .= '</table><br>';
+                        $html_out = $form->renderSubmitButton('Votar');
+                        $mt->setItem('button', $html_out);
                         
-                        $html_out .= $form->renderSubmitButton('Votar', $style_button);
-                        
-                        $html_out .= $form->renderFooter();
-                        
-                        $html_out .= '<br>';
-                        $html_out .= $style->renderStyleHeader($style_smalllink);
-                        $html_out .= build_link($results_page, 'results', $this->id, 'poll', LANG_POLL_VIEW_RESULTS, true);
-                        $html_out .= $style->renderStyleFooter($style_smalllink);
+                        $html_out = $form->renderFooter();
+                        $mt->setItem('footer', $html_out);
+                                                                        
+                        $html_out = build_link($results_page, 'results', $this->id, 'poll', LANG_POLL_VIEW_RESULTS, true);
+                        $mt->setItem('results', $html_out);                        
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'results'){
 
@@ -157,78 +128,60 @@ class Bloxx_Poll extends Bloxx_Module
                         $bar_color = $this->getConfig('bar_color');
                         
                         $total = $this->voteCount();
-
-                        $html_out = $style->renderStyleHeader($style_title);
-                        $html_out .= $this->question;
-                        $html_out .= $style->renderStyleFooter($style_title);
-                        $html_out .= '<br><br>';
                         
-                        $html_out .= '<table width="100%" border="0" cellspacing="0" cellpadding="0">';
+                        $html_out = $this->question;
+                        $mt->setItem('question', $html_out);
+                        $mt->setItem('total_votes', $total);                        
 
-                        for($n = 1; $n <= 10; $n++){
+						$mt->startLoop('results');
+						
+                        for ($n = 1; $n <= 10; $n++) {
+                        	
+                        		$mt->nextLoopIteration();
 
                                 $opt = 'option' . $n;
 
-                                if($this->$opt != ''){
+                                if ($this->$opt != '') {                                        
+                                        
+                                        $html_out = $this->$opt;
+                                        $mt->setLoopItem('option_label', $html_out);                                                                               
 
-                                        $html_out .= '<tr><td><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>';
-                                        $html_out .= '<td width="30%" align="right">';
-                                        $html_out .= $style->renderStyleHeader($style_text);
-                                        $html_out .= $this->$opt;
-                                        $html_out .= $style->renderStyleFooter($style_text);
-                                        $html_out .= '</td>';
-                                        
-                                        $html_out .= '<td width="20"><img src="res/system/transparent_pixel.gif" width="20" height="1"></td>';
-                                        
                                         $parcial = $this->voteCount($n);
                                         
-                                        if($total == 0){
+                                        if ($total == 0) {
                                         
                                                 $percent = 0;
                                         }
-                                        else{
+                                        else {
                                         
                                                 $percent = round(($parcial / $total) * 100);
                                         }
                                         
-                                        $barwidth = $percent * 3;
+                                        $html_out = '<img src="res/system/transparent_pixel.gif" width="' . $percent . '" height="1"></img>';
+                                        $mt->setLoopItem('option_hor_bar', $html_out);
                                         
-                                        $html_out .= '<td width="70%"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>';
-                                        $html_out .= '<td width="' . $barwidth . '" height="12" bgcolor="' . $bar_color . '">';
-                                        $html_out .= '<img src="res/system/transparent_pixel.gif" width="' . $barwidth . '" height="12">';
-                                        $html_out .= '</td>';
-
-                                        $html_out .= '<td width="100%">';
-                                        
-                                        $html_out .= $style->renderStyleHeader($style_text);
+                                        $html_out = '<img src="res/system/transparent_pixel.gif" height="' . $percent . '" width="1"></img>';
+                                        $mt->setLoopItem('option_ver_bar', $html_out);
+                                                                                
+                                        $mt->setLoopItem('option_count', $parcial);                                        
+                                                                                
                                         if($parcial == 1){
                                         
-                                                $html_out .= '&nbsp;' . $percent . '% ' . $parcial . ' ' . LANG_POLL_VOTE;
+                                                $mt->setLoopItem('option_votes', LANG_POLL_VOTE);
                                         }
                                         else{
                                         
-                                                $html_out .= '&nbsp;' . $percent . '% ' . $parcial . ' ' . LANG_POLL_VOTES;
-                                        }
-                                        $html_out .= $style->renderStyleFooter($style_text);
-                                        
-                                        $html_out .= '</td>';
-                                        
-                                        $html_out .= '</tr></table></td>';
-                                        
-                                        $html_out .= '</tr></table></td></tr>';
-                                        
-                                        $html_out .= '<tr><td>&nbsp;</td><td></td></tr>';
+                                                $mt->setLoopItem('option_votes', LANG_POLL_VOTES);
+                                        }                                        
                                 }
                         }
-                        
-                        $html_out .= '</tr></table>';
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'form'){
+                else if ($mode == 'form') {
 
                         $this->publish_date = time();
-                        $html_out .= $this->renderForm(-1, false);
+                        $html_out .= $this->renderForm(-1, false, $mt);
 
                         return $html_out;
                 }

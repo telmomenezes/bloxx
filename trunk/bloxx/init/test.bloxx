@@ -826,7 +826,7 @@
 	font-family:verdana, arial,helvetica,sans-serif;
 	font-weight:bold;
 	font-size:12;
-	color:#FFFFFF;
+	color:#202020;
 }
 
 .AdminFormField{
@@ -884,6 +884,24 @@
 }
 
 .AdminNavigator a{
+	font-family:verdana, arial, helvetica,sans-serif;
+	font-size:16;
+	color:#337321;
+}
+
+.AdminNavigator a:link{
+	font-family:verdana, arial, helvetica,sans-serif;
+	font-size:16;
+	color:#337321;
+}
+
+.AdminNavigator a:visited{
+	font-family:verdana, arial, helvetica,sans-serif;
+	font-size:16;
+	color:#337321;
+}
+
+.AdminNavigator a:hoover{
 	font-family:verdana, arial, helvetica,sans-serif;
 	font-size:16;
 	color:#337321;
@@ -1585,11 +1603,11 @@
 [workflow][_workflow]
 [title]Backend[_title]
 [header_html_LANG_PT]<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table width="100%"  border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+<table width="100%"  height="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+  <tr valign="top">
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        <td><table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
               <tr>
@@ -1608,14 +1626,16 @@
       <tr>
         <td>
 
-	   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+	   <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
           <tr valign="top">
             <td width="181">
 
+<span class="AdminText">
 <bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
 <br>
 <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
 <br>
+<span>
 
 <bloxx_discard module="admin" trust="ADMINISTRATOR">
 <bloxx_mod module="identity" view="loginbox" param=0></bloxx_mod>                               
@@ -1636,11 +1656,11 @@
 <bloxx_mod module="admin" view="navigator" param=0></bloxx_mod>                
 <br><br>[_header_html_LANG_PT]
 [header_html_LANG_EN]<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table width="100%"  border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+<table width="100%"  height="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+  <tr valign="top">
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        <td><table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
               <tr>
@@ -1659,14 +1679,16 @@
       <tr>
         <td>
 
-	   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+	   <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
           <tr valign="top">
             <td width="181">
 
+<span class="AdminText">
 <bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
 <br>
 <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
 <br>
+<span>
 
 <bloxx_discard module="admin" trust="ADMINISTRATOR">
 <bloxx_mod module="identity" view="loginbox" param=0></bloxx_mod>                               

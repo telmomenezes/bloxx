@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_admin.php,v 1.7 2005-02-18 17:34:55 tmenezes Exp $
+// $Id: bloxx_admin.php,v 1.8 2005-02-22 23:03:22 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -508,7 +508,7 @@ class Bloxx_Admin extends Bloxx_Module
                 else if($mode == 'about'){
 
                         $html_out = 'Bloxx core version ' . BLOXX_CORE_VERSION . '<br><br>';
-                        $html_out .= 'Copyright 2002 - 2005 Telmo Menezes. All rights reserved.<br>';
+                        $html_out .= 'Copyright &copy; 2002 - 2005 The Bloxx Team. All rights reserved.<br>';
                         $html_out .= '<br>';
                         $html_out .= 'Bloxx is free software; you can redistribute it and/or modify<br>';
                         $html_out .= 'it under the terms of the GNU General Public License as published by<br>';

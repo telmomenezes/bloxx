@@ -19,12 +19,11 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-//
-// $Id: bloxx_modulelogger.php,v 1.1 2005-02-24 01:35:30 secretdraft Exp $
+// $Id: bloxx_modulelogger.php,v 1.2 2005-02-24 01:43:09 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
-// based on syslog
+// Priority, based on syslog
 define('LOG_EMERG',   0);
 define('LOG_ALERT',   1);
 define('LOG_CRIT',    2);
@@ -35,10 +34,10 @@ define('LOG_INFO',    6);
 define('LOG_DEBUG',   7);
      
 /**
- * Bloxx_ModLog  Implements log system.
+ * Bloxx_ModuleLogger Implements log system.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_modulelogger.php,v 1.1 2005-02-24 01:35:30 secretdraft Exp $
+ * @version   $Id: bloxx_modulelogger.php,v 1.2 2005-02-24 01:43:09 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_page.php,v 1.6 2005-02-26 20:26:03 tmenezes Exp $
+// $Id: bloxx_page.php,v 1.7 2005-03-04 20:49:37 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -71,9 +71,7 @@ class Bloxx_Page extends Bloxx_Module
                         return $this->content;
                 }
                 
-                $html_part_1 = '
-                <html>
-                <head>';
+                $html_part_1 = '<html><head>';
                 
                 include_module_once('config');
                 $config = new Bloxx_Config();
@@ -82,7 +80,7 @@ class Bloxx_Page extends Bloxx_Module
                 $config = new Bloxx_Config();
                 $page_title_separator = $config->getConfig('page_title_separator');
                 
-                $html_part_1 .= '<title>' . $site_name . '' . $page_title_separator . '' . $this->title . '</title>';
+                $html_part_1 .= '<title>' . $site_name . $page_title_separator . $this->title . '</title>';
                 
                 $javascript_part = '';
                 

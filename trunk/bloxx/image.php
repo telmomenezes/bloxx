@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: image.php,v 1.6 2005-02-24 03:44:02 secretdraft Exp $
+// $Id: image.php,v 1.7 2005-03-04 20:49:37 tmenezes Exp $
 
 require_once('defines.php');
 require_once('functions.php');
@@ -29,7 +29,7 @@ $id = $_GET['id'];
 $field = $_GET['field'];
 
 include_module_once($mod);
-$mod = "Bloxx_" . $mod;
+$mod = 'Bloxx_' . $mod;
 $mod_inst = new $mod();
 
 $mod_inst->clearWhereCondition();

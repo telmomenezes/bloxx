@@ -20,7 +20,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_module.php,v 1.11 2005-02-26 20:38:04 secretdraft Exp $
+// $Id: bloxx_module.php,v 1.12 2005-03-04 20:49:37 tmenezes Exp $
 
 require_once 'defines.php';
 require_once CORE_DIR.'bloxx_dbobject.php';
@@ -29,7 +29,7 @@ require_once CORE_DIR.'bloxx_dbobject.php';
   * This is the class from where all Bloxx Module classes are derived from.
   *
   * @package   bloxx_core
-  * @version   $Id: bloxx_module.php,v 1.11 2005-02-26 20:38:04 secretdraft Exp $
+  * @version   $Id: bloxx_module.php,v 1.12 2005-03-04 20:49:37 tmenezes Exp $
   * @category  Core
   * @copyright Copyright &copy; 2002-2005 The Bloxx Team
   * @license   The GNU General Public License, Version 2
@@ -158,12 +158,15 @@ class Bloxx_Module extends Bloxx_DBObject
     function renderJavaScript($mode, $id)
     {
 
-        $js_out = '';
-        $js_file = JAVASCRIPT_DIR.'bloxx_'.$this->name;
-
-        $js_out = '<script language="JavaScript" type="text/javascript" src="'.$js_file.'"></script>';
-
-        $js_out .= $this->doRenderJavaScript($mode, $id);
+        $js_out = '';        
+        
+        if (isset($this->java_script) && ($this->java_script == true))
+        {
+        	
+        	$js_file = JAVASCRIPT_DIR . 'bloxx_' . $this->name;
+        	$js_out = '<script language="JavaScript" type="text/javascript" src="' . $js_file . '"></script>';
+        	$js_out .= $this->doRenderJavaScript($mode, $id);
+        }
 
         return $js_out;
     }

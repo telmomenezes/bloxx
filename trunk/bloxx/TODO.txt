@@ -36,6 +36,7 @@ Core Functionalities
 - Check index.php for possibilities of transversal directory attack;
 - Correct <bloxx_item> or moduletemplates behaviour that ignores
 everything that comes after a bad/wrong item.
+- Solve security issues with image.php.
 
 Documentation
 

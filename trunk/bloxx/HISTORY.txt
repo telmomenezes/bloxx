@@ -3,13 +3,16 @@ BLOXX CHANGELOG
 Version 0.6 -
 =========================
 
-- Bloxx_News, Bloxx_PhotoNews, Bloxx_Poll updated to use ModuleTemplate;
+- Bloxx_News, Bloxx_PhotoNews, Bloxx_Poll, Bloxx_PhotoGallery, BloxxPhoto
+ updated to use ModuleTemplate;
 - Coding standards document created;
 - Code cleanup to support the coding standards started;
 - Installation/database configuration script;
 - Configurable timeout of login cookies;
 - Log system;
 - Bug correction: use_init_file no longer ignored;
+- CSS style now generated to a separate bloxx.css file;
+- JavaScript file inclusion now depends on java_script module property;
 - 
 
 Version 0.5 - 17/Fev/2005

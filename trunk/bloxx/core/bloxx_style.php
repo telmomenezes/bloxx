@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_style.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_style.php,v 1.3 2005-03-04 20:49:37 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -47,19 +47,20 @@ class Bloxx_Style extends Bloxx_Module
 
         }
         
-        function renderStyleSheet()
+        function generateStyleSheetFile()
         {
                 $html_out =  '
                 <style TYPE="text/css">
                 <!--
                 ';
                 
-                $this->clearWhereCondition();
-                $this->runSelect();
+                $style = new Bloxx_Style();
+                $style->clearWhereCondition();
+                $style->runSelect();
 
-                while($this->nextRow()) {
+                while($style->nextRow()) {
 
-                        $html_out .= $this->css;
+                        $html_out .= $style->css;
                 }
                 
                 $html_out .=  '
@@ -67,9 +68,33 @@ class Bloxx_Style extends Bloxx_Module
                 </style>
                 ';
                 
-                return $html_out;
+                $css_file = fopen('bloxx.css', 'w');			
+				fwrite($css_file, $html_out);
+				fclose($css_file);
         }
         
+        function renderStyleSheet()
+        {
+        	$html_out = '<link rel="stylesheet" href="bloxx.css" type="text/css">';
+        	
+        	return $html_out;        	
+        }
+        
+        function create()
+        {
+
+				Bloxx_Module::create();
+                $this->generateStyleSheetFile();                
+        }
+        
+        function update()
+        {
+
+				Bloxx_Module::update();
+                $this->generateStyleSheetFile();                
+        }
+        
+        //deprecated
         function renderStyleHeader($style_name)
         {
                 $html_out =  '<span class=' . $style_name . '>';
@@ -77,6 +102,7 @@ class Bloxx_Style extends Bloxx_Module
                 return $html_out;
         }
         
+        //deprecated
         function renderStyleFooter($style_name)
         {
                 $html_out = '</span>';

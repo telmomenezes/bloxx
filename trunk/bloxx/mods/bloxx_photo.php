@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photo.php,v 1.6 2005-02-24 04:51:29 secretdraft Exp $
+// $Id: bloxx_photo.php,v 1.7 2005-03-04 20:49:37 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -66,16 +66,13 @@ class Bloxx_Photo extends Bloxx_Module
                 );
         }
 
-        function doRender($mode, $id, $target)
-        {
-                $style = new Bloxx_Style();
-                $style_title = $this->getGlobalStyle('Title');
-
+        function doRender($mode, $id, $target, $mt)
+        {                
                 if($mode == 'form'){
 
                         unset($_GET['return_id']);
                         unset($_GET['id']);
-                        $html_out = $this->renderForm(-1, false);
+                        $html_out = $this->renderForm(-1, false, $mt);
 
                         return $html_out;
                 }
@@ -83,75 +80,45 @@ class Bloxx_Photo extends Bloxx_Module
                         
                         $this->getRowByID($id);
                         $html_out = $this->renderImage('image');
+                        $mt->setItem('image', $html_out);
                         
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'title'){
 
                         $this->getRowByID($id);
                         $html_out = $this->title;
-
-                        return $html_out;
+						$mt->setItem('title', $html_out);
+                        
+                        return $mt->renderView();
                 }
                 else if($mode == 'thumbnail'){
 
                         $full_image_page = $this->getConfig('full_photo_page');
 
                         $this->getRowByID($id);
-                        
-                        $html_out = '
-                        <table cellpadding=0 cellspacing=0 width=90 height=90">
-                                <tr>
-                                        <td>
-                                                <img src="res/system/transparent_pixel.gif" width=10 height=10></img>
-                                        </td>
-                                        <td>
-                                                <img src="res/system/transparent_pixel.gif" width=80 height=1></img>
-                                        </td>
-                                        <td>
-                                                <img src="res/system/transparent_pixel.gif" width=10 height=10></img>
-                                        </td>
-                                </tr>
-                                <tr valign=center align=center>
-                                        <td><img src="res/system/transparent_pixel.gif" width=1 height=80></img></td>
-                                        <td valign=center align=center>
-                        ';
 
-                        $html_out .= '<a href="index.php?id=' . $full_image_page . '&param=' . $id . '">';
+                        $html_out = '<a href="index.php?id=' . $full_image_page . '&param=' . $id . '">';
                         $html_out .= $this->renderImage('thumb');
+                        $html_out .= '</a>';
                         
-                        $html_out .= '
-                                        </td>
-                                        <td></td>
-                                </tr>
-                                <tr>
-                                        <td width=10>
-                                                <img src="res/system/transparent_pixel.gif" width=10 height=10></img>
-                                        </td>
-                                        <td align="center">';
-
-                        $html_out .= $style->renderStyleHeader($style_title);
-                        $html_out .= '<a href="index.php?id=' . $full_image_page . '&param=' . $id . '">';
+                        $mt->setItem('thumb', $html_out);                        
+                        
+                        $html_out = '<a href="index.php?id=' . $full_image_page . '&param=' . $id . '">';
                         $html_out .= $this->title;
                         $html_out .= '</a>';
-                        $html_out .= $style->renderStyleFooter($style_title);
-                                        
-                        $html_out .= '
-                                        </td>
-                                        <td>
-                                                <img src="res/system/transparent_pixel.gif" width=10 height=10></img>
-                                        <td>
-                                </tr>
-                        </table>
-                        ';
+                        
+                        $mt->setItem('title', $html_out);
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
         }
         
         function create()
         {
                 if(isset($_FILES['image']['tmp_name'])){
+
+						$thumb_side = $this->getConfig('thumb_side');
 
                         include_once(CORE_DIR . 'bloxx_image_utils.php');
                         
@@ -160,11 +127,11 @@ class Bloxx_Photo extends Bloxx_Module
                         
                         if($or_width > $or_height){
                         
-                                $this->thumb = scaleJpegWidth($_FILES['image']['tmp_name'], 50);
+                                $this->thumb = scaleJpegWidth($_FILES['image']['tmp_name'], $thumb_side);
                         }
                         else{
                         
-                                $this->thumb = scaleJpegHeight($_FILES['image']['tmp_name'], 50);
+                                $this->thumb = scaleJpegHeight($_FILES['image']['tmp_name'], $thumb_side);
                         }
                 }
 

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_menubar.php,v 1.3 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_menubar.php,v 1.4 2005-03-04 20:49:37 tmenezes Exp $
 
 require_once 'defines.php';
 
@@ -54,8 +54,8 @@ class Bloxx_MenuBar extends Bloxx_Module
                 
 
                 $this->use_init_file = true;
-
                 $this->no_private = true;
+                $this->java_script = true;
 
 
 

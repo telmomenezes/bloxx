@@ -19,15 +19,16 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: install.php,v 1.6 2005-02-21 15:58:56 secretdraft Exp $
+// $Id: install.php,v 1.7 2005-02-24 01:35:29 secretdraft Exp $
 
-function bloxxInstall() {
-
+function bloxxInstall() 
+{
 	require_once('defines.php');
 	require_once('functions.php');
 	include_once(CORE_DIR.'bloxx_page.php');
 	include_once(CORE_DIR.'bloxx_modulemanager.php');
 	include_once(CORE_DIR.'bloxx_config.php');
+	include_once(CORE_DIR.'bloxx_modulelogger.php');
 	include_once(CORE_DIR.'bloxx_session.php');
 	include_once(CORE_DIR.'bloxx_identity.php');
 	include_once(CORE_DIR.'bloxx_role.php');
@@ -61,6 +62,8 @@ function bloxxInstall() {
 	$user->install();
 	$admin = new Bloxx_Admin();
 	$admin->install();
+	$logger = new Bloxx_ModuleLogger();
+	$logger->install();
 	$session = new Bloxx_Session();
 	$session->install();
 	$style = new Bloxx_Style();
@@ -90,6 +93,7 @@ function bloxxInstall() {
 	$page->afterInstall();
 	$user->afterInstall();
 	$admin->afterInstall();
+	$logger->afterInstall();
 	$session->afterInstall();
 	$style->afterInstall();
 	$stylelink->afterInstall();

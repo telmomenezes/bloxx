@@ -19,28 +19,31 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_session.php,v 1.6 2005-02-23 04:12:40 secretdraft Exp $
+// $Id: bloxx_session.php,v 1.7 2005-02-24 01:35:30 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
+require_once(CORE_DIR . 'bloxx_modulelogger.php');
 
 /**
  * Bloxx_Session Handles everything about user sessions.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_session.php,v 1.6 2005-02-23 04:12:40 secretdraft Exp $
+ * @version   $Id: bloxx_session.php,v 1.7 2005-02-24 01:35:30 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
  * @author    Silas Francisco <draft@dog.kicks-ass.net>
  */
-class Bloxx_Session extends Bloxx_Module {
-        
+class Bloxx_Session extends Bloxx_Module 
+{        
         function Bloxx_Session() 
         {
                 $this->name = 'session';
                 $this->module_version = 1;
                 $this->use_init_file = false;
                 $this->no_private = true;
+                
+                $this->logger = new Bloxx_ModuleLogger();
                 
                 $this->Bloxx_Module();
         }
@@ -72,21 +75,27 @@ class Bloxx_Session extends Bloxx_Module {
                 $this->session = md5(uniqid(mt_rand(), true));
                 
                 $sessionTime = $this->getConfig('sessionTime');
-                if ($sessionTime == null) {
-                	
+                if ($sessionTime == null) 
+                {                
                 	$this->timelimit = time() + 2592000;
                 }
-                else {
-                	
+                else 
+                {                	
                 	$this->timelimit = time() + ($sessionTime * 60);
                 }
                 
                 $this->addr = $_SERVER['REMOTE_ADDR'];
                 
-                if ($this->insertRow()) {
-                
+                if ($this->insertRow()) 
+                {                
                         $this->createCookie('login', $this->login, $this->timelimit);
                         $this->createCookie('session', $this->session, $this->timelimit);
+                }
+
+                if ($this->getConfig('logUserLog') != null)
+                {
+                	$this->logger->modLog(LOG_INFO, $login . ' has logged in. ['
+                		. $_SERVER['REMOTE_ADDR'] . ']');
                 }
         }
         
@@ -100,18 +109,24 @@ class Bloxx_Session extends Bloxx_Module {
 		 */        
         function removeSession() 
         {                
-                if (isset($_COOKIE['login']) && isset($_COOKIE['session'])) {
-                                        
+                if (isset($_COOKIE['login']) && isset($_COOKIE['session'])) 
+                {                                        
                         $this->clearWhereCondition();
                         $this->insertWhereCondition('login', '=', $_COOKIE['login']);
                         $this->insertWhereCondition('session', '=', $_COOKIE['session']);
                         $this->runSelect();
                 
-                        if ($this->nextRow()) {
-                        
+                        if ($this->nextRow()) 
+                        {                        
                                 $this->deleteRowByID($this->id);
+                                
+                                if ($this->getConfig('logUserLog') != null)
+                				{
+                					$this->logger->modLog(LOG_INFO, $_COOKIE['login'] . ' has logged out. ['
+                						. $_SERVER['REMOTE_ADDR'] . ']');
+                				}
                         }
-                
+                		
                         $this->removeCookie('login');
                         $this->removeCookie('session');
                 }
@@ -129,34 +144,48 @@ class Bloxx_Session extends Bloxx_Module {
 		 */        
         function exists() 
         {        
-                if (isset($_COOKIE['login']) && isset($_COOKIE['session'])) {
-                        
+                if (isset($_COOKIE['login']) && isset($_COOKIE['session'])) 
+                {                        
                         $this->clearWhereCondition();
                         $this->insertWhereCondition('login', '=', $_COOKIE['login']);
                         $this->insertWhereCondition('session', '=', $_COOKIE['session']);
                         $this->runSelect();
 
-                        if ($this->nextRow()) {
-
-                                if ($this->addr != $_SERVER['REMOTE_ADDR']) {
-                                        
+                        if ($this->nextRow()) 
+                        {
+                                if ($this->addr != $_SERVER['REMOTE_ADDR']) 
+                                {                                        
+                                        if ($this->getConfig('logBadSession') != null)
+                                        {
+                                        	$this->logger->modLog(LOG_CRIT, 
+                                        		$_SERVER['REMOTE_ADDR'] . ' Attempted to hijack ' 
+                                        		. $_COOKIE['login'] . ' session.');
+                                        }
+                                        		
                                         // blacklistIP();
                                         return false;                                        
                                 } 
-                                else {
-                                        
-                                        if (time() < $this->timelimit) {
-                                                
+                                else
+                                {                                        
+                                        if (time() < $this->timelimit) 
+                                        {                                               
                                                 return true;                                                
                                         } 
-                                        else {
-                                                
+                                        else 
+                                        {                                                
                                                 $this->removeSession();
                                                 return false;
                                         }
                                 }                                
                         } 
-                        else {
+                        else 
+                        {                              
+                                if ($this->getConfig('logBadSession') != null)
+                                {
+                                	$this->logger->modLog(LOG_WARNING,
+                                		$_SERVER['REMOTE_ADDR'] . ' Attempted to identify as '
+                                		. $_COOKIE['login'] . ' but session doesnt exist.');
+                                }
                                 
                                 $this->removeCookie('login');
                                 $this->removeCookie('session');
@@ -181,10 +210,10 @@ class Bloxx_Session extends Bloxx_Module {
         	$this->insertWhereCondition('login', '=', $login);
         	$this->runSelect();
         	
-        	while ($this->nextRow()) {
-
-        		if (time() > $this->timelimit) {
-        			
+        	while ($this->nextRow()) 
+        	{
+        		if (time() > $this->timelimit) 
+        		{        			
         			$this->deleteRowByID($this->id);
         		}
         	}

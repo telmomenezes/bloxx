@@ -8,6 +8,8 @@ Version 0.6 -
 - Code cleanup to support the coding standards started;
 - Installation/database configuration script;
 - Configurable timeout of login cookies;
+- Log system;
+-
 
 Version 0.5 - 17/Fev/2005
 =========================

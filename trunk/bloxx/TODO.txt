@@ -33,7 +33,6 @@ Core Functionalities
 - Lost email recovery;
 - Check if all user input are being filtered;
 - Review identity because the use of deprecated hidden hash var;
-- Log system;
 
 Documentation
 

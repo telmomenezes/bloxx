@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_comment.php,v 1.6 2005-02-24 04:51:29 secretdraft Exp $
+// $Id: bloxx_comment.php,v 1.7 2005-03-07 14:18:22 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -62,19 +62,6 @@ class Bloxx_Comment extends Bloxx_Module
                         'new_comment' => TRUST_GUEST,
                         'comments_count' => TRUST_GUEST,
                         'count' => TRUST_GUEST
-                );
-        }
-        
-        function getStyleList()
-        {
-                return array(
-                        'Title' => 'NormalTitle',
-                        'Text' => 'NormalText',
-                        'Link' => 'NormalLink',
-                        'Info' => 'NormalText',
-                        'HeaderBlock' => 'CommentHeader',
-                        'BodyBlock' => 'CommentBlock',
-                        'ContentBlock' => 'CommentContent'
                 );
         }
         
@@ -139,43 +126,38 @@ class Bloxx_Comment extends Bloxx_Module
                 return $count;
         }
         
-        function doRender($mode, $id, $target)
+        function doRender($mode, $id, $target, $mt)
         {
-                $style = new Bloxx_Style();
-                $style_title = $this->getGlobalStyle('Title');
-                $style_text = $this->getGlobalStyle('Text');
-                $style_link = $this->getGlobalStyle('Link');
-                $style_info = $this->getGlobalStyle('Info');
-                $style_header = $this->getGlobalStyle('HeaderBlock');
-                $style_content = $this->getGlobalStyle('ContentBlock');
                 
-                if($mode == 'comment_link'){
+                if ($mode == 'comment_link')
+                {
                 
                         $new_comment_page = $this->getConfig('new_comment_page');
-
-                        $html_out = $style->renderStyleHeader($style_link);
-                        $html_out .= build_link($new_comment_page, 'new_comment', $id, $target, LANG_COMMENT_COMMENT, true);
-                        $html_out .= $style->renderStyleFooter($style_link);
+                        
+                        $html_out = build_link($new_comment_page, 'new_comment', $id, $target, LANG_COMMENT_COMMENT, true);
+                        $mt->setItem('link', $html_out);                      
                   
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'read_comments_link'){
+                else if ($mode == 'read_comments_link')
+                {
 
                         $read_comments_page = $this->getConfig('read_comments_page');
 
-                        $html_out = $style->renderStyleHeader($style_link);
-                        $html_out .= build_link($read_comments_page, 'read_comments', $id, $target, LANG_COMMENT_READ_COMMENT, false);
-                        $html_out .= $style->renderStyleFooter($style_link);
+                        $html_out = build_link($read_comments_page, 'read_comments', $id, $target, LANG_COMMENT_READ_COMMENT, false);
+                        $mt->setItem('link', $html_out);
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'new_comment'){
+                else if ($mode == 'new_comment')
+                {
                 
                         $tname = 'Bloxx_'.$target;
                         include_module_once($target);
                         $target_module = new $tname();
 
                         $html_out = $target_module->render($target_module->default_mode, $id);
+                        $mt->setItem('target_view', $html_out);
                 
                         $this->parent_id = $id;
                         $this->parent_type = $target;
@@ -184,34 +166,33 @@ class Bloxx_Comment extends Bloxx_Module
                         $ident = new Bloxx_Identity();
                         $this->user_id = $ident->id();
                         
-                        $html_out .= $this->renderForm(-1, false);
+                        $this->renderForm(-1, false, $mt);
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'read_comments'){
+                else if ($mode == 'read_comments')
+                {
 
                         $tname = 'Bloxx_'.$target;
                         include_module_once($target);
                         $target_module = new $tname();
                         
                         $html_out = $target_module->render($target_module->default_mode, $id);
+                        $mt->setItem('target_view', $html_out);
 
-                        $html_out .= '<br>';
-                        $html_out .= $this->render('comment_link', $id, $target_module->name);
+                        $html_out = $this->render('comment_link', $id, $target_module->name);
+                        $mt->setItem('comment_link', $html_out);
                         
-                        $html_out .= '<br><br><br>';
-                        $html_out .= $this->renderCommentsTree($id, $target, 0);
-                        $html_out .= '<br><br>';
+                        $this->renderCommentsTree($id, $target, 0, $mt);
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'comments_count'){
+                else if ($mode == 'comments_count')
+                {
 
                         $id_in = $id;
 
                         $count = $this->countComments($id, $target);
-                        
-                        $html_out = '';
                         
                         if($count > 0){
                         
@@ -219,31 +200,32 @@ class Bloxx_Comment extends Bloxx_Module
 
                                 if($count == 1){
                                 
-                                        $text = '(' . $count . ' ' . LANG_COMMENT_ONE_COMMENT . ')';
+                                        $text = $count . ' ' . LANG_COMMENT_ONE_COMMENT;
                                 }
                                 else{
                                 
-                                        $text = '(' . $count . ' ' . LANG_COMMENT_COMMENTS . ')';
+                                        $text = $count . ' ' . LANG_COMMENT_COMMENTS;
                                 }
-
-                                $html_out .= $style->renderStyleHeader($style_link);
-                                $html_out .= build_link($read_comments_page, 'read_comments', $id_in, $target, $text, false);
-                                $html_out .= $style->renderStyleFooter($style_link);
+                                
+                                $html_out = build_link($read_comments_page, 'read_comments', $id_in, $target, $text, false);
+                        		$mt->setItem('count_link', $html_out);
                         }
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'count'){
+                else if ($mode == 'count')
+                {
 
                         $id_in = $id;
 
                         $count = $this->countComments($id, $target);
 
-                        $html_out = $count;
+                        $mt->setItem('count', $count);
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'comment'){
+                else if ($mode == 'comment')
+                {
 
                         include_module_once('identity');
                         
@@ -256,27 +238,22 @@ class Bloxx_Comment extends Bloxx_Module
                         
                         $ident->getRowByID($this->user_id);
 
-                        $comment_header_color = $this->getConfig('comment_header_color');
+                        $html_out = $this->subject;
+                        $mt->setItem('subject', $html_out);
+                        
+                        $html_out = LANG_COMMENT_BY . $ident->username;
+                        $mt->setItem('comment_by', $html_out);
+                        
+                        $html_out = getDateAndTimeString($this->publish_date);
+                        $mt->setItem('date', $html_out);
+                        
+                        $html_out = $this->renderAutoText($this->content);
+                        $mt->setItem('content', $html_out);                        
 
-                        $html_out = $style->renderStyleHeader($style_header);
-                        $html_out .= $style->renderStyleHeader($style_title);
-                        $html_out .= $this->subject;
-                        $html_out .= $style->renderStyleFooter($style_title);
-                        $html_out .= '<br>';
-                        $html_out .= $style->renderStyleHeader($style_info);
-                        $html_out .= LANG_COMMENT_BY . $ident->username;
-                        $html_out .= ', ' . getDateAndTimeString($this->publish_date);
-                        $html_out .= $style->renderStyleFooter($style_info);
-                        $html_out .= $style->renderStyleFooter($style_header);
-                        $html_out .= $style->renderStyleHeader($style_content);
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= $this->renderAutoText($this->content);
-                        $html_out .= $style->renderStyleFooter($style_text);
-                        $html_out .= $style->renderStyleFooter($style_content);
-
-                        return $html_out;
+                        return $mt->renderView();
                 }
-                else if($mode == 'comment_header'){
+                else if ($mode == 'comment_header')
+                {
                 
                         include_module_once('identity');
 
@@ -290,18 +267,17 @@ class Bloxx_Comment extends Bloxx_Module
                         $ident->getRowByID($this->user_id);
                         
                         $read_comments_page = $config->getConfig('read_comments_page');
+                        
+                        $html_out = build_link($read_comments_page, 'read_comments', $id, $target, $this->subject, false);
+                        $mt->renderItem('read_comments_link', $html_out);
+                        
+                        $html_out = LANG_COMMENT_BY . $ident->username;
+                        $mt->renderItem('comment_by', $html_out);
+                        
+                        $html_out = getDateAndTimeString($this->publish_date);
+                        $mt->renderItem('date', $html_out);                        
 
-                        $html_out .= '<ul><li>';
-                        $html_out .= $style->renderStyleHeader($style_link);
-                        $html_out .= build_link($read_comments_page, 'read_comments', $id, $target, $this->subject, false);
-                        $html_out .= $style->renderStyleFooter($style_link);
-                        $html_out .= $style->renderStyleHeader($style_text);
-                        $html_out .= '&nbsp;' . LANG_COMMENT_BY . $ident->username;
-                        $html_out .= ', ' . getDateAndTimeString($this->publish_date);
-                        $html_out .= $style->renderStyleFooter($style_text);
-                        $html_out .= '</li></ul>';
-
-                        return $html_out;
+                        return $mt->renderView();
                 }
         }
         

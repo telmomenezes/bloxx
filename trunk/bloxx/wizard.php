@@ -19,12 +19,12 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: wizard.php,v 1.6 2005-02-25 00:44:06 secretdraft Exp $
+// $Id: wizard.php,v 1.7 2005-03-07 14:18:22 tmenezes Exp $
  
 require_once 'DB.php';
 require_once 'PEAR.php';
 
-$bloxxCoreVersion = '0.6';
+$bloxxCoreVersion = '0.7';
 
 if (!file_exists('defines.php')) {
 

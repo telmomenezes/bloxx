@@ -1,6 +1,11 @@
 BLOXX CHANGELOG
 
-Version 0.6 -
+Version 0.7 - 
+=========================
+
+- 
+
+Version 0.6 - 6/Mar/2005
 =========================
 
 - Bloxx_News, Bloxx_PhotoNews, Bloxx_Poll, Bloxx_PhotoGallery, BloxxPhoto
@@ -13,7 +18,6 @@ Version 0.6 -
 - Bug correction: use_init_file no longer ignored;
 - CSS style now generated to a separate bloxx.css file;
 - JavaScript file inclusion now depends on java_script module property;
-- 
 
 Version 0.5 - 17/Fev/2005
 =========================

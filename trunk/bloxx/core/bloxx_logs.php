@@ -19,65 +19,64 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_modulelogger.php,v 1.2 2005-02-24 01:43:09 secretdraft Exp $
+// $Id: bloxx_logs.php,v 1.1 2005-02-25 03:29:14 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
-// Priority, based on syslog
-define('LOG_EMERG',   0);
-define('LOG_ALERT',   1);
-define('LOG_CRIT',    2);
-define('LOG_ERR',     3);
-define('LOG_WARNING', 4);
-define('LOG_NOTICE',  5);
-define('LOG_INFO',    6);
-define('LOG_DEBUG',   7);
-     
 /**
- * Bloxx_ModuleLogger Implements log system.
+ * Bloxx_Logs Implements log system.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_modulelogger.php,v 1.2 2005-02-24 01:43:09 secretdraft Exp $
+ * @version   $Id: bloxx_logs.php,v 1.1 2005-02-25 03:29:14 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
  * @author    Silas Francisco <draft@dog.kicks-ass.net>
  */
-class Bloxx_ModuleLogger extends Bloxx_Module
+class Bloxx_Logs extends Bloxx_Module
 {
-		function Bloxx_ModuleLogger()
+		function Bloxx_Logs($ownerModuleId = '-1')
 		{
-			$this->name = 'modulelogger';
+			$this->name = 'logs';
 			$this->module_version = 1;
 			$this->use_init_file = false;
 			$this->no_private = true;
 			
+			$this->_ownerModuleId = $ownerModuleId;
+			
 			$this->Bloxx_Module();	
 		}
-		
+	
        function getTableDefinition() 
         {        
                 return array(
-                        'timestamp' => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
-                        'priority'  => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
-                        'message'   => array('TYPE' => 'STRING', 'SIZE' => 256, 'NOTNULL' => true));
+                		'ownerModuleId' => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
+                        'addr'          => array('TYPE' => 'STRING', 'SIZE' => 15, 'NOTNULL' => true),
+                        'timestamp'     => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
+                        'priority'      => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
+                        'message'       => array('TYPE' => 'STRING', 'SIZE' => 256, 'NOTNULL' => true));
         }
         		
 		/**
-		 * modLog Logs a message.
+		 * writeLog Logs a message.
 		 *
-		 * @param int    $priority Message priority.
+		 * @param int    $priority Message priority (syslog constants).
 		 * @param string $message  Message to log.
 		 *
 		 * @access public
 		 */
-		function modLog($priority, $message)
+		function writeLog($priority, $message)
 		{
-			$this->timestamp = time();
-			$this->priority  = $priority;
-			$this->message   = $message;
+			if ($priority <= $this->getConfig('logLevel'))
+			{
+				$this->ownerModuleId = $this->_ownerModuleId;	
+				$this->addr      = $_SERVER['REMOTE_ADDR'];
+				$this->timestamp = time();
+				$this->priority  = $priority;
+				$this->message   = $message;
 			
-			$this->insertRow();
+				$this->insertRow();
+			}
 		}
 }
 ?>

@@ -19,16 +19,15 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_session.php,v 1.8 2005-02-24 04:51:30 secretdraft Exp $
+// $Id: bloxx_session.php,v 1.9 2005-02-25 03:29:14 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
-require_once(CORE_DIR . 'bloxx_modulelogger.php');
 
 /**
  * Bloxx_Session Handles everything about user sessions.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_session.php,v 1.8 2005-02-24 04:51:30 secretdraft Exp $
+ * @version   $Id: bloxx_session.php,v 1.9 2005-02-25 03:29:14 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -42,8 +41,6 @@ class Bloxx_Session extends Bloxx_Module
                 $this->module_version = 1;
                 $this->use_init_file = false;
                 $this->no_private = true;
-                
-                $this->logger = new Bloxx_ModuleLogger();
                 
                 $this->Bloxx_Module();
         }
@@ -92,11 +89,7 @@ class Bloxx_Session extends Bloxx_Module
                         $this->createCookie('session', $this->session, $this->timelimit);
                 }
 
-                if ($this->getConfig('logUserLog') != null)
-                {
-                	$this->logger->modLog(LOG_INFO, $login . ' has logged in. ['
-                		. $_SERVER['REMOTE_ADDR'] . ']');
-                }
+                $this->writeLog(LOG_INFO, $login . ' has logged in.');
         }
         
 		/**
@@ -119,12 +112,8 @@ class Bloxx_Session extends Bloxx_Module
                         if ($this->nextRow()) 
                         {                        
                                 $this->deleteRowByID($this->id);
-                                
-                                if ($this->getConfig('logUserLog') != null)
-                				{
-                					$this->logger->modLog(LOG_INFO, $_COOKIE['login'] . ' has logged out. ['
-                						. $_SERVER['REMOTE_ADDR'] . ']');
-                				}
+
+                				$this->writeLog(LOG_INFO, $_COOKIE['login'] . ' has logged out.');
                         }
                 		
                         $this->removeCookie('login');
@@ -155,12 +144,8 @@ class Bloxx_Session extends Bloxx_Module
                         {
                                 if ($this->addr != $_SERVER['REMOTE_ADDR']) 
                                 {                                        
-                                        if ($this->getConfig('logBadSession') != null)
-                                        {
-                                        	$this->logger->modLog(LOG_CRIT, 
-                                        		$_SERVER['REMOTE_ADDR'] . ' Attempted to hijack ' 
-                                        		. $_COOKIE['login'] . ' session.');
-                                        }
+                                        $this->writeLog(LOG_CRIT, 'Hijack attempt to' 
+                                        	. $_COOKIE['login'] . ' session.');
                                         		
                                         // blacklistIP();
                                         return false;                                        
@@ -180,12 +165,8 @@ class Bloxx_Session extends Bloxx_Module
                         } 
                         else 
                         {                              
-                                if ($this->getConfig('logBadSession') != null)
-                                {
-                                	$this->logger->modLog(LOG_WARNING,
-                                		$_SERVER['REMOTE_ADDR'] . ' Attempted to identify as '
-                                		. $_COOKIE['login'] . ' but session doesnt exist.');
-                                }
+                                $this->writeLog(LOG_WARNING,'Identify attempt as '
+                                	. $_COOKIE['login'] . ' but session doesnt exist.');
                                 
                                 $this->removeCookie('login');
                                 $this->removeCookie('session');

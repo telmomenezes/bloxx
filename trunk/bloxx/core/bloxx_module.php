@@ -21,7 +21,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_module.php,v 1.7 2005-02-24 04:51:31 secretdraft Exp $
+// $Id: bloxx_module.php,v 1.8 2005-02-25 03:29:14 secretdraft Exp $
 
 require_once 'defines.php';
 require_once CORE_DIR . 'bloxx_dbobject.php';
@@ -30,7 +30,7 @@ require_once CORE_DIR . 'bloxx_dbobject.php';
   * This is the class from where all Bloxx Module classes are derived from.
   *
   * @package   bloxx_core
-  * @version   $Id: bloxx_module.php,v 1.7 2005-02-24 04:51:31 secretdraft Exp $
+  * @version   $Id: bloxx_module.php,v 1.8 2005-02-25 03:29:14 secretdraft Exp $
   * @category  Core
   * @copyright Copyright &copy; 2002-2005 The Bloxx Team
   * @license   The GNU General Public License, Version 2
@@ -1134,6 +1134,21 @@ class Bloxx_Module extends Bloxx_DBObject {
 
             return $this->getConfig($id);
         }
+    }
+
+	/**
+	 * writeLog Logs a message.
+	 *
+	 * @param int    $priority Message priority (syslog constants).
+	 * @param string $message  Message to log.
+	 *
+	 * @access public
+	 */    
+    function writeLog ($priority, $message)
+    {
+    	include_module_once('logs');
+    	$logs = new Bloxx_Logs($this->getModID($this->name));
+    	$logs->writeLog($priority, $message);
     }
 
     var $table_rows;

@@ -20,12 +20,12 @@
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
 //
-// $Id: wizard.php,v 1.2 2005-02-22 21:23:41 secretdraft Exp $
+// $Id: wizard.php,v 1.3 2005-02-22 22:10:38 secretdraft Exp $
  
 require_once 'DB.php';
 require_once 'PEAR.php';
 
-$bloxxCoreVersion = 0.6;
+$bloxxCoreVersion = '0.6';
 
 if (!file_exists('defines.php')) {
 
@@ -46,34 +46,38 @@ if (!file_exists('defines.php')) {
 				. "define('ENUM_DIR', MAIN_DIR . 'enums/');\n\n"
 				. "define('BLOXX_CORE_VERSION', '". $bloxxCoreVersion . "');\n?>\n"; 
 
-		$defines = fopen('defines.php', 'x');
-		if ($defines !== FALSE) {
-			
-			if (fwrite($defines, $buffer) !== FALSE) {
-			
-				$mysqlHost = DB::connect($hostDSN);
-				if (DB::isError($mysqlHost)) {
+		$mysqlHost = DB::connect($hostDSN);
+		if (DB::isError($mysqlHost)) {
 					
-					echo $mysqlHost->toString();
-				}
-				else {
+			echo $mysqlHost->toString();
+		}
+		else {
+
+			if (isset($_POST['overwritedb']) && ($_POST['overwritedb'] == 1)) {
+				
+				$mysqlHost->query('DROP DATABASE ' . $_POST['database']);
+			}
 					
-					$result = $mysqlHost->query('CREATE DATABASE ' . $_POST['database']);
-					if (DB::isError($result)) {
-						
-						echo $result->toString();
-					}
-					else {
-						
+			$result = $mysqlHost->query('CREATE DATABASE ' . $_POST['database']);
+			if (DB::isError($result)) {
+					
+				echo $result->toString();
+			}
+			else {
+				
+				$defines = fopen('defines.php', 'x');
+				if ($defines !== FALSE) {
+			
+					if (fwrite($defines, $buffer) !== FALSE) {
+			
 						include('install.php');
 						bloxxInstall();
 					}
+
+					fclose($defines);
 				}
 			}
-
-			fclose($defines);
 		}
-
 	} 
 	else {
 
@@ -113,6 +117,10 @@ if (!file_exists('defines.php')) {
     	$html_out .= '
     	<input type="SUBMIT" name="submit" value="' . 'Install' . '">
     	';
+    	
+    	$html_out .= '<br>
+    	<input name="' . 'overwritedb' . '" type="checkbox" value="1"> overwrite old database';
+    	
                 
 		$html_out .= '</form></body></html>';
 

@@ -5,6 +5,8 @@ Version 0.5 -
 
 - Enums created;
 - PhotoNews Module created;
+- ModuleTemplate core Module created;
+- Bug with install_mods.php corrected (don't try to install directories as modules);
 -
 
 Version 0.4 - 31/Jan/2005

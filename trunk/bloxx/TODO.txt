@@ -28,6 +28,8 @@ Core Functionalities
 - Verify IMAGE format;
 - Support other IMAGE formats (gif, etc..);
 - doRender() passa a chamar funções, para benificiar de herança de módulos;
+- Local time, correct server time someway;
+- Display photo in photogallery selector, first or random;
 
 Documentation
 

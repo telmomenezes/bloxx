@@ -57,7 +57,7 @@ class Bloxx_News extends Bloxx_Module
                         'news_intro' => TRUST_GUEST,
                         'news_detailed_link' => TRUST_GUEST,
                         'news_datetime' => TRUST_GUEST,
-                        'news_form' => TRUST_GUEST
+                        'news_form' => TRUST_EDITOR
                 );
         }
 

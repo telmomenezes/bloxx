@@ -44,53 +44,65 @@
 [row]
 [id]8[_id]
 [workflow][_workflow]
-[module_name]style[_module_name]
+[module_name]session[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]9[_id]
 [workflow][_workflow]
-[module_name]stylelink[_module_name]
+[module_name]style[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]10[_id]
 [workflow][_workflow]
-[module_name]headerfooter[_module_name]
+[module_name]stylelink[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]11[_id]
 [workflow][_workflow]
-[module_name]resource[_module_name]
+[module_name]moduletemplate[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]12[_id]
 [workflow][_workflow]
-[module_name]usergroup[_module_name]
+[module_name]headerfooter[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]13[_id]
 [workflow][_workflow]
-[module_name]grouplink[_module_name]
+[module_name]resource[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]14[_id]
 [workflow][_workflow]
-[module_name]workflow[_module_name]
+[module_name]usergroup[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]15[_id]
 [workflow][_workflow]
-[module_name]state[_module_name]
+[module_name]grouplink[_module_name]
 [version]1[_version]
 [_row]
 [row]
 [id]16[_id]
+[workflow][_workflow]
+[module_name]workflow[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]17[_id]
+[workflow][_workflow]
+[module_name]state[_module_name]
+[version]1[_version]
+[_row]
+[row]
+[id]18[_id]
 [workflow][_workflow]
 [module_name]list[_module_name]
 [version]1[_version]
@@ -205,8 +217,10 @@
 [trust_page]6[_trust_page]
 [trust_identity]6[_trust_identity]
 [trust_admin]6[_trust_admin]
+[trust_session]6[_trust_session]
 [trust_style]6[_trust_style]
 [trust_stylelink]6[_trust_stylelink]
+[trust_moduletemplate]6[_trust_moduletemplate]
 [trust_headerfooter]6[_trust_headerfooter]
 [trust_resource]6[_trust_resource]
 [trust_usergroup]6[_trust_usergroup]
@@ -229,7 +243,6 @@
 [trust_photogallery]6[_trust_photogallery]
 [trust_rssdisplay]6[_trust_rssdisplay]
 [trust_photonews]6[_trust_photonews]
-[trust_moduletemplate]6[_trust_moduletemplate]
 [_row]
 [_role]
 [MODULE config]
@@ -470,6 +483,720 @@
 [_identity]
 [MODULE admin]
 [_admin]
+[MODULE session]
+[row]
+[id]1[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]2[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]3[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]4[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]5[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]6[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]7[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]8[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]9[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]10[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]11[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]12[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]13[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]14[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]15[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]16[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]17[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]18[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]19[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]20[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]21[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]22[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]23[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]24[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]25[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]26[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]27[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]28[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]33[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]39[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]46[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]47[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]48[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]49[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]50[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]51[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]75[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]76[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]77[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]78[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]79[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]80[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]81[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]100[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]103[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]104[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]105[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]106[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]127[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]151[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]152[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]153[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]154[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]155[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]156[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]157[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]158[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]174[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]175[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]176[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]177[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]180[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]181[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]188[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]189[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]190[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]191[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]192[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]210[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]228[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]229[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]230[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]232[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]233[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]249[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]250[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]251[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]252[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]253[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]254[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]255[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]279[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]280[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]281[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]282[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]283[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]284[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]285[_id]
+[workflow][_workflow]
+[login][_login]
+[session][_session]
+[timelimit]0[_timelimit]
+[addr][_addr]
+[_row]
+[row]
+[id]287[_id]
+[workflow][_workflow]
+[login]admin[_login]
+[session]cf68fa2c4a5888fde0f0b4446f93569e[_session]
+[timelimit]1110660055[_timelimit]
+[addr]127.0.0.1[_addr]
+[_row]
+[_session]
 [MODULE style]
 [row]
 [id]1[_id]
@@ -812,49 +1539,50 @@
 	color:#A30030;
 }
 
+.AdminText{
+	font-family:verdana, arial, helvetica, sans-serif;
+	font-size:14;
+	color:#202020;
+}
+
 .AdminLink{
 	font-family:verdana, arial, helvetica, sans-serif;
-	font-weight:bold;
-	font-size:13;
-	color:#A30030;
+	font-size:14;
+	color:#337321;
 }
 
 .AdminLink a:link{
 	font-family:verdana, arial, helvetica, sans-serif;
-	font-weight:bold;
-	font-size:18;
-	color:#FFFFFF;
+	font-size:14;
+	color:#337321;
 	text-decoration:none;
 }
 
 .AdminLink a:visited{
 	font-family:verdana, arial, helvetica, sans-serif;
-	font-weight:bold;
-	font-size:18;
-	color:#FFFFFF;
+	font-size:14;
+	color:#337321;
 	text-decoration:none;
 }
 
 .AdminLink a:hover{
 	font-family:verdana, arial, helvetica, sans-serif;
 	font-weight:bold;
-	font-size:18;
-	color:#FEA63E;
+	font-size:14;
+	color:#337321;
 	text-decoration:none;
 }
 
 .AdminNavigator{
 	font-family:verdana, arial, helvetica, sans-serif;
-	font-weight:bold;
 	font-size:16;
-	color:#FFFFFF;
+	color:#202020;
 }
 
 .AdminNavigator a{
 	font-family:verdana, arial, helvetica,sans-serif;
-	font-weight:bold;
 	font-size:16;
-	color:#FFFFFF;
+	color:#337321;
 }[_css]
 [_row]
 [_style]
@@ -1308,200 +2036,300 @@
 [global_style]NormalLink[_global_style]
 [_row]
 [_stylelink]
+[MODULE moduletemplate]
+[row]
+[id]3[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]module_list[_view]
+[template]<table>
+<tr valign="top"><td>
+
+<table>
+    <bloxx_loop name="core_list">
+        <tr bgcolor="EEEEEE">
+            <td><img src="res/system/bloxx_icon_core.gif"></img></td>
+            <td><span class="AdminLink"><bloxx_item name="name"></bloxx_item></span></td>
+            <td><span class="AdminText"><bloxx_item name="version"></bloxx_item></span></td>
+        </tr>
+    </bloxx_loop>
+</table>
+
+</td>
+<td>  </td>
+<td>
+
+<table>
+    <bloxx_loop name="module_list">
+        <tr bgcolor="EEEEEE">
+            <td><img src="res/system/bloxx_icon_module.gif"></img></td> 
+            <td><span class="AdminLink"><bloxx_item name="name"></bloxx_item></span></td>
+            <td><span class="AdminText"><bloxx_item name="version"></bloxx_item></span></td>
+        </tr>
+    </bloxx_loop>
+</table>
+
+</td></tr>
+</table>[_template]
+[_row]
+[row]
+[id]4[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]new_row[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_loop name="form">
+    <bloxx_item name="label"></bloxx_item>
+    <br>
+    <bloxx_item name="field"></bloxx_item>
+    <br><br>
+</bloxx_loop>
+<br><br>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]5[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]edit_row[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_loop name="form">
+    <bloxx_item name="label"></bloxx_item>
+    <br>
+    <bloxx_item name="field"></bloxx_item>
+    <br><br>
+</bloxx_loop>
+<br><br>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]8[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]module[_view]
+[template]<bloxx_item name="new_button"></bloxx_item>
+<br>
+<table>
+<tr valign="top"><td>
+
+<table>
+    <bloxx_loop name="list">
+        <tr bgcolor="EEEEEE">           
+            <td><span class="AdminLink"><bloxx_item name="edit_item"></bloxx_item></span></td>
+            <td><span class="AdminLink"><bloxx_item name="delete_item"></bloxx_item></span></td>            
+        </tr>
+    </bloxx_loop>
+</table>[_template]
+[_row]
+[row]
+[id]12[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]navigator[_view]
+[template]<span class="AdminNavigator">
+    <bloxx_item name="navigator"></bloxx_item>
+</span>[_template]
+[_row]
+[row]
+[id]13[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]about[_view]
+[template]<bloxx_item name="about"></bloxx_item>[_template]
+[_row]
+[row]
+[id]14[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]saveall[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="label"></bloxx_item>
+<bloxx_item name="field"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]15[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]menu[_view]
+[template]<bloxx_loop name="options">
+    <bloxx_item name="button"></bloxx_item>
+</bloxx_loop>[_template]
+[_row]
+[row]
+[id]16[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]delete_row[_view]
+[template]<bloxx_item name="warning"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>[_template]
+[_row]
+[row]
+[id]17[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]install_mod[_view]
+[template]<bloxx_item name="label"></bloxx_item>
+<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="selector"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]18[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]uninstall_mod[_view]
+[template]<bloxx_item name="label"></bloxx_item>
+<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="selector"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]19[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]uninstall_mod_confirm[_view]
+[template]<bloxx_item name="warning"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>[_template]
+[_row]
+[_moduletemplate]
 [MODULE headerfooter]
 [row]
 [id]1[_id]
 [workflow][_workflow]
 [title]Backend[_title]
-[header_html_LANG_PT]<body marginwidth=0 marginheight=0 topmargin=0 leftmargin=0 bgcolor="#A30030">
-    <table width="100%" cellpadding=0 cellspacing=0 border=0>
-        <tr bgcolor="#FEA63E">
-            <td>
-                <img src="res/system/bloxx_logo.gif"></img>
-            </td>
-            <td width="100%"></td>
-            <td>
-                <a href="http://www.cognitiva-systems.com">
-                   <img src="res/system/bloxx_cog.gif" border=0></img>
-                </a>
-            </td>
-            <td width="20"><img src="res/system/transparent_pixel.gif" width="20"></img></td>
-        </tr>
-        <tr bgcolor="#FEA63E">
-            <td>
-                <CENTER>
-                   <bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
-<b>  (</b>
-                   <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
-<b> )</b>
-                </CENTER>
-                <br>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
-    <table width="100%" cellpadding=0 cellspacing=0 border=0>
-            <tr bgcolor="#A30030" valign="top">
-            <td>
-                <table width="100%" cellpadding=0 cellspacing=0 border=0>
-                    <tr height="10">
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                        <td width="100%"></td>
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                    </tr>
-                    <tr>
-                        <td width="10"></td>
-                        <td>
+[header_html_LANG_PT]<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="181"><img src="res/system/bloxx_top.gif" width="181" height="75"></td>
+                <td width="1" background="res/system/pixel_verde.gif"><img src="res/system/pixel_verde.gif" width="1" height="1"></td>
+                <td width="100%"><img src="res/system/display_ingenuity.gif" width="102" height="75"></td>
+                <td height="75"> </td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="9" background="res/system/barra_verde.gif"></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>
 
+	   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr valign="top">
+            <td width="181">
+
+<bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
+<br>
+<bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
+<br>
 
                 <bloxx_mod module="identity" view="loginbox_admin" param=0></bloxx_mod>                                
 
 <bloxx_private module="admin" trust="ADMINISTRATOR">
-
-<bloxx_mod module="admin" view="menu_saveall" param=0></bloxx_mod>
-<bloxx_mod module="admin" view="menu_home" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_site" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_change_password" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_install_mod" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_uninstall_mod" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_update_mod" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_about" param=0></bloxx_mod>                                         
- 
+<bloxx_mod module="admin" view="menu" param=0></bloxx_mod>
 </bloxx_private>
                         
 
-                        </td>
-                        <td width="10"></td>
-                    </tr>
-                    <tr height="10">
-                        <td width="10"></td>
-                        <td></td>
-                        <td width="10"></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="100%">
-                <table width="100%" cellpadding=0 cellspacing=0 border=0>
-                    <tr height="10">
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                        <td width="100%"></td>
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                    </tr>
-                    <tr>
-                        <td width="10"></td>
-                        <td>                
-                
-                <bloxx_mod module="admin" view="navigator" param=0></bloxx_mod>
-                <br><br>[_header_html_LANG_PT]
-[header_html_LANG_EN]<body marginwidth=0 marginheight=0 topmargin=0 leftmargin=0 bgcolor="#A30030">
-    <table width="100%" cellpadding=0 cellspacing=0 border=0>
-        <tr bgcolor="#FEA63E">
-            <td>
-                <img src="res/system/bloxx_logo.gif"></img>
-            </td>
-            <td width="100%"></td>
-            <td>
-                <a href="http://www.cognitiva-systems.com">
-                   <img src="res/system/bloxx_cog.gif" border=0></img>
-                </a>
-            </td>
-            <td width="20"><img src="res/system/transparent_pixel.gif" width="20"></img></td>
-        </tr>
-        <tr bgcolor="#FEA63E">
-            <td>
-                <CENTER>
-                   <bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
-<b>  (</b>
-                   <bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
-<b> )</b>
-                </CENTER>
-                <br>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
-    <table width="100%" cellpadding=0 cellspacing=0 border=0>
-            <tr bgcolor="#A30030" valign="top">
-            <td>
-                <table width="100%" cellpadding=0 cellspacing=0 border=0>
-                    <tr height="10">
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                        <td width="100%"></td>
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                    </tr>
-                    <tr>
-                        <td width="10"></td>
-                        <td>
+</td>
+            <td width="1" background="res/system/pixel_verde.gif"><img src="pixel_verde.gif" width="1" height="1"></td>
+            <td width="5"><img src="res/system/transparent_pixel.gif" width="5" height="1"></td>
+            <td>                
 
+<br>
+<bloxx_mod module="admin" view="navigator" param=0></bloxx_mod>                
+<br><br>[_header_html_LANG_PT]
+[header_html_LANG_EN]<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="181"><img src="res/system/bloxx_top.gif" width="181" height="75"></td>
+                <td width="1" background="res/system/pixel_verde.gif"><img src="res/system/pixel_verde.gif" width="1" height="1"></td>
+                <td width="100%"><img src="res/system/display_ingenuity.gif" width="102" height="75"></td>
+                <td height="75"> </td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="9" background="res/system/barra_verde.gif"></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>
+
+	   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr valign="top">
+            <td width="181">
+
+<bloxx_mod module="config" view="configdata" param="site_name"></bloxx_mod>
+<br>
+<bloxx_mod module="config" view="configdata" param="site_url"></bloxx_mod>
+<br>
 
                 <bloxx_mod module="identity" view="loginbox_admin" param=0></bloxx_mod>                                
 
 <bloxx_private module="admin" trust="ADMINISTRATOR">
-
-<bloxx_mod module="admin" view="menu_saveall" param=0></bloxx_mod>
-<bloxx_mod module="admin" view="menu_home" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_site" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_change_password" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_install_mod" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_uninstall_mod" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_update_mod" param=0></bloxx_mod>                                        
-<bloxx_mod module="admin" view="menu_about" param=0></bloxx_mod>                                         
- 
+<bloxx_mod module="admin" view="menu" param=0></bloxx_mod>
 </bloxx_private>
                         
 
-                        </td>
-                        <td width="10"></td>
-                    </tr>
-                    <tr height="10">
-                        <td width="10"></td>
-                        <td></td>
-                        <td width="10"></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="100%">
-                <table width="100%" cellpadding=0 cellspacing=0 border=0>
-                    <tr height="10">
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                        <td width="100%"></td>
-                        <td width="10"><img src="res/system/transparent_pixel.gif" width="10"></img></td>
-                    </tr>
-                    <tr>
-                        <td width="10"></td>
-                        <td>                
-                
-                <bloxx_mod module="admin" view="navigator" param=0></bloxx_mod>
-                <br><br>[_header_html_LANG_EN]
-[footer_html_LANG_PT]                        </td>
-                        <td width="10"></td>
-                    </tr>
-                    <tr height="10">
-                        <td width="10"></td>
-                        <td></td>
-                        <td width="10"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+</td>
+            <td width="1" background="res/system/pixel_verde.gif"><img src="pixel_verde.gif" width="1" height="1"></td>
+            <td width="5"><img src="res/system/transparent_pixel.gif" width="5" height="1"></td>
+            <td>                
+
+<br>
+<bloxx_mod module="admin" view="navigator" param=0></bloxx_mod>                
+<br><br>[_header_html_LANG_EN]
+[footer_html_LANG_PT]</td>
+          </tr>
+        </table>
+
+        </td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
 </body>[_footer_html_LANG_PT]
-[footer_html_LANG_EN]                        </td>
-                        <td width="10"></td>
-                    </tr>
-                    <tr height="10">
-                        <td width="10"></td>
-                        <td></td>
-                        <td width="10"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+[footer_html_LANG_EN]</td>
+          </tr>
+        </table>
+
+        </td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
 </body>[_footer_html_LANG_EN]
 [_row]
 [row]
@@ -1564,11 +2392,175 @@
 [_photonews]
 [MODULE moduletemplate]
 [row]
-[id]1[_id]
+[id]3[_id]
 [workflow][_workflow]
 [private_content]0[_private_content]
 [moduleid]7[_moduleid]
 [view]module_list[_view]
-[template]<bloxx_item name="main"></bloxx_item>[_template]
+[template]<table>
+<tr valign="top"><td>
+
+<table>
+    <bloxx_loop name="core_list">
+        <tr bgcolor="EEEEEE">
+            <td><img src="res/system/bloxx_icon_core.gif"></img></td>
+            <td><span class="AdminLink"><bloxx_item name="name"></bloxx_item></span></td>
+            <td><span class="AdminText"><bloxx_item name="version"></bloxx_item></span></td>
+        </tr>
+    </bloxx_loop>
+</table>
+
+</td>
+<td>  </td>
+<td>
+
+<table>
+    <bloxx_loop name="module_list">
+        <tr bgcolor="EEEEEE">
+            <td><img src="res/system/bloxx_icon_module.gif"></img></td> 
+            <td><span class="AdminLink"><bloxx_item name="name"></bloxx_item></span></td>
+            <td><span class="AdminText"><bloxx_item name="version"></bloxx_item></span></td>
+        </tr>
+    </bloxx_loop>
+</table>
+
+</td></tr>
+</table>[_template]
+[_row]
+[row]
+[id]4[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]new_row[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_loop name="form">
+    <bloxx_item name="label"></bloxx_item>
+    <br>
+    <bloxx_item name="field"></bloxx_item>
+    <br><br>
+</bloxx_loop>
+<br><br>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]5[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]edit_row[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_loop name="form">
+    <bloxx_item name="label"></bloxx_item>
+    <br>
+    <bloxx_item name="field"></bloxx_item>
+    <br><br>
+</bloxx_loop>
+<br><br>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]8[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]module[_view]
+[template]<bloxx_item name="new_button"></bloxx_item>
+<br>
+<table>
+<tr valign="top"><td>
+
+<table>
+    <bloxx_loop name="list">
+        <tr bgcolor="EEEEEE">           
+            <td><span class="AdminLink"><bloxx_item name="edit_item"></bloxx_item></span></td>
+            <td><span class="AdminLink"><bloxx_item name="delete_item"></bloxx_item></span></td>            
+        </tr>
+    </bloxx_loop>
+</table>[_template]
+[_row]
+[row]
+[id]12[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]navigator[_view]
+[template]<span class="AdminNavigator">
+    <bloxx_item name="navigator"></bloxx_item>
+</span>[_template]
+[_row]
+[row]
+[id]13[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]about[_view]
+[template]<bloxx_item name="about"></bloxx_item>[_template]
+[_row]
+[row]
+[id]14[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]saveall[_view]
+[template]<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="label"></bloxx_item>
+<bloxx_item name="field"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]15[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]menu[_view]
+[template]<bloxx_loop name="options">
+    <bloxx_item name="button"></bloxx_item>
+</bloxx_loop>[_template]
+[_row]
+[row]
+[id]16[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]delete_row[_view]
+[template]<bloxx_item name="warning"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>[_template]
+[_row]
+[row]
+[id]17[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]install_mod[_view]
+[template]<bloxx_item name="label"></bloxx_item>
+<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="selector"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]18[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]uninstall_mod[_view]
+[template]<bloxx_item name="label"></bloxx_item>
+<bloxx_item name="header"></bloxx_item>
+<bloxx_item name="selector"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>
+<bloxx_item name="footer"></bloxx_item>[_template]
+[_row]
+[row]
+[id]19[_id]
+[workflow][_workflow]
+[private_content]0[_private_content]
+[moduleid]7[_moduleid]
+[view]uninstall_mod_confirm[_view]
+[template]<bloxx_item name="warning"></bloxx_item>
+<bloxx_item name="button"></bloxx_item>[_template]
 [_row]
 [_moduletemplate]

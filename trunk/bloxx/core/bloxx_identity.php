@@ -21,10 +21,10 @@
 //
 
 require_once 'defines.php';
-require_once(CORE_DIR.'bloxx_module.php');
-require_once(CORE_DIR.'bloxx_modulemanager.php');
-include_once(CORE_DIR.'bloxx_role.php');
-include_once(CORE_DIR.'bloxx_session.php');
+require_once(CORE_DIR . 'bloxx_module.php');
+require_once(CORE_DIR . 'bloxx_modulemanager.php');
+include_once(CORE_DIR . 'bloxx_role.php');
+include_once(CORE_DIR . 'bloxx_session.php');
 
 class Bloxx_Identity extends Bloxx_Module
 {
@@ -393,7 +393,7 @@ class Bloxx_Identity extends Bloxx_Module
                 } // WARNING Must check if this is safe
                 
                 $this->is_loged_in = $this->session->exists();
-                
+
                 return $this->is_loged_in;
         }
         
@@ -501,6 +501,7 @@ class Bloxx_Identity extends Bloxx_Module
         
         function id()
         {
+        
                 global $_COOKIE;
         
                 if ($this->isLoggedIn()){

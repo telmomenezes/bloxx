@@ -33,6 +33,9 @@ Core Functionalities
 - Lost email recovery;
 - Check if all user input are being filtered;
 - Review identity because the use of deprecated hidden hash var;
+- Check index.php for possibilities of transversal directory attack;
+- Correct <bloxx_item> or moduletemplates behaviour that ignores
+everything that comes after a bad/wrong item.
 
 Documentation
 

@@ -20,7 +20,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_module.php,v 1.10 2005-02-26 20:26:03 tmenezes Exp $
+// $Id: bloxx_module.php,v 1.11 2005-02-26 20:38:04 secretdraft Exp $
 
 require_once 'defines.php';
 require_once CORE_DIR.'bloxx_dbobject.php';
@@ -29,7 +29,7 @@ require_once CORE_DIR.'bloxx_dbobject.php';
   * This is the class from where all Bloxx Module classes are derived from.
   *
   * @package   bloxx_core
-  * @version   $Id: bloxx_module.php,v 1.10 2005-02-26 20:26:03 tmenezes Exp $
+  * @version   $Id: bloxx_module.php,v 1.11 2005-02-26 20:38:04 secretdraft Exp $
   * @category  Core
   * @copyright Copyright &copy; 2002-2005 The Bloxx Team
   * @license   The GNU General Public License, Version 2
@@ -1355,5 +1355,3 @@ class Bloxx_Module extends Bloxx_DBObject
     var $private_content;
 }
 ?>
-
-

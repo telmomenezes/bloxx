@@ -1,6 +1,5 @@
 <?php
 
-
 // Bloxx - Open Source Content Management System
 //
 // Copyright (c) 2002 - 2005 The Bloxx Team. All rights reserved.
@@ -21,71 +20,88 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_module.php,v 1.8 2005-02-25 03:29:14 secretdraft Exp $
+// $Id: bloxx_module.php,v 1.9 2005-02-26 15:23:59 tmenezes Exp $
 
 require_once 'defines.php';
-require_once CORE_DIR . 'bloxx_dbobject.php';
+require_once CORE_DIR.'bloxx_dbobject.php';
 
 /**
   * This is the class from where all Bloxx Module classes are derived from.
   *
   * @package   bloxx_core
-  * @version   $Id: bloxx_module.php,v 1.8 2005-02-25 03:29:14 secretdraft Exp $
+  * @version   $Id: bloxx_module.php,v 1.9 2005-02-26 15:23:59 tmenezes Exp $
   * @category  Core
   * @copyright Copyright &copy; 2002-2005 The Bloxx Team
   * @license   The GNU General Public License, Version 2
   * @author    Telmo Menezes <telmo@cognitiva.net>
   */
-class Bloxx_Module extends Bloxx_DBObject {
-    
-/**
-  * Default constructor.
-  * 
-  */
-    function Bloxx_Module() {
+class Bloxx_Module extends Bloxx_DBObject
+{
+
+    /**
+      * Default constructor.
+      * 
+      */
+    function Bloxx_Module()
+    {
 
         $def = $this->tableDefinition();
 
-        if ($def != null) {
+        if ($def != null)
+        {
 
-            foreach ($def as $k => $v) {
+            foreach ($def as $k => $v)
+            {
 
                 $this-> $k = null;
             }
         }
     }
-    
+
     //abstract methods
-    function doRender($mode, $id, $target) {}
-    function doProcessForm($command) {}
-    function getRenderTrusts() {}
-    function getFormTrusts() {}
-    
+    function doRender($mode, $id, $target)
+    {
+    }
+    function doProcessForm($command)
+    {
+    }
+    function getRenderTrusts()
+    {
+    }
+    function getFormTrusts()
+    {
+    }
+
     function getStyleList()
     {
-    	
+
         return array ();
     }
-    
-    function doRenderJavaScript($mode, $id) {}
-    function getTableDefinition() {}
 
-/**
-  * Returns the array with the table definition for the module.
-  * 
-  * This method merges an array with global module field definitions
-  * with the array of specific field definitions provided by each specific
-  * module. 
-  *
-  * @return array  Field definition list array.
-  *
-  */
+    function doRenderJavaScript($mode, $id)
+    {
+    }
+    function getTableDefinition()
+    {
+    }
+
+    /**
+      * Returns the array with the table definition for the module.
+      * 
+      * This method merges an array with global module field definitions
+      * with the array of specific field definitions provided by each specific
+      * module. 
+      *
+      * @return array  Field definition list array.
+      *
+      */
     function tableDefinition()
     {
 
         $def1 = array ('id' => array ('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true, 'HIDDEN' => true), 'workflow' => array ('TYPE' => 'NUMBER', 'SIZE' => -1, 'HIDDEN' => true));
 
-        if ((!isset ($this->no_private)) || (!$this->no_private)) {
+        if ((!isset ($this->no_private)) || (!$this->no_private))
+        {
 
             $def_private = array ('private_content' => array ('TYPE' => 'BLOXX_USERGROUP', 'SIZE' => -1, 'NOTNULL' => true));
             $def1 = array_merge($def1, $def_private);
@@ -96,51 +112,53 @@ class Bloxx_Module extends Bloxx_DBObject {
         return array_merge($def1, $def2);
     }
 
-/**
-  * Renders a view for a data element in the module.
-  *
-  * @param string   $mode      Render mode
-  * @param int      $id        Item database ID
-  * @param int      $target    Optional target item database ID
-  *
-  * @return string  HTML block
-  *
-  */
+    /**
+      * Renders a view for a data element in the module.
+      *
+      * @param string   $mode      Render mode
+      * @param int      $id        Item database ID
+      * @param int      $target    Optional target item database ID
+      *
+      * @return string  HTML block
+      *
+      */
     function render($mode, $id, $target = null)
     {
-    	
+
         include_module_once('moduletemplate');
         $mt = new Bloxx_ModuleTemplate();
         $mt->getTemplate($this, $mode);
 
-        if ($this->isGenericRender($mode)) {
+        if ($this->isGenericRender($mode))
+        {
 
             return $this->doGenericRender($mode, $id, $target);
         }
 
         $trusts = $this->getRenderTrusts();
 
-        if (isset ($trusts[$mode]) && $this->verifyTrust($trusts[$mode], $id)) {
+        if (isset ($trusts[$mode]) && $this->verifyTrust($trusts[$mode], $id))
+        {
 
             return $this->doRender($mode, $id, $target, $mt);
         }
     }
 
-/**
-  * Renders the JavaScript code for specific module view.
-  *
-  * @param string   $mode      Render mode
-  * @param int      $id        Item database ID
-  *
-  * @return string  JavaScript code.
-  *
-  */
+    /**
+      * Renders the JavaScript code for specific module view.
+      *
+      * @param string   $mode      Render mode
+      * @param int      $id        Item database ID
+      *
+      * @return string  JavaScript code.
+      *
+      */
 
     function renderJavaScript($mode, $id)
     {
-    	
+
         $js_out = '';
-        $js_file = JAVASCRIPT_DIR . 'bloxx_' . $this->name;
+        $js_file = JAVASCRIPT_DIR.'bloxx_'.$this->name;
 
         $js_out = '<script language="JavaScript" type="text/javascript" src="'.$js_file.'"></script>';
 
@@ -149,55 +167,58 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $js_out;
     }
 
-/**
-  * Processes a command on a module.
-  *
-  * Verifies trust and the calls doProcessForm() on the current module.
-  *
-  * @param  string   $command  Command name.
-  *
-  */
-  
+    /**
+      * Processes a command on a module.
+      *
+      * Verifies trust and the calls doProcessForm() on the current module.
+      *
+      * @param  string   $command  Command name.
+      *
+      */
+
     function processForm($command)
     {
         $trusts = $this->getFormTrusts();
 
-        if (isset ($trusts[$command]) && $this->verifyTrust($trusts[$command])) {
+        if (isset ($trusts[$command]) && $this->verifyTrust($trusts[$command]))
+        {
 
             $this->doProcessForm($command);
         }
     }
 
-/**
-  * Returns the module version.
-  *
-  * @return string  Module version.
-  *
-  */
+    /**
+      * Returns the module version.
+      *
+      * @return string  Module version.
+      *
+      */
 
     function getVersion()
     {
-    	
+
         return $this->module_version;
     }
 
-/**
-  * Installs a module.
-  * 
-  * Creates the database table, registers module on the ModuleManager.
-  *
-  * @return error
-  *
-  */
+    /**
+      * Installs a module.
+      * 
+      * Creates the database table, registers module on the ModuleManager.
+      *
+      * @return error
+      *
+      */
 
     function install()
     {
 
-        if ($this->tableDefinition() != null) {
+        if ($this->tableDefinition() != null)
+        {
 
             $ret = $this->createTable();
 
-            if (PEAR :: isError($ret)) {
+            if (PEAR :: isError($ret))
+            {
 
                 return $ret;
             }
@@ -207,7 +228,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         $module_manager = new Bloxx_ModuleManager();
         $module_manager->register($this->name, $this->getVersion());
 
-        if ($this->name != 'modulemanager') {
+        if ($this->name != 'modulemanager')
+        {
 
             include_module_once('role');
             $role = new Bloxx_Role();
@@ -215,28 +237,37 @@ class Bloxx_Module extends Bloxx_DBObject {
         }
     }
 
-/**
-  * Insert rows from .bloxx files for this module.
-  */
+    /**
+      * Insert rows from .bloxx files for this module.
+      */
 
-    function afterInstall() {
+    function afterInstall()
+    {
+		if (isset($this->use_init_file) && $this->use_init_file)
+		{
+			
+        	include_module_once('initparser');
+        	$p = new Bloxx_InitParser($this);
+        	$result = $p->init();
+        	$result = $p->parse();
+		}
 
-        $this->parse();
+        return true;
     }
 
-/**
-  * Renders a create/edit form for a module.
-  *
-  * @param int                    $id               Database ID of the item to 
-  *                                                 edit, -1 to create
-  * @param boolean                $inadmin          Are we calling this from the 
-  *                                                 backend?
-  * @param Bloxx_ModuleTemplate   $module_template  The module template.
-  * 
-  * @return string  HTML block.
-  *
-  */
-  
+    /**
+      * Renders a create/edit form for a module.
+      *
+      * @param int                    $id               Database ID of the item to 
+      *                                                 edit, -1 to create
+      * @param boolean                $inadmin          Are we calling this from the 
+      *                                                 backend?
+      * @param Bloxx_ModuleTemplate   $module_template  The module template.
+      * 
+      * @return string  HTML block.
+      *
+      */
+
     function renderForm($id, $inadmin, $module_template)
     {
 
@@ -249,26 +280,33 @@ class Bloxx_Module extends Bloxx_DBObject {
 
         $form = new Bloxx_Form();
 
-        if ($inadmin) {
+        if ($inadmin)
+        {
 
             $form->setMode('module');
             $form->setParam($this->name);
-        } else {
+        }
+        else
+        {
 
             $form->setFromGlobals();
         }
 
         $header = '';
 
-        if ($id >= 0) {
+        if ($id >= 0)
+        {
 
             $header .= $form->renderHeader('admin', 'change');
-        } else {
+        }
+        else
+        {
 
             $header .= $form->renderHeader('admin', 'create');
         }
 
-        if ($id >= 0) {
+        if ($id >= 0)
+        {
 
             $this->getRowByID($id, true);
 
@@ -282,20 +320,25 @@ class Bloxx_Module extends Bloxx_DBObject {
 
         $def = $this->tableDefinitionLangComplete();
 
-        foreach ($def as $k => $v) {
+        foreach ($def as $k => $v)
+        {
 
             $module_template->nextLoopIteration();
 
             $form_type = '';
 
-            if ((!$inadmin) && ((!isset ($v['USER'])) || (!$v['USER']))) {
+            if ((!$inadmin) && ((!isset ($v['USER'])) || (!$v['USER'])))
+            {
 
                 $form_type = 'hidden';
-            } else
-                if (($v['TYPE'] != 'PASSWORD') && ($k != 'private_content')) {
+            }
+            else
+                if (($v['TYPE'] != 'PASSWORD') && ($k != 'private_content'))
+                {
 
                     $lang_code = null;
-                    if (isset ($v['LANG_CODE'])) {
+                    if (isset ($v['LANG_CODE']))
+                    {
 
                         $lang_code = $v['LANG_CODE'];
                     }
@@ -305,29 +348,40 @@ class Bloxx_Module extends Bloxx_DBObject {
 
             $length = 0;
 
-            if ((($id >= 0) || (!$inadmin)) && (isset ($this-> $k))) {
+            if ((($id >= 0) || (!$inadmin)) && (isset ($this-> $k)))
+            {
 
                 $value = $this-> $k;
-            } else {
+            }
+            else
+            {
 
                 $value = '';
             }
 
-            if (($v['TYPE'] == 'TEXT') || ($v['TYPE'] == 'HTML')) {
+            if (($v['TYPE'] == 'TEXT') || ($v['TYPE'] == 'HTML'))
+            {
 
-                if ($inadmin) {
+                if ($inadmin)
+                {
 
                     $module_template->setLoopItem('field', $form->renderTextArea($k, 30, 80, $value));
-                } else {
+                }
+                else
+                {
 
                     $module_template->setLoopItem('field', $form->renderTextArea($k, 30, 70, $value));
                 }
-            } else
-                if ($k == 'private_content') {
+            }
+            else
+                if ($k == 'private_content')
+                {
 
                     //Don't show this field.
-                } else
-                    if ((substr($v['TYPE'], 0, 6) == "BLOXX_") && ($form_type != 'hidden')) {
+                }
+                else
+                    if ((substr($v['TYPE'], 0, 6) == "BLOXX_") && ($form_type != 'hidden'))
+                    {
 
                         $select_field = $form->startSelect($k, 1);
 
@@ -339,14 +393,18 @@ class Bloxx_Module extends Bloxx_DBObject {
                         $typeinst->clearWhereCondition();
                         $typeinst->runSelect();
 
-                        while ($typeinst->nextRow()) {
+                        while ($typeinst->nextRow())
+                        {
 
                             $labelf = $typeinst->label_field;
 
-                            if ($typeinst->id == $value) {
+                            if ($typeinst->id == $value)
+                            {
 
                                 $selected = true;
-                            } else {
+                            }
+                            else
+                            {
 
                                 $selected = false;
                             }
@@ -356,24 +414,30 @@ class Bloxx_Module extends Bloxx_DBObject {
 
                         $select_field .= $form->endSelect();
                         $module_template->setLoopItem('field', $select_field);
-                    } else
-                        if ((substr($v['TYPE'], 0, 5) == "ENUM_") && ($form_type != 'hidden')) {
+                    }
+                    else
+                        if ((substr($v['TYPE'], 0, 5) == "ENUM_") && ($form_type != 'hidden'))
+                        {
 
                             $select_field = $form->startSelect($k, 1);
 
                             $enum_name = substr($v['TYPE'], 5);
-                            $enum_var = 'ENUM_' . $enum_name;
+                            $enum_var = 'ENUM_'.$enum_name;
                             include_enum_once($enum_name);
 
                             global $$enum_var;
                             $enum = $$enum_var->getEnum();
 
-                            foreach ($enum as $k => $v) {
+                            foreach ($enum as $k => $v)
+                            {
 
-                                if ($k == $value) {
+                                if ($k == $value)
+                                {
 
                                     $selected = true;
-                                } else {
+                                }
+                                else
+                                {
 
                                     $selected = false;
                                 }
@@ -386,10 +450,13 @@ class Bloxx_Module extends Bloxx_DBObject {
                             $select_field .= $form->endSelect();
 
                             $module_template->setLoopItem('field', $select_field);
-                        } else
-                            if ($v['TYPE'] == 'PASSWORD') {
+                        }
+                        else
+                            if ($v['TYPE'] == 'PASSWORD')
+                            {
 
-                                if ($id < 0) {
+                                if ($id < 0)
+                                {
 
                                     $module_template->setLoopItem('label', $k);
                                     $module_template->setLoopItem('field', $form->renderInput($k, 'password', $value));
@@ -397,16 +464,21 @@ class Bloxx_Module extends Bloxx_DBObject {
                                     $module_template->setLoopItem('label', $k.' (again)');
                                     $module_template->setLoopItem('field', $form->renderInput($k.'_again', 'password', $value));
                                 }
-                            } else
-                                if ($v['TYPE'] == 'FILE') {
+                            }
+                            else
+                                if ($v['TYPE'] == 'FILE')
+                                {
 
                                     $file_input = $form->renderInput('MAX_FILE_SIZE', 'hidden', 300000, null);
                                     $file_input .= $form->renderInput($k, 'file', $value);
                                     $module_template->setLoopItem('field', $file_input);
-                                } else
-                                    if ($v['TYPE'] == 'IMAGE') {
+                                }
+                                else
+                                    if ($v['TYPE'] == 'IMAGE')
+                                    {
 
-                                        if ($form_type != 'hidden') {
+                                        if ($form_type != 'hidden')
+                                        {
 
                                             $image_input = '<img width="100" src="image.php?module='.$this->name.'&id='.$this->id.'&field='.$k.'"></img>';
                                             $image_input .= '<br>';
@@ -414,8 +486,10 @@ class Bloxx_Module extends Bloxx_DBObject {
                                             $image_input .= $form->renderInput($k, 'file', '');
                                             $module_template->setLoopItem('field', $image_input);
                                         }
-                                    } else
-                                        if ($v['TYPE'] == 'DATE') {
+                                    }
+                                    else
+                                        if ($v['TYPE'] == 'DATE')
+                                        {
 
                                             $date = getDate($value);
 
@@ -423,23 +497,29 @@ class Bloxx_Module extends Bloxx_DBObject {
                                             $date_input .= $form->renderMonthSelector($k.'__month', $date['mon']);
                                             $date_input .= $form->renderInput($k.'__year', 'input', $date['year'], 4, 4);
                                             $module_template->setLoopItem('field', $date_input);
-                                        } else
-                                            if ($v['TYPE'] == 'NUMBER') {
+                                        }
+                                        else
+                                            if ($v['TYPE'] == 'NUMBER')
+                                            {
 
                                                 $module_template->setLoopItem('field', $form->renderInput($k, $form_type, $value, 10, 15));
 
-                                            } else {
+                                            }
+                                            else
+                                            {
 
                                                 $maxsize = $v['SIZE'];
 
-                                                if ($maxsize <= 0) {
+                                                if ($maxsize <= 0)
+                                                {
 
                                                     $maxsize = 255;
                                                 }
 
                                                 $size = $maxsize;
 
-                                                if ($maxsize > 80) {
+                                                if ($maxsize > 80)
+                                                {
 
                                                     $size = 80;
                                                 }
@@ -452,7 +532,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         include_module_once('identity');
         $ident = new Bloxx_Identity();
 
-        if (((!isset ($this->no_private)) || (!$this->no_private)) && (($ident->belongsToGroups()) || $inadmin)) {
+        if (((!isset ($this->no_private)) || (!$this->no_private)) && (($ident->belongsToGroups()) || $inadmin))
+        {
 
             $glist = $ident->groups();
 
@@ -464,27 +545,35 @@ class Bloxx_Module extends Bloxx_DBObject {
 
             $select_input = $form->startSelect('private_content', 1);
 
-            if ($this->private_content == 0) {
+            if ($this->private_content == 0)
+            {
 
                 $selected = true;
-            } else {
+            }
+            else
+            {
 
                 $selected = false;
             }
 
             $select_input .= $form->addSelectItem(0, LANG_USERGROUP_NO, $selected);
 
-            if (isset ($glist)) {
+            if (isset ($glist))
+            {
 
-                foreach ($glist as $v) {
+                foreach ($glist as $v)
+                {
 
                     $grp = new Bloxx_UserGroup();
                     $grp->getRowByID($v);
 
-                    if ($this->private_content == $v) {
+                    if ($this->private_content == $v)
+                    {
 
                         $selected = true;
-                    } else {
+                    }
+                    else
+                    {
 
                         $selected = false;
                     }
@@ -498,10 +587,13 @@ class Bloxx_Module extends Bloxx_DBObject {
             $module_template->setLoopItem('field', $select_input);
         }
 
-        if ($id >= 0) {
+        if ($id >= 0)
+        {
 
             $module_template->setItem('button', $form->renderSubmitButton(LANG_ADMIN_APPLY_CHANGES));
-        } else {
+        }
+        else
+        {
 
             $text = LANG_ADMIN_CREATE;
             $module_template->setItem('button', $form->renderSubmitButton($text));
@@ -512,45 +604,62 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $module_template->renderView();
     }
 
-    function assignValuesFromPost($new) {
+    function assignValuesFromPost($new)
+    {
 
         $def = $this->tableDefinitionLangComplete();
 
-        foreach ($def as $k => $v) {
+        foreach ($def as $k => $v)
+        {
 
-            if ($v['TYPE'] == 'DATE') {
+            if ($v['TYPE'] == 'DATE')
+            {
 
-                if (isset ($_POST[$k.'__month']) && isset ($_POST[$k.'__day']) && isset ($_POST[$k.'__year'])) {
+                if (isset ($_POST[$k.'__month']) && isset ($_POST[$k.'__day']) && isset ($_POST[$k.'__year']))
+                {
 
                     $this-> $k = mktime(0, 0, 0, $_POST[$k.'__month'], $_POST[$k.'__day'], $_POST[$k.'__year']);
                 }
-            } else
-                if ($new && ($v['TYPE'] == 'CREATIONDATETIME')) {
+            }
+            else
+                if ($new && ($v['TYPE'] == 'CREATIONDATETIME'))
+                {
 
                     $this-> $k = time();
-                } else
-                    if ($new && ($v['TYPE'] == 'CREATORID')) {
+                }
+                else
+                    if ($new && ($v['TYPE'] == 'CREATORID'))
+                    {
 
                         include_module_once('identity');
                         $ident = new Bloxx_Identity();
                         $this-> $k = $ident->id();
-                    } else
-                        if ($v['TYPE'] == 'IMAGE') {
+                    }
+                    else
+                        if ($v['TYPE'] == 'IMAGE')
+                        {
 
-                            if ((isset ($_FILES[$k]['tmp_name'])) && (!isset ($this-> $k))) {
+                            if ((isset ($_FILES[$k]['tmp_name'])) && (!isset ($this-> $k)))
+                            {
 
-                                if (isset ($v['IMG_WIDTH']) && !isset ($v['IMG_HEIGHT'])) {
+                                if (isset ($v['IMG_WIDTH']) && !isset ($v['IMG_HEIGHT']))
+                                {
 
                                     include_once (CORE_DIR.'bloxx_image_utils.php');
                                     $this-> $k = scaleJpegWidth($_FILES[$k]['tmp_name'], $v['IMG_WIDTH']);
-                                } else {
+                                }
+                                else
+                                {
 
                                     $this-> $k = fread(fopen($_FILES[$k]['tmp_name'], "r"), $_FILES[$k]['size']);
                                 }
                             }
-                        } else {
+                        }
+                        else
+                        {
 
-                            if (isset ($_POST[$k])) {
+                            if (isset ($_POST[$k]))
+                            {
 
                                 $this-> $k = $_POST[$k];
                             }
@@ -558,10 +667,13 @@ class Bloxx_Module extends Bloxx_DBObject {
         }
     }
 
-    function create($verify_trust = true) {
-        if ($verify_trust) {
+    function create($verify_trust = true)
+    {
+        if ($verify_trust)
+        {
 
-            if (!$this->verifyTrust(TRUST_ADMINISTRATOR)) {
+            if (!$this->verifyTrust(TRUST_ADMINISTRATOR))
+            {
 
                 return false;
             }
@@ -571,10 +683,13 @@ class Bloxx_Module extends Bloxx_DBObject {
 
         $wf = -1;
 
-        if (!$this->hasWorkflow()) {
+        if (!$this->hasWorkflow())
+        {
 
             $wf = 1;
-        } else {
+        }
+        else
+        {
 
             $this->workflow = $wf;
             global $warningmessage;
@@ -584,17 +699,21 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $this->newDataElement();
     }
 
-    function update($verify_trust = true) {
+    function update($verify_trust = true)
+    {
 
-        if ($verify_trust) {
+        if ($verify_trust)
+        {
 
-            if (!$this->verifyTrust(TRUST_ADMINISTRATOR)) {
+            if (!$this->verifyTrust(TRUST_ADMINISTRATOR))
+            {
 
                 return false;
             }
         }
 
-        if (!$this->getRowByID($_POST['id'])) {
+        if (!$this->getRowByID($_POST['id']))
+        {
 
             return false;
         }
@@ -604,36 +723,43 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $this->updateRow(true);
     }
 
-    function verifyTrust($trust, $id = -1) {
+    function verifyTrust($trust, $id = -1)
+    {
 
         include_module_once('role');
 
         $current_trust = $this->getTrust();
 
-        if ($current_trust < $trust) {
+        if ($current_trust < $trust)
+        {
 
             return false;
         }
 
-        if ((!isset ($this->no_private) || (!$this->no_private)) && ($this->private_content > 0)) {
+        if ((!isset ($this->no_private) || (!$this->no_private)) && ($this->private_content > 0))
+        {
 
             include_module_once('identity');
             $ident = new Bloxx_Identity();
 
-            if (!$ident->belongsToGroup($this->private_content)) {
+            if (!$ident->belongsToGroup($this->private_content))
+            {
 
                 return false;
             }
         }
 
-        if ($id > 0) {
+        if ($id > 0)
+        {
 
-            if (($current_trust < TRUST_MODERATOR) && ($this->hasWorkflow())) {
+            if (($current_trust < TRUST_MODERATOR) && ($this->hasWorkflow()))
+            {
 
                 $modclone = $this->modClone();
                 $modclone->getRowByID($id);
 
-                if ($modclone->workflow <= 0) {
+                if ($modclone->workflow <= 0)
+                {
 
                     return false;
                 }
@@ -643,7 +769,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         return true;
     }
 
-    function getTrust() {
+    function getTrust()
+    {
 
         include_module_once('identity');
 
@@ -652,7 +779,8 @@ class Bloxx_Module extends Bloxx_DBObject {
 
         $trust = TRUST_GUEST;
 
-        if ($iid != -1) {
+        if ($iid != -1)
+        {
 
             $role = new Bloxx_Role();
             $role->getRowByID($ident->role);
@@ -662,12 +790,16 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $trust;
     }
 
-    function getCurrentPageID() {
+    function getCurrentPageID()
+    {
 
-        if (isset ($_GET['id'])) {
+        if (isset ($_GET['id']))
+        {
 
             return $_GET['id'];
-        } else {
+        }
+        else
+        {
 
             include_once (CORE_DIR.'bloxx_config.php');
             $system = new Bloxx_Config();
@@ -675,7 +807,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         }
     }
 
-    function getGlobalStyle($module_style) {
+    function getGlobalStyle($module_style)
+    {
         include_module_once('stylelink');
         $stylelink = new Bloxx_StyleLink();
 
@@ -687,7 +820,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         $stylelink->insertWhereCondition('module_style', '=', $module_style);
         $stylelink->runSelect();
 
-        if (!$stylelink->nextRow()) {
+        if (!$stylelink->nextRow())
+        {
 
             //estilo não encontrado
             return;
@@ -696,22 +830,14 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $stylelink->global_style;
     }
 
-    function parse() {
-
-        include_module_once('initparser');
-        $p = new Bloxx_InitParser($this);
-        $result = $p->init();
-        $result = $p->parse();
-
-        return true;
-    }
-
-    function newDataElement() {
+    function newDataElement()
+    {
 
         return $this->insertRow(false);
     }
 
-    function saveDataToFile($file_path) {
+    function saveDataToFile($file_path)
+    {
         $file_name = $file_path.'.bloxx';
 
         echo $file_name.'<br>';
@@ -723,13 +849,15 @@ class Bloxx_Module extends Bloxx_DBObject {
 
         fwrite($handle, "[MODULE ".$this->name."]\n");
 
-        while ($this->nextRow(false)) {
+        while ($this->nextRow(false))
+        {
 
             fwrite($handle, "[row]\n");
 
             $def = $this->tableDefinitionLangComplete();
 
-            foreach ($def as $k => $v) {
+            foreach ($def as $k => $v)
+            {
 
                 fwrite($handle, "[".$k."]");
 
@@ -751,34 +879,41 @@ class Bloxx_Module extends Bloxx_DBObject {
         fclose($handle);
     }
 
-    function getConfig($item_name) {
+    function getConfig($item_name)
+    {
         include_module_once('config');
 
         $config = new Bloxx_Config();
         return $config->getValue($this->getModID(), $item_name);
     }
 
-    function tableDefinitionLangComplete() {
+    function tableDefinitionLangComplete()
+    {
         $def = $this->tableDefinition();
 
         include_module_once('language');
 
-        foreach ($def as $k => $v) {
+        foreach ($def as $k => $v)
+        {
 
-            if (isset ($v['LANG']) && $v['LANG']) {
+            if (isset ($v['LANG']) && $v['LANG'])
+            {
 
                 $lang = new Bloxx_Language();
                 $lang->clearWhereCondition();
                 $lang->runSelect();
 
-                while ($lang->nextRow()) {
+                while ($lang->nextRow())
+                {
 
                     $klang = $k.'_LANG_'.$lang->code;
                     $v['LANG_CODE'] = $lang->code;
                     $v['FIELD_NAME'] = $k;
                     $ret[$klang] = $v;
                 }
-            } else {
+            }
+            else
+            {
 
                 $v['FIELD_NAME'] = $k;
                 $ret[$k] = $v;
@@ -788,18 +923,21 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $ret;
     }
 
-    function renderLabel() {
+    function renderLabel()
+    {
 
         $label = $this->label_field;
 
-        if (!isset ($this-> $label)) {
+        if (!isset ($this-> $label))
+        {
 
             return null;
         }
         return $this-> $label;
     }
 
-    function getRowIDFromEnd($count) {
+    function getRowIDFromEnd($count)
+    {
         $this->clearWhereCondition();
         $this->setOrderBy('id', true);
         $this->setLimit($count);
@@ -807,11 +945,14 @@ class Bloxx_Module extends Bloxx_DBObject {
 
         $n = $count;
 
-        if ((isset ($this->no_private)) && ($this->no_private)) {
+        if ((isset ($this->no_private)) && ($this->no_private))
+        {
 
-            while ($n > 0) {
+            while ($n > 0)
+            {
 
-                if (!$this->nextRow()) {
+                if (!$this->nextRow())
+                {
 
                     $n = 0;
                 }
@@ -820,20 +961,25 @@ class Bloxx_Module extends Bloxx_DBObject {
             }
 
             return $this->id;
-        } else {
+        }
+        else
+        {
             include_module_once('identity');
             $ident = new Bloxx_Identity();
 
             $hasWorkflow = $this->hasWorkflow();
 
-            while ($n > 0) {
+            while ($n > 0)
+            {
 
-                if (!$this->nextRow()) {
+                if (!$this->nextRow())
+                {
 
                     $n = 0;
                 }
 
-                if ((($this->private_content <= 0) || ($ident->belongsToGroup($this->private_content))) && ((!$hasWorkflow) || ($this->workflow > 0))) {
+                if ((($this->private_content <= 0) || ($ident->belongsToGroup($this->private_content))) && ((!$hasWorkflow) || ($this->workflow > 0)))
+                {
 
                     $n --;
                 }
@@ -843,23 +989,29 @@ class Bloxx_Module extends Bloxx_DBObject {
         }
     }
 
-    function fieldLabel($field, $lang_code) {
-        if (($field == 'id') || ($field == 'workflow')) {
+    function fieldLabel($field, $lang_code)
+    {
+        if (($field == 'id') || ($field == 'workflow'))
+        {
 
             $field_label = constant('F_LANG__'.strtoupper($field));
-        } else {
+        }
+        else
+        {
 
             $field_label = constant('F_LANG_'.strtoupper($this->name).'_'.strtoupper($field));
         }
 
-        if (isset ($lang_code)) {
+        if (isset ($lang_code))
+        {
 
             include_module_once('language');
             $lang = new Bloxx_Language();
             $lang->insertWhereCondition('code', '=', $lang_code);
             $lang->runSelect();
 
-            if ($lang->nextRow()) {
+            if ($lang->nextRow())
+            {
 
                 $field_label .= ' ('.$lang->language_name.')';
             }
@@ -868,26 +1020,32 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $field_label;
     }
 
-    function enumLabel($enum, $enum_element, $lang_code) {
+    function enumLabel($enum, $enum_element, $lang_code)
+    {
 
         $enum_label = constant('E_LANG_'.strtoupper($enum).'_'.strtoupper($enum_element));
 
         return $enum_label;
     }
 
-    function renderRow($style_title, $style_text) {
+    function renderRow($style_title, $style_text)
+    {
         include_once (CORE_DIR.'bloxx_style.php');
         $style = new Bloxx_Style();
 
         $def = $this->tableDefinitionLangComplete();
 
-        foreach ($def as $k => $v) {
+        foreach ($def as $k => $v)
+        {
 
-            if (($v['TYPE'] != 'PASSWORD') && ($k != 'private_content') && ((!isset ($v['HIDDEN']) || (!$v['HIDDEN'])))) {
+            if (($v['TYPE'] != 'PASSWORD') && ($k != 'private_content') && ((!isset ($v['HIDDEN']) || (!$v['HIDDEN']))))
+            {
 
-                if ((isset ($v['CONFIDENTIAL']) && ($v['CONFIDENTIAL']))) {
+                if ((isset ($v['CONFIDENTIAL']) && ($v['CONFIDENTIAL'])))
+                {
 
-                    if (!$this->verifyTrust(TRUST_ADMINISTRATOR)) {
+                    if (!$this->verifyTrust(TRUST_ADMINISTRATOR))
+                    {
 
                         continue;
                     }
@@ -895,7 +1053,8 @@ class Bloxx_Module extends Bloxx_DBObject {
 
                 $html_out = $style->renderStyleHeader($style_title);
                 $lang_code = null;
-                if (isset ($v['LANG_CODE'])) {
+                if (isset ($v['LANG_CODE']))
+                {
 
                     $lang_code = $v['LANG_CODE'];
                 }
@@ -903,13 +1062,16 @@ class Bloxx_Module extends Bloxx_DBObject {
                 $html_out .= $style->renderStyleFooter($style_title);
                 $html_out .= '<br>';
 
-                if ($v['TYPE'] == 'DATE') {
+                if ($v['TYPE'] == 'DATE')
+                {
 
                     $html_out .= $style->renderStyleHeader($style_text);
                     $html_out .= getDateString($this-> $k);
                     $html_out .= $style->renderStyleFooter($style_text);
-                } else
-                    if (substr($v['TYPE'], 0, 6) == "BLOXX_") {
+                }
+                else
+                    if (substr($v['TYPE'], 0, 6) == "BLOXX_")
+                    {
 
                         $typemod = substr($v['TYPE'], 6);
                         include_module_once($typemod);
@@ -923,7 +1085,9 @@ class Bloxx_Module extends Bloxx_DBObject {
                         $html_out .= $style->renderStyleHeader($style_text);
                         $html_out .= $typeinst-> $labelf;
                         $html_out .= $style->renderStyleFooter($style_text);
-                    } else {
+                    }
+                    else
+                    {
 
                         $html_out .= $style->renderStyleHeader($style_text);
                         $html_out .= $this-> $k;
@@ -938,7 +1102,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         include_module_once('identity');
         $ident = new Bloxx_Identity();
 
-        if (((!isset ($this->no_private)) || (!$this->no_private)) && ($this->private_content > 0)) {
+        if (((!isset ($this->no_private)) || (!$this->no_private)) && ($this->private_content > 0))
+        {
 
             $glist = $ident->groups();
 
@@ -962,33 +1127,39 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $html_out;
     }
 
-    function renderAutoText($field) {
+    function renderAutoText($field)
+    {
         return nl2br($field);
     }
 
-    function hasWorkflow() {
+    function hasWorkflow()
+    {
         $wf = $this->getConfig('workflow');
 
         return ($wf > 0);
     }
 
-    function modClone() {
+    function modClone()
+    {
         $mname = 'Bloxx_'.$this->name;
         $modclone = new $mname ();
         return $modclone;
     }
 
-    function submissionCount() {
+    function submissionCount()
+    {
         $this->clearWhereCondition();
         $this->insertWhereCondition('workflow', '<=', '0');
         return $this->runSelect();
     }
 
-    function renderImage($field, $align = null) {
+    function renderImage($field, $align = null)
+    {
 
         $html_out = '<img src="image.php?module='.$this->name.'&id='.$this->id.'&field='.$field.'" border="0"';
 
-        if ($align != null) {
+        if ($align != null)
+        {
 
             $html_out .= ' align="'.$align.'" ';
         }
@@ -998,11 +1169,13 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $html_out;
     }
 
-    function insertListConditions() {
+    function insertListConditions()
+    {
         return;
     }
 
-    function renderList($start_id, $columns, $rows, $mode, $html_after_row, $html_after_column) {
+    function renderList($start_id, $columns, $rows, $mode, $html_after_row, $html_after_column)
+    {
 
         $this->clearWhereCondition();
         $this->insertWhereCondition('id', '>=', $start_id);
@@ -1015,7 +1188,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         $total = $columns * $rows;
         $counter = 0;
 
-        while (($this->nextRow()) && ($counter < $total)) {
+        while (($this->nextRow()) && ($counter < $total))
+        {
 
             $clone = $this->modClone();
             $html_out .= $clone->render($mode, $this->id);
@@ -1023,28 +1197,33 @@ class Bloxx_Module extends Bloxx_DBObject {
             $counter ++;
 
             //End of row
-            if (($counter % $columns) == 0) {
+            if (($counter % $columns) == 0)
+            {
 
                 $html_out .= $html_after_row;
             }
             //End of column
-            else {
+            else
+            {
 
                 $html_out .= $html_after_column;
             }
         }
 
         //Balance table (render empty cells in last row)
-        while (($counter % $columns) != 0) {
+        while (($counter % $columns) != 0)
+        {
 
             $counter ++;
             //End of row
-            if (($counter % $columns) == 0) {
+            if (($counter % $columns) == 0)
+            {
 
                 $html_out .= $html_after_row;
             }
             //End of column
-            else {
+            else
+            {
 
                 $html_out .= $html_after_column;
             }
@@ -1053,7 +1232,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $html_out;
     }
 
-    function nextListID($start_id, $count) {
+    function nextListID($start_id, $count)
+    {
 
         $this->clearWhereCondition();
         $this->insertWhereCondition('id', '>=', $start_id);
@@ -1065,13 +1245,15 @@ class Bloxx_Module extends Bloxx_DBObject {
         $n = 0;
         $id = $start_id;
 
-        while (($this->nextRow()) && ($n <= $count)) {
+        while (($this->nextRow()) && ($n <= $count))
+        {
 
             $id = $this->id;
             $n ++;
         }
 
-        if ($n <= $count) {
+        if ($n <= $count)
+        {
 
             return -1;
         }
@@ -1079,7 +1261,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $id;
     }
 
-    function previousListID($start_id, $count) {
+    function previousListID($start_id, $count)
+    {
 
         $this->clearWhereCondition();
         $this->insertWhereCondition('id', '<=', $start_id);
@@ -1091,7 +1274,8 @@ class Bloxx_Module extends Bloxx_DBObject {
         $n = 0;
         $id = $start_id;
 
-        while (($this->nextRow()) && ($n <= $count)) {
+        while (($this->nextRow()) && ($n <= $count))
+        {
 
             $id = $this->id;
             $n ++;
@@ -1100,27 +1284,32 @@ class Bloxx_Module extends Bloxx_DBObject {
         return $id;
     }
 
-    function getState($item) {
+    function getState($item)
+    {
         include_module_once('state');
         $state = new Bloxx_State();
         return $state->getValue($this->name, $item);
     }
 
-    function setState($item, $value) {
+    function setState($item, $value)
+    {
         include_module_once('state');
         $state = new Bloxx_State();
         $state->setValue($this->name, $item, $value);
     }
 
-    function getModID() {
+    function getModID()
+    {
         include_module_once('modulemanager');
         $mm = new Bloxx_ModuleManager();
         return $mm->getModuleID($this->name);
     }
 
-    function isGenericRender($mode) {
+    function isGenericRender($mode)
+    {
 
-        if ($mode == 'configdata') {
+        if ($mode == 'configdata')
+        {
 
             return true;
         }
@@ -1128,27 +1317,29 @@ class Bloxx_Module extends Bloxx_DBObject {
         return false;
     }
 
-    function doGenericRender($mode, $id, $target) {
+    function doGenericRender($mode, $id, $target)
+    {
 
-        if ($mode == 'configdata') {
+        if ($mode == 'configdata')
+        {
 
             return $this->getConfig($id);
         }
     }
 
-	/**
-	 * writeLog Logs a message.
-	 *
-	 * @param int    $priority Message priority (syslog constants).
-	 * @param string $message  Message to log.
-	 *
-	 * @access public
-	 */    
-    function writeLog ($priority, $message)
+    /**
+     * writeLog Logs a message.
+     *
+     * @param int    $priority Message priority (syslog constants).
+     * @param string $message  Message to log.
+     *
+     * @access public
+     */
+    function writeLog($priority, $message)
     {
-    	include_module_once('logs');
-    	$logs = new Bloxx_Logs($this->getModID($this->name));
-    	$logs->writeLog($priority, $message);
+        include_module_once('logs');
+        $logs = new Bloxx_Logs($this->getModID($this->name));
+        $logs->writeLog($priority, $message);
     }
 
     var $table_rows;
@@ -1163,3 +1354,5 @@ class Bloxx_Module extends Bloxx_DBObject {
     var $private_content;
 }
 ?>
+
+

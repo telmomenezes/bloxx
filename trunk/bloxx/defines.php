@@ -20,7 +20,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-define('DATABASE_DSN', 'mysql://:@localhost/teste');
+define('DATABASE_DSN', 'mysql://:@localhost/test');
 define('MAIN_DIR', '');
 define('CORE_DIR', MAIN_DIR . 'core/');
 define('INIT_FILE', MAIN_DIR . 'init/teste.bloxx');

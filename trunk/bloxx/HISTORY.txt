@@ -7,7 +7,7 @@ Version 0.5 -
 - PhotoNews Module created;
 - ModuleTemplate core Module created;
 - Bug with install_mods.php corrected (don't try to install directories as modules);
--
+- Removed old deprecated HTTP_*_VARS
 
 Version 0.4 - 31/Jan/2005
 =========================

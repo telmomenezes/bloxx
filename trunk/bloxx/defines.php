@@ -22,12 +22,12 @@
 
 define('DATABASE_DSN', 'mysql://:@localhost/teste');
 define('MAIN_DIR', '');
-define('CORE_DIR', MAIN_DIR.'core/');
-define('INIT_FILE', MAIN_DIR.'init/teste.bloxx');
-define('MODS_DIR', MAIN_DIR.'mods/');
-define('LANG_DIR', MAIN_DIR.'lang/');
-define('JAVASCRIPT_DIR', MAIN_DIR.'javascript/');
-define('TEMP_DIR', MAIN_DIR.'temp/');
+define('CORE_DIR', MAIN_DIR . 'core/');
+define('INIT_FILE', MAIN_DIR . 'init/teste.bloxx');
+define('MODS_DIR', MAIN_DIR . 'mods/');
+define('LANG_DIR', MAIN_DIR . 'lang/');
+define('JAVASCRIPT_DIR', MAIN_DIR . 'javascript/');
+define('ENUM_DIR', MAIN_DIR . 'enums/');
 
-define('BLOXX_CORE_VERSION', '0.4');
+define('BLOXX_CORE_VERSION', '0.5');
 ?>

@@ -24,6 +24,10 @@ Core Functionalities
 - Bug: non-html tag content after <bloxx_> tag is discarded;
 - Bug: &nbsp; in forms are discarded;
 - Order lists of things by some criteria;
+- General spell-checking system;
+- Verify IMAGE format;
+- Support other IMAGE formats (gif, etc..);
+- doRender() passa a chamar funções, para benificiar de herança de módulos;
 
 Documentation
 

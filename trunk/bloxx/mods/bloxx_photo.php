@@ -21,7 +21,7 @@
 //
 
 require_once 'defines.php';
-require_once(CORE_DIR.'bloxx_module.php');
+require_once(CORE_DIR . 'bloxx_module.php');
 
 class Bloxx_Photo extends Bloxx_Module
 {

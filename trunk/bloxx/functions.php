@@ -64,6 +64,40 @@ function include_module_once($module)
         }
 }
 
+function include_enum_once($enum)
+{
+        global $BLOXX_INCLUDED_ENUMS;
+        
+        $enum_name = 'ENUM_' . $enum;
+
+        if(isset($BLOXX_INCLUDED_ENUMS[$enum_name])){
+
+                return;
+        }
+
+        $BLOXX_INCLUDED_ENUMS[$enum_name] = true;
+
+        $file_name = strtolower($enum_name) . '.php';
+
+        if(file_exists(ENUM_DIR . $file_name)){
+
+                include_once(ENUM_DIR . $file_name);
+        }
+
+        include_once(CORE_DIR.'bloxx_config.php');
+
+        $config = new Bloxx_Config();
+        $lang = $config->getConfig('default_language');
+
+        //Include module language module
+        $lang_file = LANG_DIR . $lang . '/' . 'enum_lang_' . $lang . '_' . strtolower($enum) . '.php';
+
+        if(file_exists($lang_file)){
+
+                include_once($lang_file);
+        }
+}
+
 function build_link($id, $view, $param, $target, $link_text, $return, $vars = null)
 {
         global $HTTP_GET_VARS;

@@ -1,5 +1,12 @@
 BLOXX CHANGELOG
 
+Version 0.5 -
+=========================
+
+- Enums created;
+- PhotoNews Module created;
+-
+
 Version 0.4 - 31/Jan/2005
 =========================
 

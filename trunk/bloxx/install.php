@@ -30,6 +30,7 @@ include_once(CORE_DIR.'bloxx_role.php');
 include_once(CORE_DIR.'bloxx_admin.php');
 include_once(CORE_DIR.'bloxx_style.php');
 include_once(CORE_DIR.'bloxx_stylelink.php');
+include_once(CORE_DIR.'bloxx_moduletemplate.php');
 include_once(CORE_DIR.'bloxx_resource.php');
 include_once(CORE_DIR.'bloxx_headerfooter.php');
 include_once(CORE_DIR.'bloxx_language.php');

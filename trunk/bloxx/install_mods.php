@@ -19,38 +19,41 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: install_mods.php,v 1.5 2005-02-18 17:34:55 tmenezes Exp $
+// $Id: install_mods.php,v 1.6 2005-02-21 15:58:57 secretdraft Exp $
 
-require_once('defines.php');
-require_once('functions.php');
+function bloxxInstallMods() {
 
-$dh = opendir(MODS_DIR);
+	require_once('defines.php');
+	require_once('functions.php');
 
-while (($file = readdir($dh)) !== false) {
+	$dh = opendir(MODS_DIR);
 
-        if(is_file(MODS_DIR . $file) && ($file != '.') && ($file != '..')){
+	while (($file = readdir($dh)) !== false) {
 
-                include_once(MODS_DIR . $file);
+    	    if(is_file(MODS_DIR . $file) && ($file != '.') && ($file != '..')){
 
-                $mod_name = substr($file, 0, -4);
-                $mod = new $mod_name();
-                $mod->install();
-        }
-}
+        	        include_once(MODS_DIR . $file);
 
-closedir($dh);
+            	    $mod_name = substr($file, 0, -4);
+                	$mod = new $mod_name();
+                	$mod->install();
+        	}
+	}
 
-$dh = opendir(MODS_DIR);
+	closedir($dh);
 
-while (($file = readdir($dh)) !== false) {
+	$dh = opendir(MODS_DIR);
 
-        if(is_file($file) && ($file != '.') && ($file != '..')){
+	while (($file = readdir($dh)) !== false) {
+
+    	    if(is_file($file) && ($file != '.') && ($file != '..')){
         
-                $mod_name = substr($file, 0, -4);
-                $mod = new $mod_name();
-                $mod->afterInstall();
-        }
-}
+        		$mod_name = substr($file, 0, -4);
+           		$mod = new $mod_name();
+               	$mod->afterInstall();
+        	}
+	}
 
-closedir($dh);
+	closedir($dh);
+}
 ?>

@@ -17,16 +17,26 @@
 // along with Bloxx; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// Authors: Silas Francisco <draft@dog.kicks-ass.com>
+// Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_session.php,v 1.5 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_session.php,v 1.6 2005-02-23 04:12:40 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
+/**
+ * Bloxx_Session Handles everything about user sessions.
+ *
+ * @package   Bloxx_Core
+ * @version   $Id: bloxx_session.php,v 1.6 2005-02-23 04:12:40 secretdraft Exp $
+ * @category  Core
+ * @copyright Copyright &copy; 2002-2005 The Bloxx Team
+ * @license   The GNU General Public License, Version 2
+ * @author    Silas Francisco <draft@dog.kicks-ass.net>
+ */
 class Bloxx_Session extends Bloxx_Module {
         
-        function Bloxx_Session() {
-                
+        function Bloxx_Session() 
+        {
                 $this->name = 'session';
                 $this->module_version = 1;
                 $this->use_init_file = false;
@@ -35,8 +45,8 @@ class Bloxx_Session extends Bloxx_Module {
                 $this->Bloxx_Module();
         }
         
-        function getTableDefinition() {
-                
+        function getTableDefinition() 
+        {        
                 return array(
                         'login' => array('TYPE' => 'STRING', 'SIZE' => 10, 'NOTNULL' => true),
                         'session' => array('TYPE' => 'STRING', 'SIZE' => 32, 'NOTNULL' => true),
@@ -44,89 +54,112 @@ class Bloxx_Session extends Bloxx_Module {
                         'addr' => array('TYPE' => 'STRING', 'SIZE' => 15, 'NOTNULL' => true));
         }
 
-        function createSession($login) {
-        
-                global $_COOKIE;
-                global $_SERVER;
+		/**
+		 * createSession Creates a session by making database entries and creating user cookies.
+		 *
+		 * @param string $login Login of an already authenticated user.
+		 *
+		 * @uses $_COOKIE['login'] User login.
+		 * @uses $_COOKIE['session'] Session hash.
+		 * 
+		 * @access public
+		 */
+        function createSession($login) 
+        {       
+                $this->cleanOldSessions($login);
                 
                 $this->login = $login;
                 $this->session = md5(uniqid(mt_rand(), true));
-                $this->timelimit = time() + 2592000; // Timelimit restriction goes here
-                $this->addr = $_SERVER["REMOTE_ADDR"];
                 
-                if($this->insertRow()) {
+                $sessionTime = $this->getConfig('sessionTime');
+                if ($sessionTime == null) {
+                	
+                	$this->timelimit = time() + 2592000;
+                }
+                else {
+                	
+                	$this->timelimit = time() + ($sessionTime * 60);
+                }
                 
-                        setcookie('login', $this->login, $this->timelimit, '/', '', 0);
-                        setcookie('session', $this->session, $this->timelimit, '/', '', 0);
+                $this->addr = $_SERVER['REMOTE_ADDR'];
                 
-                        $_COOKIE["login"] = $this->login;
-                        $_COOKIE["session"] = $this->session;
+                if ($this->insertRow()) {
+                
+                        $this->createCookie('login', $this->login, $this->timelimit);
+                        $this->createCookie('session', $this->session, $this->timelimit);
                 }
         }
         
-        function removeSession() {
-                
-                global $_COOKIE;
-                
-                if(isset($_COOKIE["login"]) && isset($_COOKIE["session"])) {
+		/**
+		 * removeSession Removes session by cleaning database entries and user cookies.
+		 *
+		 * @uses $_COOKIE['login'] Login of the session to remove.
+		 * @uses $_COOKIE['session'] Session hash of the session to remove.
+		 * 
+		 * @access public
+		 */        
+        function removeSession() 
+        {                
+                if (isset($_COOKIE['login']) && isset($_COOKIE['session'])) {
                                         
                         $this->clearWhereCondition();
-                        $this->insertWhereCondition('login', '=', $_COOKIE["login"]);
-                        $this->insertWhereCondition('session', '=', $_COOKIE["session"]);
+                        $this->insertWhereCondition('login', '=', $_COOKIE['login']);
+                        $this->insertWhereCondition('session', '=', $_COOKIE['session']);
                         $this->runSelect();
                 
-                        if($this->nextRow()) {
+                        if ($this->nextRow()) {
                         
                                 $this->deleteRowByID($this->id);
                         }
                 
-                        setcookie('login', '', (time()+2592000), '/', '', 0);
-                        setcookie('session', '', (time()+2592000), '/', '', 0);
-                
-                        unset ($_COOKIE["login"]);
-                        unset ($_COOKIE["session"]);
+                        $this->removeCookie('login');
+                        $this->removeCookie('session');
                 }
         }
         
-        function exists() {
-        
-                global $_COOKIE;
-                global $_SERVER;
-                
-                if(isset($_COOKIE["login"]) && isset($_COOKIE["session"])) {
+		/**
+		 * exists Informs if a given session exists and is active.
+		 * 
+		 * @uses $_COOKIE['login'] User login.
+		 * @uses $_COOKIE['session'] Session hash.
+		 * 
+		 * @return bool false if session doesnt exist, expired or invalid and true otherwise.
+		 * 
+		 * @access public
+		 */        
+        function exists() 
+        {        
+                if (isset($_COOKIE['login']) && isset($_COOKIE['session'])) {
                         
                         $this->clearWhereCondition();
-                        $this->insertWhereCondition('login', '=', $_COOKIE["login"]);
-                        $this->insertWhereCondition('session', '=', $_COOKIE["session"]);
+                        $this->insertWhereCondition('login', '=', $_COOKIE['login']);
+                        $this->insertWhereCondition('session', '=', $_COOKIE['session']);
                         $this->runSelect();
 
-                        if($this->nextRow()) {
+                        if ($this->nextRow()) {
 
-                                if($this->addr != $_SERVER["REMOTE_ADDR"]) {
+                                if ($this->addr != $_SERVER['REMOTE_ADDR']) {
                                         
                                         // blacklistIP();
-                                        return false;
+                                        return false;                                        
+                                } 
+                                else {
                                         
-                                } else {
-                                        
-                                        if(time() < $this->timelimit) {
+                                        if (time() < $this->timelimit) {
                                                 
-                                                return true;
-                                                
-                                        } else {
+                                                return true;                                                
+                                        } 
+                                        else {
                                                 
                                                 $this->removeSession();
                                                 return false;
                                         }
-                                }
+                                }                                
+                        } 
+                        else {
                                 
-                        } else {
-                                
-                                setcookie('login', '', (time()+2592000), '/', '', 0);
-                                setcookie('session', '', (time()+2592000), '/', '', 0);
-                
-                                unset ($_COOKIE["login"]);
-                                unset ($_COOKIE["session"]);
+                                $this->removeCookie('login');
+                                $this->removeCookie('session');
                                         
                                 return false;
                         }
@@ -134,5 +167,55 @@ class Bloxx_Session extends Bloxx_Module {
                 
                 return false;        
         }
+
+		/**
+		 * cleanOldSessions Cleans all expired sessions of a given login.
+		 *
+		 * @param string $login User login.
+		 *
+		 * @access public
+		 */        
+        function cleanOldSessions($login)
+        {
+        	$this->clearWhereCondition();
+        	$this->insertWhereCondition('login', '=', $login);
+        	$this->runSelect();
+        	
+        	while ($this->nextRow()) {
+
+        		if (time() > $this->timelimit) {
+        			
+        			$this->deleteRowByID($this->id);
+        		}
+        	}
+        }
+
+		/**
+		 * createCookie Sets a cookie and loads it.
+		 *
+		 * @param string $name 		Cookie name.
+		 * @param string $value 	Cookie value.
+		 * @param long	 $timelimit	Cookie expire time.
+		 *
+		 * @access private
+		 */                
+        function createCookie($name, $value, $timelimit)
+        {
+    		setcookie($name, $value, $timelimit, '/', '', 0);
+			$_COOKIE[$name] = $value;
+        }
+        
+		/**
+		 * removeCookie Unsets a cookie and unloads it.
+		 *
+		 * @param string $name Cookie name.
+		 *
+		 * @access private
+		 */
+		 function removeCookie($name)
+		 {
+		 	setcookie($name, '', 0, '/', '', 0);
+		 	unset ($_COOKIE[$name]);
+		 }                
 }
 ?>

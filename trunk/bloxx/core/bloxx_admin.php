@@ -48,16 +48,12 @@ class Bloxx_Admin extends Bloxx_Module
                         'module_list' => TRUST_GUEST,
                         'module' => TRUST_GUEST,
                         'edit' => TRUST_GUEST,
-                        'new_edit_delete' => TRUST_GUEST,
+                        'new_row' => TRUST_GUEST,
+                        'edit_row' => TRUST_GUEST,
+                        'delete_row' => TRUST_GUEST,
                         'save_db' => TRUST_GUEST,
                         'saveall' => TRUST_GUEST,
-                        'menu_saveall' => TRUST_GUEST,
-                        'menu_home' => TRUST_GUEST,
-                        'menu_site' => TRUST_GUEST,
-                        'menu_change_password' => TRUST_GUEST,
-                        'menu_install_mod' => TRUST_GUEST,
-                        'menu_uninstall_mod' => TRUST_GUEST,
-                        'menu_update_mod' => TRUST_GUEST,
+                        'menu' => TRUST_GUEST,
                         'install_mod' => TRUST_GUEST,
                         'uninstall_mod' => TRUST_GUEST,
                         'update_mod' => TRUST_GUEST,
@@ -98,25 +94,73 @@ class Bloxx_Admin extends Bloxx_Module
 
         function doRender($mode, $id, $target)
         {
+
                 global $_POST;
+
 
                 if(!$this->verifyTrust(TRUST_ADMINISTRATOR, $id)){
 
                         return $this->renderAdminLogin();
                 }
+                
+                include_module_once('moduletemplate');
+                $mt = new Bloxx_ModuleTemplate();
+                $mt->getTemplate($this, $mode);
 
                 if($mode == 'module_list'){
-
-                        include_module_once('moduletemplate');
-                        $mt = new Bloxx_ModuleTemplate();
-                        $mt->getTemplate($this, $mode);
                         
                         include_module_once('modulemanager');
-                        $module_manager = new Bloxx_ModuleManager();
-                        $mt->setItem('main', $module_manager->render('module_list', -1));
-                        $html_out = $mt->renderView();
+                        $mm = new Bloxx_ModuleManager();
+
+                        include_module_once('identity');
+                        $user = new Bloxx_Identity();
+
+                        $mm->clearWhereCondition();
+                        $mm->runSelect();
+
+                        $page_id = $this->getCurrentPageID();
+
+                        $mt->startLoop('core_list');
+
+                        while($mm->nextRow()) {
                         
-                        return $html_out;
+                                $mt->nextLoopIteration();
+
+                                if($mm->isCoreModule($mm->module_name)){
+
+                                        $mod_name = '<a href="index.php?id='.$page_id.'&mode=module&param=' . $mm->module_name . '">';
+                                        $mod_name .= $mm->module_name;
+                                        $mod_name .= '</a>';
+                                        $mt->setLoopItem('name', $mod_name);
+                                        
+                                        $mod_version = 'ver: ' . $mm->version;
+                                        $mt->setLoopItem('version', $mod_version);
+                                }
+                        }
+
+                        $mm = new Bloxx_ModuleManager();
+                        $mm->clearWhereCondition();
+                        $mm->runSelect();
+                        
+                        $mt->startLoop('module_list');
+
+                        while($mm->nextRow()) {
+                        
+                                $mt->nextLoopIteration();
+
+                                if(!$mm->isCoreModule($mm->module_name)){
+
+                                        $mod_name = '<a href="index.php?id='.$page_id.'&mode=module&param=' . $mm->module_name . '">';
+                                        $mod_name .= $mm->module_name;
+                                        $mod_name .= '</a>';
+                                        $mt->setLoopItem('name', $mod_name);
+
+                                        $mod_version = 'ver: ' . $mm->version;
+                                        $mt->setLoopItem('version', $mod_version);
+                                }
+                        }
+                        
+                        return $mt->renderView();
                 }
                 else if($mode == 'module'){
 
@@ -125,26 +169,25 @@ class Bloxx_Admin extends Bloxx_Module
 
                         $item = new $modname();
 
-                        include_once(CORE_DIR.'bloxx_admin.php');
-                        include_once(CORE_DIR.'bloxx_style.php');
-                        include_once(CORE_DIR.'bloxx_form.php');
-
-                        $style = new Bloxx_Style();
-                        $admin = new Bloxx_Admin();
-                        $style_admin_form_label = $admin->getGlobalStyle('Label');
-                        $style_admin_form_field = $admin->getGlobalStyle('Field');
-                        $style_admin_form_button = $admin->getGlobalStyle('Button');
+                        include_once(CORE_DIR . 'bloxx_form.php');
 
                         $form = new Bloxx_Form();
-                        $form->setMode('new_edit_delete');
+                        $form->setMode('new_row');
                         $form->setParam($item->name);
-                        $html_out = $form->renderHeader('admin', 'edit');
-                        $html_out .= $form->startSelect('item', 20, $style_admin_form_field);
+                        $new_button = $form->renderHeader('admin', 'edit');
+                        $new_button .= $form->renderSubmitButton(LANG_ADMIN_NEW);
+                        $new_button .= $form->renderFooter();
+                        
+                        $mt->setItem('new_button', $new_button);
                         
                         $item->clearWhereCondition();
                         $item->runSelect();
+                        
+                        $mt->startLoop('list');
 
                         while($item->nextRow()) {
+                        
+                                $mt->nextLoopIteration();
 
                                 $label = $item->label_field;
                                 
@@ -153,291 +196,204 @@ class Bloxx_Admin extends Bloxx_Module
                                         $label = $item->$label;
                                 }
                                 $label = $item->renderLabel();
-                                $html_out .= $form->addSelectItem($item->id, $label);
+                                
+                                $form = new Bloxx_Form();
+                                $form->setMode('edit_row');
+                                $form->setParam($item->name);
+                                $edit_item = $form->renderHeader('admin', 'edit');
+                                $edit_item .= $form->renderInput('item', 'hidden', $item->id);
+                                $edit_item .= $form->renderSubmitLink($label);
+                                $edit_item .= $form->renderFooter();
+                                
+                                $mt->setLoopItem('edit_item', $edit_item);
+                                
+                                $form = new Bloxx_Form();
+                                $form->setMode('delete_row');
+                                $form->setParam($item->name);
+                                $delete_item = $form->renderHeader('admin', 'edit');
+                                $delete_item .= $form->renderInput('item', 'hidden', $item->id);
+                                $delete_item .= $form->renderSubmitLink('X');
+                                $delete_item .= $form->renderFooter();
+                                
+                                $mt->setLoopItem('delete_item', $delete_item);
                         }
-
-                        $html_out .= $form->endSelect();
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_NEW, $style_admin_form_button);
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_EDIT, $style_admin_form_button);
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_DELETE, $style_admin_form_button);
-                        $html_out .= $form->renderFooter();
                         
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'edit'){
                 
                         include_module_once($id);
                         $modname = 'Bloxx_' . $id;
-
-                        $item = new $modname();
-                        $html_out = $item->renderForm($_POST['item']);
+                        $mod_inst = new $modname();
+                                                
+                        $html_out = $mod_inst->renderForm($_POST['item']);
                         
                         return $html_out;
                 }
                 else if($mode == 'saveall'){
-                
-                        include_once(CORE_DIR.'bloxx_style.php');
 
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_label = $this->getGlobalStyle('Label');
-                        $style_admin_form_field = $this->getGlobalStyle('Field');
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        include_once(CORE_DIR . 'bloxx_form.php');
 
                         $form = new Bloxx_Form();
                         $form->setMode('save_db');
                         $form->setParam($this->name);
 
                         $html_out = $form->renderHeader('admin', 'save_db');
+                        $mt->setItem('header', $html_out);
 
-                        $html_out .= $style->renderStyleHeader($style_admin_form_label);
-                        $html_out .=  LANG_ADMIN_DIRECTORY;
-                        $html_out .= $style->renderStyleFooter($style_admin_form_label);
-                        $html_out .= $form->renderInput('save_dir', '', '', $style_admin_form_field);
+                        $mt->setItem('label', LANG_ADMIN_DIRECTORY);
 
-                        $html_out .= $form->renderSubmitButton('Gravar', $style_admin_form_button);
-
-                        $html_out .= $form->renderFooter();
+                        $html_out = $form->renderInput('save_dir', '', '');
+                        $mt->setItem('field', $html_out);
                         
-                        return $html_out;
+                        $html_out = $form->renderSubmitButton(LANG_ADMIN_SAVE_ALL);
+                        $mt->setItem('button', $html_out);
+
+                        $html_out = $form->renderFooter();
+                        $mt->setItem('footer', $html_out);
+                        
+                        return $mt->renderView();
                 }
-                else if($mode == 'menu_saveall'){
+                else if($mode == 'menu'){
 
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        include_once(CORE_DIR . 'bloxx_form.php');
+                        
+                        $mt->startLoop('options');
 
                         $form = new Bloxx_Form();
                         $form->setMode('saveall');
                         $form->setParam($this->name);
-
                         $html_out = $form->renderHeader('admin', 'saveall');
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_SAVE_ALL, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_SAVE_ALL);
                         $html_out .= $form->renderFooter();
-                        
-                        return $html_out;
-                }
-                else if($mode == 'menu_home'){
-
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
                         $form = new Bloxx_Form();
                         $form->setMode('module_list');
                         $form->setParam($this->name);
-
                         $html_out = $form->renderHeader('admin', 'module_list');
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_HOME, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_HOME);
                         $html_out .= $form->renderFooter();
-                        
-                        return $html_out;
-                }
-                else if($mode == 'menu_site'){
-
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
                         $form = new Bloxx_Form();
                         $form->setMode('');
                         $form->setParam('');
-
                         include_module_once('config');
                         $config = new Bloxx_Config();
                         $id = $config->getMainPage();
-        
                         $html_out = $form->renderHeader('', 0, $id);
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_SITE, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_SITE);
                         $html_out .= $form->renderFooter();
-                        
-                        return $html_out;
-                }
-                else if($mode == 'menu_change_password'){
-
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
                         $form = new Bloxx_Form();
                         $form->setMode('change_password');
                         $form->setParam($this->name);
-
                         $html_out = $form->renderHeader('admin', 'dummy');
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_CHANGE_PASSWORD, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_CHANGE_PASSWORD);
                         $html_out .= $form->renderFooter();
-
-                        return $html_out;
-                }
-                else if($mode == 'menu_install_mod'){
-
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
                         $form = new Bloxx_Form();
                         $form->setMode('install_mod');
                         $form->setParam($this->name);
-
                         $html_out = $form->renderHeader('admin', 'dummy');
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_INSTALL_MOD, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_INSTALL_MOD);
                         $html_out .= $form->renderFooter();
-
-                        return $html_out;
-                }
-                else if($mode == 'menu_uninstall_mod'){
-
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
                         $form = new Bloxx_Form();
                         $form->setMode('uninstall_mod');
                         $form->setParam($this->name);
-
                         $html_out = $form->renderHeader('admin', 'dummy');
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_UNINSTALL_MOD, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_UNINSTALL_MOD);
                         $html_out .= $form->renderFooter();
-
-                        return $html_out;
-                }
-                else if($mode == 'menu_update_mod'){
-
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
                         $form = new Bloxx_Form();
                         $form->setMode('update_mod');
                         $form->setParam($this->name);
-
                         $html_out = $form->renderHeader('admin', 'dummy');
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_UPDATE_MOD, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_UPDATE_MOD);
                         $html_out .= $form->renderFooter();
-
-                        return $html_out;
-                }
-                else if($mode == 'menu_about'){
-
-                        include_once(CORE_DIR.'bloxx_style.php');
-
-                        $style = new Bloxx_Style();
-
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
                         $form = new Bloxx_Form();
                         $form->setMode('about');
                         $form->setParam($this->name);
-
                         $html_out = $form->renderHeader('admin', 'dummy');
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_ABOUT, $style_admin_form_button);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_ABOUT);
                         $html_out .= $form->renderFooter();
+                        $mt->setLoopItem('button', $html_out);
+                        $mt->nextLoopIteration();
 
+                        return $mt->renderView();
+                }
+                else if($mode == 'new_row'){
+                                                                                        
+                        include_module_once($id);
+                        $modname = 'Bloxx_' . $id;
+
+                        $item = new $modname();
+                        $html_out = $item->renderForm(-1, true, $mt);
+                        
                         return $html_out;
                 }
-                else if($mode == 'new_edit_delete'){
+                else if($mode == 'edit_row'){
+                                        
+                        include_module_once($id);
+                        $modname = 'Bloxx_' . $id;
 
-                        if(!isset($_POST['item'])){
-                        
-                                $_POST['item'] = null;
-                        }
-
-                        $html_out = '';
-
-                        if($_POST['submit'] == LANG_ADMIN_NEW){
-                        
-                                include_module_once($id);
-                                $modname = 'Bloxx_' . $id;
-
-                                $item = new $modname();
-                                $html_out .= $item->renderForm(-1);
-                        }
-                        else if($_POST['submit'] == LANG_ADMIN_EDIT){
-                        
-                                include_module_once($id);
-                                $modname = 'Bloxx_' . $id;
-
-                                $item = new $modname();
-                                $html_out .= $item->renderForm($_POST['item']);
-                        }
-                        else if($_POST['submit'] == LANG_ADMIN_DELETE){
-                        
-                                include_once(CORE_DIR.'bloxx_style.php');
-
-                                $style = new Bloxx_Style();
-
-                                $style_admin_form_label = $this->getGlobalStyle('Label');
-                                $style_admin_form_field = $this->getGlobalStyle('Field');
-                                $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                                include_module_once($id);
-                                $modname = 'Bloxx_' . $id;
-                                
-                                $modinst = new $modname();
-                                $modinst->getRowByID($_POST['item'], false);
-                                $label_field = $modinst->label_field;
-
-                                $html_out .= $style->renderStyleHeader($style_admin_form_label);
-                                $html_out .= LANG_ADMIN_WARNING1;
-                                
-                                if(isset($modinst->$label_field)){
-                                
-                                        $html_out .= $modinst->$label_field;
-                                }
-                                $html_out .= LANG_ADMIN_WARNING2;
-                                $html_out .= $id;
-                                $html_out .= '".';
-                                $html_out .= '<br><br>';
-                                $html_out .= 'Esta acção é irreversível. Tem a certeza que deseja continuar?';
-                                $html_out .= $style->renderStyleFooter($style_admin_form_label);
-                                $html_out .= '<br><br>';
-                                
-                                include_once(CORE_DIR.'bloxx_form.php');
-
-                                $form = new Bloxx_Form();
-                                $form->setMode('module');
-                                $form->setParam($id);
-
-                                $html_out .= $form->renderHeader('admin', 'delete');
-                                $html_out .= $form->renderInput('item', 'hidden', $_POST['item'], $style_admin_form_field);
-                                $html_out .= $form->renderInput('target_module', 'hidden', $id, $style_admin_form_field);
-                                $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM, $style_admin_form_button);
-                                $html_out .= $form->renderFooter();
-                        }
+                        $item = new $modname();
+                        $html_out = $item->renderForm($_POST['item'], true, $mt);
                         
                         return $html_out;
+                }
+                else if($mode == 'delete_row'){
+                
+
+                        include_module_once($id);
+                        $modname = 'Bloxx_' . $id;
+                                
+                        $modinst = new $modname();
+                        $modinst->getRowByID($_POST['item'], false);
+                        $label_field = $modinst->label_field;
+
+                        $html_out = LANG_ADMIN_WARNING1;
+                        if(isset($modinst->$label_field)){
+                                
+                                $html_out .= $modinst->$label_field;
+                        }
+                        $html_out .= LANG_ADMIN_WARNING2;
+                        $html_out .= $id;
+                        $html_out .= '".';
+                        $html_out .= '<br><br>';
+                        $html_out .= LANG_ADMIN_WARNING3;
+                        
+                        $mt->setItem('warning', $html_out);
+                                
+                        include_once(CORE_DIR . 'bloxx_form.php');
+
+                        $form = new Bloxx_Form();
+                        $form->setMode('module');
+                        $form->setParam($id);
+
+                        $html_out = $form->renderHeader('admin', 'delete');
+                        $html_out .= $form->renderInput('item', 'hidden', $_POST['item']);
+                        $html_out .= $form->renderInput('target_module', 'hidden', $id);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM);
+                        $html_out .= $form->renderFooter();
+                        $mt->setItem('button', $html_out);
+                        
+                        return $mt->renderView();
 
                 }
                 else if($mode == 'change_password'){
@@ -450,23 +406,18 @@ class Bloxx_Admin extends Bloxx_Module
                 }
                 else if($mode == 'install_mod'){
 
-                        include_once(CORE_DIR.'bloxx_style.php');
-                        $style = new Bloxx_Style();
-                        $style_admin_form_label = $this->getGlobalStyle('Label');
-                        $style_admin_form_field = $this->getGlobalStyle('Field');
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
 
-                        $html_out = $style->renderStyleHeader($style_admin_form_label);
-                        $html_out .= LANG_ADMIN_INSTALL_MOD;
-                        $html_out .= $style->renderStyleFooter($style_admin_form_label);
+                        $mt->setItem('label', LANG_ADMIN_INSTALL_MOD);
 
                         include_once(CORE_DIR.'bloxx_form.php');
 
                         $form = new Bloxx_Form();
                         $form->setMode('module_list');
 
-                        $html_out .= $form->renderHeader('admin', 'install_mod');
-                        $html_out .= $form->startSelect('module_to_install', 1, $style_admin_form_field);
+                        $html_out = $form->renderHeader('admin', 'install_mod');
+                        $mt->setItem('header', $html_out);
+                        
+                        $html_out = $form->startSelect('module_to_install', 1);
 
                         include_module_once('modulemanager');
 
@@ -494,31 +445,29 @@ class Bloxx_Admin extends Bloxx_Module
                         closedir($dh);
 
                         $html_out .= $form->endSelect();
+                        $mt->setItem('selector', $html_out);
+                        
+                        $html_out = $form->renderSubmitButton(LANG_ADMIN_CONFIRM);
+                        $mt->setItem('button', $html_out);
+                        
+                        $html_out = $form->renderFooter();
+                        $mt->setItem('footer', $html_out);
 
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM, $style_admin_form_button);
-
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'uninstall_mod'){
 
-                        include_once(CORE_DIR.'bloxx_style.php');
-                        $style = new Bloxx_Style();
-                        $style_admin_form_label = $this->getGlobalStyle('Label');
-                        $style_admin_form_field = $this->getGlobalStyle('Field');
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-
-                        $html_out .= $style->renderStyleHeader($style_admin_form_label);
-                        $html_out .= LANG_ADMIN_UNINSTALL_MOD;
-                        $html_out .= $style->renderStyleFooter($style_admin_form_label);
+                        $mt->setItem('label', LANG_ADMIN_UNINSTALL_MOD);
                         
-                        include_once(CORE_DIR.'bloxx_form.php');
+                        include_once(CORE_DIR . 'bloxx_form.php');
 
                         $form = new Bloxx_Form();
                         $form->setMode('uninstall_mod_confirm');
-                        //$form->setParam($id);
 
-                        $html_out .= $form->renderHeader('admin', 'dummy');
-                        $html_out .= $form->startSelect('module_to_uninstall', 1, $style_admin_form_field);
+                        $html_out = $form->renderHeader('admin', 'dummy');
+                        $mt->setItem('header', $html_out);
+                        
+                        $html_out = $form->startSelect('module_to_uninstall', 1);
                         
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
@@ -534,18 +483,17 @@ class Bloxx_Admin extends Bloxx_Module
                         }
 
                         $html_out .= $form->endSelect();
+                        $mt->setItem('selector', $html_out);
                         
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM, $style_admin_form_button);
+                        $html_out = $form->renderSubmitButton(LANG_ADMIN_CONFIRM);
+                        $mt->setItem('button', $html_out);
+                        
+                        $html_out = $form->renderFooter();
+                        $mt->setItem('footer', $html_out);
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'uninstall_mod_confirm'){
-                
-                        include_once(CORE_DIR.'bloxx_style.php');
-                        $style = new Bloxx_Style();
-                        $style_admin_form_label = $this->getGlobalStyle('Label');
-                        $style_admin_form_field = $this->getGlobalStyle('Field');
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
 
                         global $_POST;
 
@@ -553,33 +501,28 @@ class Bloxx_Admin extends Bloxx_Module
                         $mm = new Bloxx_ModuleManager();
                         $mm->getRowByID($_POST['module_to_uninstall']);
 
-                        $html_out = $style->renderStyleHeader($style_admin_form_label);
-                        $html_out .= LANG_ADMIN_UNISTALL_MOD_WARNING1;
+                        $html_out = LANG_ADMIN_UNISTALL_MOD_WARNING1;
                         $html_out .= $mm->module_name;
                         $html_out .= LANG_ADMIN_UNISTALL_MOD_WARNING2;
                         $html_out .= '<br><br>';
                         $html_out .= LANG_ADMIN_WARNING3;
                         $html_out .= '<br><br>';
-                        $html_out .= $style->renderStyleFooter($style_admin_form_label);
+                        $mt->setItem('warning', $html_out);
                         
                         $form = new Bloxx_Form();
                         $form->setMode('module_list');
-                        //$form->setParam($id);
 
-                        $html_out .= $form->renderHeader('admin', 'uninstall_mod');
-                        $html_out .= $form->renderInput('module_to_uninstall', 'hidden', $_POST['module_to_uninstall'], $style_admin_form_field);
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM, $style_admin_form_button);
+                        $html_out = $form->renderHeader('admin', 'uninstall_mod');
+                        $html_out .= $form->renderInput('module_to_uninstall', 'hidden', $_POST['module_to_uninstall']);
+                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_CONFIRM);
+                        $html_out .= $form->renderFooter();
+                        $mt->setItem('button', $html_out);
                         
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'about'){
 
-                        include_module_once('style');
-                        $style = new Bloxx_Style();
-                        $style_admin_form_label = $this->getGlobalStyle('Label');
-
-                        $html_out = $style->renderStyleHeader($style_admin_form_label);
-                        $html_out .= 'Bloxx core version ' . BLOXX_CORE_VERSION . '<br><br>';
+                        $html_out = 'Bloxx core version ' . BLOXX_CORE_VERSION . '<br><br>';
                         $html_out .= 'Copyright 2002 - 2005 Telmo Menezes. All rights reserved.<br>';
                         $html_out .= '<br>';
                         $html_out .= 'Bloxx is free software; you can redistribute it and/or modify<br>';
@@ -595,12 +538,13 @@ class Bloxx_Admin extends Bloxx_Module
                         $html_out .= 'You should have received a copy of the GNU General Public License<br>';
                         $html_out .= 'along with Bloxx; if not, write to the Free Software<br>';
                         $html_out .= 'Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>';
-                        $html_out .= $style->renderStyleFooter($style_admin_form_label);
 
-                        return $html_out;
+                        $mt->setItem('about', $html_out);
+                        return $mt->renderView();
                 }
                 else if($mode == 'navigator'){
 
+                        $html_out = '';
                         global $_GET;
 
                         if(isset($_GET['mode'])){
@@ -608,27 +552,31 @@ class Bloxx_Admin extends Bloxx_Module
                                 if($_GET['mode'] == 'module'){
                                 
                                         $html_out = $this->renderNavigator($_GET['param']);
-                                        return $html_out;
                                 }
-
-                                if($_GET['mode'] == 'new_edit_delete'){
+                                else if($_GET['mode'] == 'edit_row'){
 
                                         if(isset($_POST['item'])){
                                         
-                                                $html_out = $this->renderNavigator($_GET['param'], $_POST['item']);
-                                                return $html_out;
+                                                $html_out = $this->renderNavigator($_GET['param'], $_POST['item']);                                        
                                         }
                                         else{
                                         
+
                                                 $html_out = $this->renderNavigator($_GET['param']);
-                                                return $html_out;
                                         }
                                 }
+                                else{
+                                
+                                        $html_out = $this->renderNavigator();
+                                }
                         }
+                        else{
                         
-                        $html_out = $this->renderNavigator();
+                                $html_out = $this->renderNavigator();
+                        }
 
-                        return $html_out;
+                        $mt->setItem('navigator', $html_out);
+                        return $mt->renderView();
                 }
         }
 
@@ -742,14 +690,8 @@ class Bloxx_Admin extends Bloxx_Module
                 include_module_once('config');
                 $config = new Bloxx_Config();
                 $admin_page = $config->getConfig('admin_page');
-                
-                include_module_once('style');
-                $style = new Bloxx_Style();
-                $style_admin_navigator = $this->getGlobalStyle('Navigator');
-
-                $html_out = $style->renderStyleHeader($style_admin_navigator);
         
-                $html_out .= '<a href="index.php?id=' . $admin_page . '">backend</a>';
+                $html_out = '<a href="index.php?id=' . $admin_page . '">backend</a>';
         
                 if($module != null){
                 
@@ -770,8 +712,6 @@ class Bloxx_Admin extends Bloxx_Module
                                 }
                         }
                 }
-                
-                $html_out .= $style->renderStyleFooter($style_admin_navigator);
                 
                 return $html_out;
         }

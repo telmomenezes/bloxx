@@ -160,45 +160,17 @@ class Bloxx_Module extends Bloxx_DBObject
                 
                 //Insert rows from .bloxx files
                 $this->parse();
-        
-                //include_module_once('stylelink');
-                
-                //$stylelink = new Bloxx_StyleLink();
-                //$stylelist = $this->getStyleList();
-
-                /*foreach($stylelist as $k => $v){
-
-                        $stylelink->insertLink($this->name, $k, $v);
-                }*/
         }
         
-        function renderForm($id, $inadmin = true, $create_button_text = null)
+        function renderForm($id, $inadmin, $module_template)
         {
-                include_once(CORE_DIR.'bloxx_admin.php');
-                include_once(CORE_DIR.'bloxx_style.php');
+        
+                include_module_once('admin');
+                include_module_once('moduletemplate');
 
-                $style = new Bloxx_Style();
                 $admin = new Bloxx_Admin();
                 
-                if($inadmin){
-                
-                        $style_admin_form_label = $admin->getGlobalStyle('Label');
-                        $style_admin_form_field = $admin->getGlobalStyle('Field');
-                        $style_admin_form_button = $admin->getGlobalStyle('Button');
-                }
-                else{
-
-                        $style_admin_form_label = $this->getGlobalStyle('Label');
-                        $style_admin_form_field = $this->getGlobalStyle('Field');
-                        $style_admin_form_button = $this->getGlobalStyle('Button');
-                }
-                if(!$id){
-                
-                        $id = -1;
-                }
-                
-                include_once(CORE_DIR.'bloxx_form.php');
-                include_module_once('admin');
+                include_once(CORE_DIR . 'bloxx_form.php');
                 
                 $form = new Bloxx_Form();
                 
@@ -212,29 +184,34 @@ class Bloxx_Module extends Bloxx_DBObject
                         $form->setFromGlobals();
                 }
                 
-                $html_out = '';
+                $header = '';
 
                 if($id >= 0){
 
-                        $html_out .= $form->renderHeader('admin', 'change');
+                        $header .= $form->renderHeader('admin', 'change');
                 }
                 else{
 
-                        $html_out .= $form->renderHeader('admin', 'create');
+                        $header .= $form->renderHeader('admin', 'create');
                 }
         
                 if($id >= 0){
                 
                         $this->getRowByID($id, true);
   
-                        $html_out .= $form->renderInput('id', 'hidden', $id, $style_admin_form_field);
+                        $header .= $form->renderInput('id', 'hidden', $id);
                 }
                 
-                $html_out .= $form->renderInput('target_module', 'hidden', $this->name, $style_admin_form_field);
+                $header .= $form->renderInput('target_module', 'hidden', $this->name);
+                
+                $module_template->setItem('header', $header);
+                $module_template->startLoop('form');
    
                 $def = $this->tableDefinitionLangComplete();
                 
                 foreach($def as $k => $v){
+                
+                        $module_template->nextLoopIteration();
                 
                         $form_type = '';
                 
@@ -243,8 +220,6 @@ class Bloxx_Module extends Bloxx_DBObject
                                 $form_type = 'hidden';
                         }
                         else if(($v['TYPE'] != 'PASSWORD') && ($k != 'private_content')){
-                        
-                                $html_out .= '<span class="' . $style_admin_form_label . '">';
                                 
                                 $lang_code = null;
                                 if(isset($v['LANG_CODE'])){
@@ -252,9 +227,7 @@ class Bloxx_Module extends Bloxx_DBObject
                                         $lang_code = $v['LANG_CODE'];
                                 }
                                 
-                                $html_out .= $this->fieldLabel($v['FIELD_NAME'], $lang_code);
-                                $html_out .= '</span>';
-                                $html_out .= '<br>';
+                                $module_template->setLoopItem('label',  $this->fieldLabel($v['FIELD_NAME'], $lang_code));
                         }
                         
                         $length = 0;
@@ -269,26 +242,23 @@ class Bloxx_Module extends Bloxx_DBObject
                         }
                         
                         if(($v['TYPE'] == 'TEXT') || ($v['TYPE'] == 'HTML')) {
-                            
                                 
                                 if($inadmin){
                                 
-                                        $html_out .= $form->renderTextArea($k, 30, 80, $value, $style_admin_form_field);
-                                        $html_out .= '<br><br>';
+                                        $module_template->setLoopItem('field', $form->renderTextArea($k, 30, 80, $value));
                                 }
                                 else{
                                 
-                                        $html_out .= $form->renderTextArea($k, 30, 70, $value, $style_admin_form_field);
-                                        $html_out .= '<br><br>';
+                                        $module_template->setLoopItem('field', $form->renderTextArea($k, 30, 70, $value));
                                 }
                         }
                         else if($k == 'private_content'){
                         
-                                //Não mostrar nada para este field.
+                                //Don't show this field.
                         }
                         else if((substr($v['TYPE'], 0, 6) == "BLOXX_")  && ($form_type != 'hidden')){
                         
-                                $html_out .= $form->startSelect($k, 1, $style_admin_form_field);
+                                $select_field = $form->startSelect($k, 1);
                                 
                                 $typemod = substr($v['TYPE'], 6);
                                 include_module_once($typemod);
@@ -311,15 +281,15 @@ class Bloxx_Module extends Bloxx_DBObject
                                                 $selected = false;
                                         }
                                         
-                                        $html_out .= $form->addSelectItem($typeinst->id, $typeinst->$labelf, $selected);
+                                        $select_field .= $form->addSelectItem($typeinst->id, $typeinst->$labelf, $selected);
                                 }
                                 
-                                $html_out .= $form->endSelect();
-                                $html_out .= '<br><br>';
+                                $select_field .= $form->endSelect();
+                                $module_template->setLoopItem('field', $select_field);
                         }
                         else if((substr($v['TYPE'], 0, 5) == "ENUM_")  && ($form_type != 'hidden')){
 
-                                $html_out .= $form->startSelect($k, 1, $style_admin_form_field);
+                                $select_field = $form->startSelect($k, 1);
 
                                 $enum_name = substr($v['TYPE'], 5);
                                 $enum_var = 'ENUM_' . $enum_name;
@@ -341,64 +311,54 @@ class Bloxx_Module extends Bloxx_DBObject
                                         
                                         $langname = $this->enumLabel($enum_name, $v, $lang_code);
 
-                                        $html_out .= $form->addSelectItem($k, $langname, $selected);
+                                        $select_field .= $form->addSelectItem($k, $langname, $selected);
                                 }
 
-                                $html_out .= $form->endSelect();
-                                $html_out .= '<br><br>';
+                                $select_field .= $form->endSelect();
+                                
+                                $module_template->setLoopItem('field', $select_field);
                         }
                         else if($v['TYPE'] == 'PASSWORD'){
                         
                                 if($id < 0){
 
-                                        $html_out .= '<span class="' . $style_admin_form_label . '">';
-                                        $html_out .= $k;
-                                        $html_out .= '</span>';
-                                        $html_out .= '<br>';
-                                        $html_out .= $form->renderInput($k, 'password', $value, $style_admin_form_field);
-                                        $html_out .= '<br><br>';
-                                        $html_out .= '<span class="' . $style_admin_form_label . '">';
-                                        $html_out .= $k . ' (again)';
-                                        $html_out .= '</span>';
-                                        $html_out .= '<br>';
-                                        $html_out .= $form->renderInput($k . '_again', 'password', $value, $style_admin_form_field);
-                                        $html_out .= '<br><br>';
+                                        $module_template->setLoopItem('label', $k);
+                                        $module_template->setLoopItem('field', $form->renderInput($k, 'password', $value));
+                                        $module_template->nextLoopIteration();
+                                        $module_template->setLoopItem('label', $k . ' (again)');
+                                        $module_template->setLoopItem('field', $form->renderInput($k . '_again', 'password', $value));
                                 }
                         }
                         else if($v['TYPE'] == 'FILE'){
 
-                                $html_out .= $form->renderInput('MAX_FILE_SIZE', 'hidden', 300000, null);
-                                $html_out .= $form->renderInput($k, 'file', $value, $style_admin_form_field);
-                                $html_out .= '<br><br>';
+                                $file_input = $form->renderInput('MAX_FILE_SIZE', 'hidden', 300000, null);
+                                $file_input .= $form->renderInput($k, 'file', $value);
+                                $module_template->setLoopItem('field', $file_input);
                         }
                         else if($v['TYPE'] == 'IMAGE'){
 
                                 if($form_type != 'hidden'){
 
-                                        $html_out .= '<img width="100" src="image.php?module=' . $this->name . '&id=' . $this->id . '&field=' . $k . '"></img>';
-                                        $html_out .= '<br>';
-                                        $html_out .= $form->renderInput('MAX_FILE_SIZE', 'hidden', 9999999, null);
-                                        $html_out .= $form->renderInput($k, 'file', '', $style_admin_form_field);
-                                        $html_out .= '<br><br>';
+                                        $image_input = '<img width="100" src="image.php?module=' . $this->name . '&id=' . $this->id . '&field=' . $k . '"></img>';
+                                        $image_input .= '<br>';
+                                        $image_input .= $form->renderInput('MAX_FILE_SIZE', 'hidden', 9999999, null);
+                                        $image_input .= $form->renderInput($k, 'file', '');
+                                        $module_template->setLoopItem('field', $image_input);
                                 }
                         }
                         else if($v['TYPE'] == 'DATE'){
 
                                 $date = getDate($value);
 
-                                $html_out .= $form->renderInput($k . '__day', 'input', $date['mday'], $style_admin_form_field, 2, 2);
-                                $html_out .= $form->renderMonthSelector($k . '__month', $date['mon'], $style_admin_form_field);
-                                $html_out .= $form->renderInput($k . '__year', 'input', $date['year'], $style_admin_form_field, 4, 4);
-                                $html_out .= '<br><br>';
+                                $date_input = $form->renderInput($k . '__day', 'input', $date['mday'], 2, 2);
+                                $date_input .= $form->renderMonthSelector($k . '__month', $date['mon']);
+                                $date_input .= $form->renderInput($k . '__year', 'input', $date['year'], 4, 4);
+                                $module_template->setLoopItem('field', $date_input);
                         }
                         else if($v['TYPE'] == 'NUMBER'){
 
-                                $html_out .= $form->renderInput($k, $form_type, $value, $style_admin_form_field, 10, 15);
+                                $module_template->setLoopItem('field', $form->renderInput($k, $form_type, $value, 10, 15));
 
-                                if($form_type != 'hidden'){
-
-                                        $html_out .= '<br><br>';
-                                }
                         }
                         else{
 
@@ -416,12 +376,7 @@ class Bloxx_Module extends Bloxx_DBObject
                                         $size = 80;
                                 }
                                 
-                                $html_out .= $form->renderInput($k, $form_type, $value, $style_admin_form_field, $size, $maxsize);
-                                
-                                if($form_type != 'hidden'){
-                                
-                                        $html_out .= '<br><br>';
-                                }
+                                $module_template->setLoopItem('field', $form->renderInput($k, $form_type, $value, $size, $maxsize));
                         }
                 }
                 
@@ -437,12 +392,11 @@ class Bloxx_Module extends Bloxx_DBObject
 
                         include_module_once('usergroup');
                 
-                        $html_out .= '<span class="' . $style_admin_form_label . '">';
-                        $html_out .= LANG_USERGROUP_PRIVATE_TO_GROUP;
-                        $html_out .= '</span>';
-                        $html_out .= '<br>';
+                        $module_template->nextLoopIteration();
 
-                        $html_out .= $form->startSelect('private_content', 1, $style_admin_form_field);
+                        $module_template->setLoopItem('label', LANG_USERGROUP_PRIVATE_TO_GROUP);
+
+                        $select_input = $form->startSelect('private_content', 1);
                         
                         if($this->private_content == 0){
 
@@ -453,7 +407,7 @@ class Bloxx_Module extends Bloxx_DBObject
                                 $selected = false;
                         }
                         
-                        $html_out .= $form->addSelectItem(0, LANG_USERGROUP_NO, $selected);
+                        $select_input .= $form->addSelectItem(0, LANG_USERGROUP_NO, $selected);
 
                         if(isset($glist)){
                         
@@ -471,33 +425,28 @@ class Bloxx_Module extends Bloxx_DBObject
                                                 $selected = false;
                                         }
 
-                                        $html_out .= $form->addSelectItem($v, $grp->groupname, $selected);
+                                        $select_input .= $form->addSelectItem($v, $grp->groupname, $selected);
                                 }
                         }
 
-                        $html_out .= $form->endSelect();
-
-                        $html_out .= '<br><br>';
+                        $select_input .= $form->endSelect();
+                        
+                        $module_template->setLoopItem('field', $select_input);
                 }
    
                 if($id >= 0){
 
-                        $html_out .= $form->renderSubmitButton(LANG_ADMIN_APPLY_CHANGES, $style_admin_form_button);
+                        $module_template->setItem('button', $form->renderSubmitButton(LANG_ADMIN_APPLY_CHANGES));
                 }
                 else{
                 
                         $text = LANG_ADMIN_CREATE;
-                        if($create_button_text != null){
-                        
-                                $text = $create_button_text;
-                        }
-                
-                        $html_out .= $form->renderSubmitButton($text, $style_admin_form_button);
+                        $module_template->setItem('button', $form->renderSubmitButton($text));
                 }
                 
-                $html_out .= $form->renderFooter();
+                $module_template->setItem('footer', $form->renderFooter());
                 
-                return $html_out;
+                return $module_template->renderView();
         }
         
         function assignValuesFromPost($new)

@@ -21,8 +21,8 @@
 //
 
 require_once 'defines.php';
-require_once(CORE_DIR.'bloxx_module.php');
-require_once(CORE_DIR.'bloxx_role.php');
+require_once(CORE_DIR . 'bloxx_module.php');
+require_once(CORE_DIR . 'bloxx_role.php');
 
 class Bloxx_Page extends Bloxx_Module
 {
@@ -59,6 +59,9 @@ class Bloxx_Page extends Bloxx_Module
         
                 include_once(CORE_DIR.'bloxx_style.php');
                 include_once(CORE_DIR.'bloxx_headerfooter.php');
+                include_once(CORE_DIR . 'bloxx_tokenizer.php');
+                
+                $tokenizer = new Bloxx_Tokenizer();
                 
                 global $_GET;
                 
@@ -105,7 +108,7 @@ class Bloxx_Page extends Bloxx_Module
                         $begin_tag = false;
                 }
                 
-                $tok = strtok($content, '<');
+                $tok = $tokenizer->getToken($content, '<');
                 $count = strlen($tok) + 1;
                 
                 $bloxx_content = '';
@@ -149,7 +152,7 @@ class Bloxx_Page extends Bloxx_Module
                         
                         $begin_tag = true;
                         
-                        $tok = strtok('<');
+                        $tok = $tokenizer->getToken('<');
                 }
                 
                 //Second Pass---------------------------------------------
@@ -160,7 +163,7 @@ class Bloxx_Page extends Bloxx_Module
                         $begin_tag = false;
                 }
 
-                $tok = strtok($first_pass, '<');
+                $tok = $tokenizer->getToken($first_pass, '<');
                 $count = strlen($tok) + 1;
 
                 $bloxx_content = '';
@@ -194,7 +197,7 @@ class Bloxx_Page extends Bloxx_Module
 
                         $begin_tag = true;
 
-                        $tok = strtok('<');
+                        $tok = $tokenizer->getToken('<');
                 }
                 
                 $html_part_2 = '</head>' . $html_part_2 . '</html>';
@@ -292,7 +295,7 @@ class Bloxx_Page extends Bloxx_Module
 
                         $content = $regs[$n + 2];
 
-                        $mname = 'Bloxx_'.$module;
+                        $mname = 'Bloxx_' . $module;
 
                         include_module_once($module);
 

@@ -70,7 +70,7 @@ class Bloxx_RssDisplay extends Bloxx_Module
                         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
                         xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, 'ISO-8859-1');
 
-                        xml_set_object($parser, &$this);
+                        xml_set_object($parser, $this);
                         xml_set_element_handler($parser, "tag_open", "tag_close");
                         xml_set_character_data_handler($parser, "cdata");
 

@@ -82,16 +82,11 @@ class Bloxx_Form
                 }
         }
         
-        function renderHeader($module, $command, $id = -1, $style = null)
+        function renderHeader($module, $command, $id = -1)
         {
                 global $_GET;
                 
                 $html_out = '<form enctype="multipart/form-data"';
-                
-                if($style != null){
-                
-                        $html_out .= ' class="' . $style . '"';
-                }
                 
                 $html_out .= ' name="' . $this->form_name . '"';
                 $html_out .= ' action="index.php';
@@ -163,26 +158,18 @@ class Bloxx_Form
                 return $html_out;
         }
         
-        function renderSubmitButton($text, $style)
+        function renderSubmitButton($text)
         {
-                include_once CORE_DIR . 'bloxx_style.php';
-                $styleobj = new Bloxx_Style();
         
-                $html_out = $styleobj->renderStyleHeader($style);
-        
-                $html_out .= '
-                <input type="SUBMIT" name="submit" value="'.$text.'" class="'.$style.'">
+                $html_out = '
+                <input type="SUBMIT" name="submit" value="' . $text . '">
                 ';
-                
-                $html_out .= $styleobj->renderStyleFooter($style);
                 
                 return $html_out;
         }
         
-        function renderSubmitLink($text, $style)
+        function renderSubmitLink($text)
         {
-                include_once CORE_DIR . 'bloxx_style.php';
-                $styleobj = new Bloxx_Style();
 
                 $html_out = '
                 <a href="javascript:document.' . $this->form_name . '.submit()"';
@@ -192,33 +179,22 @@ class Bloxx_Form
                 return $html_out;
         }
         
-        function renderInput($name, $type, $value, $style, $size=20, $maxlength=255)
+        function renderInput($name, $type, $value, $size=20, $maxlength=255)
         {
-                include_once CORE_DIR . 'bloxx_style.php';
-                $styleobj = new Bloxx_Style();
         
-                $html_out = $styleobj->renderStyleHeader($style);
-        
-                $html_out .= '
-                <input name="'.$name.'" type="'.$type.'" value="'.$value.'" class="'.$style.'" size="'.$size.'" maxlength="'.$maxlength.'">';
-                
-                $html_out .= $styleobj->renderStyleFooter($style);
+                $html_out = '
+                <input name="' . $name . '" type="' . $type . '" value="' . $value .
+                '" size="' . $size . '" maxlength="' . $maxlength . '">';
                 
                 return $html_out;
         }
         
-        function startSelect($name, $size, $style)
+        function startSelect($name, $size)
         {
-                include_once CORE_DIR . 'bloxx_style.php';
-                $styleobj = new Bloxx_Style();
-
-                $html_out = $styleobj->renderStyleHeader($style);
         
-                $html_out .= '
-                <SELECT size="'.$size.'" name="'.$name.'" class="'.$style.'">
+                $html_out = '
+                <SELECT size="' . $size . '" name="' . $name . '">
                 ';
-                
-                $html_out .= $styleobj->renderStyleFooter($style);
                 
                 return $html_out;
         }
@@ -247,25 +223,20 @@ class Bloxx_Form
                 return $html_out;
         }
         
-        function renderTextArea($name, $rows, $cols, $value, $style)
+        function renderTextArea($name, $rows, $cols, $value)
         {
-                include_once CORE_DIR . 'bloxx_style.php';
-                $styleobj = new Bloxx_Style();
-
-                $html_out = $styleobj->renderStyleHeader($style);
         
-                $html_out .=  '<textarea name="' . $name . '" rows="' . $rows . '" cols="' . $cols . '" class="'.$style.'">';
+                $html_out =  '<textarea name="' . $name . '" rows="' . $rows .
+                '" cols="' . $cols . '">';
                 $html_out .=  $value;
                 $html_out .=  '</textarea>';
-                
-                $html_out .= $styleobj->renderStyleFooter($style);
                 
                 return $html_out;
         }
         
-        function renderMonthSelector($name, $value, $style)
+        function renderMonthSelector($name, $value)
         {
-                $html_out = $this->startSelect($name, 1, $style);
+                $html_out = $this->startSelect($name, 1);
                 if($value == 1) $sel = true; else $sel = false;
                 $html_out .= $this->addSelectItem(1, LANG__JANUARY, $sel);
                 if($value == 2) $sel = true; else $sel = false;

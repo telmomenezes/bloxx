@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: wizard.php,v 1.5 2005-02-23 04:14:38 secretdraft Exp $
+// $Id: wizard.php,v 1.6 2005-02-25 00:44:06 secretdraft Exp $
  
 require_once 'DB.php';
 require_once 'PEAR.php';
@@ -110,9 +110,22 @@ if (!file_exists('defines.php')) {
     	'" size="' . $size . '" maxlength="' . $maxlength . '">';
                 
     	$html_out .= 'Init File:
-    	<input name="' . 'initfile' . '" type="' . $type . '" value="' . 'init/test.bloxx' .
-    	'" size="' . '30' . '" maxlength="' . $maxlength . '">';
-                
+    	<select name="initfile">';
+    	
+    	$dh = opendir('init/');
+
+		while (($file = readdir($dh)) !== false) 
+		{
+    	    if (!is_dir($file) && ($file != '.') && ($file != '..'))
+    	    {
+    	    	$html_out .= '<option value="' . 'init/' . $file . '"' . '>' . $file;
+        	}
+		}
+
+		closedir($dh);
+
+		$html_out .= '</select>';
+		                
     	$html_out .= '
     	<input type="SUBMIT" name="submit" value="' . 'Install' . '">
     	';

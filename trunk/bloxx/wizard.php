@@ -19,8 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-//
-// $Id: wizard.php,v 1.4 2005-02-22 22:24:21 secretdraft Exp $
+// $Id: wizard.php,v 1.5 2005-02-23 04:14:38 secretdraft Exp $
  
 require_once 'DB.php';
 require_once 'PEAR.php';

@@ -28,7 +28,6 @@ Core Functionalities
 - doRender() passa a chamar funções, para benificiar de herança de módulos;
 - Local time, correct server time someway;
 - Display photo in photogallery selector, first or random;
-- Configurable timeout of login cookies;
 - Configurable textarea width;
 - Bug: Malformed html destroies render of textarea;
 - Lost email recovery;

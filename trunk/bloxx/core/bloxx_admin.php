@@ -469,7 +469,7 @@ class Bloxx_Admin extends Bloxx_Module
 
                         while (($file = readdir($dh)) !== false) {
 
-                                if(($file != '.') && ($file != '..')){
+                                if(($file != '.') && ($file != '..') && !is_dir($file)){
 
                                         include_once(MODS_DIR . $file);
 

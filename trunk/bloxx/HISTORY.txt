@@ -3,6 +3,7 @@ BLOXX CHANGELOG
 Version 0.6 -
 =========================
 
+- Installation/database configuration script;
 -
 
 Version 0.5 - 17/Fev/2005

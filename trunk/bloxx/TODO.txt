@@ -1,6 +1,5 @@
 Core Functionalities
 
-- Installation/database configuration script;
 - Test site save with images/bin data
 - General search system;
 - Better module file structure;

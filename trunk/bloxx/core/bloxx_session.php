@@ -1,10 +1,25 @@
 <?php
-/*
- * Created on Feb 5, 2005
- *
- * draft
- * 
- */
+// Bloxx - Open Source Content Management System
+//
+// Copyright (c) 2002 - 2005 The Bloxx Team. All rights reserved.
+//
+// Bloxx is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// Bloxx is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Bloxx; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// Authors: Silas Francisco <draft@dog.kicks-ass.com>
+//
+// $Id: bloxx_session.php,v 1.5 2005-02-18 17:34:56 tmenezes Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -41,11 +56,11 @@ class Bloxx_Session extends Bloxx_Module {
                 
                 if($this->insertRow()) {
                 
-                	setcookie('login', $this->login, $this->timelimit, '/', '', 0);
-                	setcookie('session', $this->session, $this->timelimit, '/', '', 0);
+                        setcookie('login', $this->login, $this->timelimit, '/', '', 0);
+                        setcookie('session', $this->session, $this->timelimit, '/', '', 0);
                 
-                	$_COOKIE["login"] = $this->login;
-                	$_COOKIE["session"] = $this->session;
+                        $_COOKIE["login"] = $this->login;
+                        $_COOKIE["session"] = $this->session;
                 }
         }
         

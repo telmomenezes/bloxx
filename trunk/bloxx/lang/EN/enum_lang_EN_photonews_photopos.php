@@ -1,9 +1,7 @@
 <?php
-
-//
 // Bloxx - Open Source Content Management System
 //
-// Copyright 2002 - 2005 Telmo Menezes. All rights reserved.
+// Copyright (c) 2002 - 2005 The Bloxx Team. All rights reserved.
 //
 // Bloxx is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +17,9 @@
 // along with Bloxx; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
+// Authors: Telmo Menezes <telmo@cognitiva.net>
+//
+// $Id: enum_lang_EN_photonews_photopos.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
 
 define('E_LANG_PHOTONEWS_PHOTOPOS_TOP_LEFT', 'Top Left');
 define('E_LANG_PHOTONEWS_PHOTOPOS_TOP_RIGHT', 'Top Right');

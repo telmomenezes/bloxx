@@ -11,6 +11,7 @@ Version 0.5 -
 - Admin core module now uses ModuleTemplate instead of stylelinks;
 - Language bugs corected in Admin core module;
 - Removed old deprecated HTTP_*_VARS;
+- Changed the way used to make a session key
 -
 
 Version 0.4 - 31/Jan/2005

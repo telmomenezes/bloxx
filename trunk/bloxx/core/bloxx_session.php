@@ -35,17 +35,18 @@ class Bloxx_Session extends Bloxx_Module {
                 global $_SERVER;
                 
                 $this->login = $login;
-                $this->session = md5(mt_rand(0, 99999999999999999));
+                $this->session = md5(uniqid(mt_rand(), true));
                 $this->timelimit = time() + 2592000; // Timelimit restriction goes here
                 $this->addr = $_SERVER["REMOTE_ADDR"];
                 
-                $this->insertRow();
+                if($this->insertRow()) {
                 
-                setcookie('login', $this->login, $this->timelimit, '/', '', 0);
-                setcookie('session', $this->session, $this->timelimit, '/', '', 0);
+                	setcookie('login', $this->login, $this->timelimit, '/', '', 0);
+                	setcookie('session', $this->session, $this->timelimit, '/', '', 0);
                 
-                $_COOKIE["login"] = $this->login;
-                $_COOKIE["session"] = $this->session;
+                	$_COOKIE["login"] = $this->login;
+                	$_COOKIE["session"] = $this->session;
+                }
         }
         
         function removeSession() {

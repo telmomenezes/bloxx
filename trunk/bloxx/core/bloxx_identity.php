@@ -24,6 +24,7 @@ require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
 require_once(CORE_DIR.'bloxx_modulemanager.php');
 include_once(CORE_DIR.'bloxx_role.php');
+include_once(CORE_DIR.'bloxx_session.php');
 
 class Bloxx_Identity extends Bloxx_Module
 {
@@ -33,7 +34,7 @@ class Bloxx_Identity extends Bloxx_Module
                 $this->module_version = 1;
                 $this->label_field = 'username';
                 
-                $this->hidden_hash_var = 'aalkb4we1addft71Rj9';
+                $this->session = new Bloxx_Session();
                 
                 $this->is_loged_in = false;
                 $this->use_init_file = true;
@@ -348,7 +349,7 @@ class Bloxx_Identity extends Bloxx_Module
                         else {
                                 if ($this->confirmed == 1) {
                                 
-                                        $this->setTokens($login);
+                                        $this->session->createSession($login);
                                         return true;
                                 }
                                 else {
@@ -378,65 +379,22 @@ class Bloxx_Identity extends Bloxx_Module
 
         function logout()
         {
-                global $_COOKIE;
 
-                setcookie('login','',(time()+2592000),'/','',0);
-                setcookie('id_hash','',(time()+2592000),'/','',0);
-                
-                unset($_COOKIE["login"]);
-                unset($_COOKIE["id_hash"]);
-        }
-        
-        function setTokens($login_in) {
-                
-                global $_COOKIE;
-                
-                if (!$login_in) {
-                
-                        //Erro - Falta login
-                        return false;
-                }
-                
-                $login = $login_in;
-                $id_hash = md5($login.$this->hidden_hash_var);
-
-                setcookie('login', $login, (time()+2592000),'/','',0);
-                setcookie('id_hash', $id_hash, (time()+2592000),'/','',0);
-                
-                $_COOKIE["login"] = $login;
-                $_COOKIE["id_hash"] = $id_hash;
+                $this->session->removeSession();
         }
         
         function isLoggedIn() {
-        
-                global $_COOKIE;
                 
                 //have we already run the hash checks? 
                 //If so, return the pre-set var
                 if (isset($this->is_loged_in) && $this->is_loged_in) {
                 
                         return true;
-                }
-                if (isset($_COOKIE["login"]) && isset($_COOKIE["id_hash"])) {
+                } // WARNING Must check if this is safe
                 
-                        $hash = md5($_COOKIE["login"].$this->hidden_hash_var);
-                        
-                        if ($hash == $_COOKIE["id_hash"]) {
-                        
-                                $this->is_loged_in = true;
-                                return true;
-                        }
-                        else {
-                        
-                                $this->is_loged_in = false;
-                                return false;
-                        }
-                }
-                else {
+                $this->is_loged_in = $this->session->exists();
                 
-                        $this->is_loged_in = false;
-                        return false;
-                }
+                return $this->is_loged_in;
         }
         
         function create()

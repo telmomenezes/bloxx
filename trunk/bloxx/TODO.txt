@@ -1,0 +1,36 @@
+Core Functionalities
+
+- Installation/database configuration script;
+- Test site save with images/bin data
+- General search system;
+- Better module file structure;
+- Module dependencies;
+- Invisible modules;
+- Doxygen stuff;
+- Caching system / search engine friendly mode;
+- Meta tag system;
+- Language selector;
+- RSS Feed;
+- Forms validation (client side/server side);
+- Improve configuration system;
+- Icon setting;
+- Dont' use the older (and deprecated) long predefined array variables ($HTTP_*_VARS).  Instead, use the superglobals that were introduced in PHP 4.1.0;
+- Include Bloxx-identity metatag;
+- Install/Uninstall languages;
+- Make Bloxx_InitParser handle all special cases (internal tags?);
+- Make DBObjects able to repeat queries;
+- Robots file;
+- Versioning system;
+- Bug: non-html tag content after <bloxx_> tag is discarded;
+- Bug: &nbsp; in forms are discarded;
+- Order lists of things by some criteria;
+
+Documentation
+
+- Manifesto;
+- Installation;
+- Web site development;
+- Module development;
+- Language plug-in development;
+- Bloxx development guidelines;
+- Bloxx philosophy;

@@ -1,0 +1,33 @@
+BLOXX CHANGELOG
+
+Version 0.4 - 31/Jan/2005
+=========================
+
+- Updated the init .bloxx file to contain the backend template;
+- Changed module init tag in .bloxx files to [MODULE <name>];
+
+Version 0.3 - 30/Jan/2005
+=========================
+
+- Backend headerfooter is now a regular Bloxx headerfooter;
+- Generic view system;
+- Configdata generic view;
+
+Version 0.2 - 25/Jan/2005
+=========================
+
+- StyleLink filters duplicate entires;
+- Only one init file for all modules (.bloxx files in /init);
+- Stylelink refers to module by ID, not name;
+
+Version 0.1 - 24/Jan/2005
+=========================
+
+- First release of Bloxx under the GPL.
+
+Core modules: modulemanager, role, config, language, page, identity, admin,
+style, stylelink, headerfooter, resource, usergroup, grouplink, workflow,
+state, list;
+
+Modules: gallery, image, forum, news, poll, pollvote, personalinfo,
+mailcomment, topicalnews, topicalnewstopic, comment, datetime.

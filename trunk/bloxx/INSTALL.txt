@@ -1,0 +1,40 @@
+Bloxx - Open Source Content Mangement System
+Display Ingenuity
+
+IMPORTANT!
+==========
+
+This is alfa software and not ready for production yet.
+At this stage Bloxx is only relevant to hardcore PHP developers.
+Use it at your own risk!
+
+INSTALATION INSTRUCTIONS
+========================
+
+1. Unzip/untar the distribution file;
+
+2. Copy/upload the Bloxx directory tree to your webserver/hosting account
+web documents directory (usually public_html);
+
+3. Make sure file permissions are correct;
+
+3. Edit the following line if the file defines.php:
+
+define('DATABASE_DSN', 'mysql://:@localhost/teste');
+
+Insert here your database user data, in the form:
+
+define('DATABASE_DSN', 'mysql://<username>:<password>@<host>/<database>');
+
+4. From your browser run install.php (www.<yoursite>.com/install.php);
+
+5. Disable the install.php file (delete/change permissions/move/insert die());
+
+6. From your browser use bloxx.php to access the bloxx backend and administer
+your site (www.<yoursite>.com/install.php);
+
+7. Login with username: admin / password: bloxx;
+
+8. Change the administrator password;
+
+We hope you enjoy Bloxx.

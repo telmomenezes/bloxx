@@ -1,5 +1,10 @@
 BLOXX CHANGELOG
 
+Version 0.6 -
+=========================
+
+-
+
 Version 0.5 - 17/Fev/2005
 =========================
 
@@ -12,7 +17,7 @@ Version 0.5 - 17/Fev/2005
 - Language bugs corected in Admin core module;
 - Removed old deprecated HTTP_*_VARS;
 - Changed Bloxx_DBObject::insertWhereCondition() to new API ($field, $op, $value);
-- Changed the way used to make a session key
+- Changed the way used to make a session key;
 
 Version 0.4 - 31/Jan/2005
 =========================

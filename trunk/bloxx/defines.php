@@ -29,5 +29,5 @@ define('LANG_DIR', MAIN_DIR . 'lang/');
 define('JAVASCRIPT_DIR', MAIN_DIR . 'javascript/');
 define('ENUM_DIR', MAIN_DIR . 'enums/');
 
-define('BLOXX_CORE_VERSION', '0.5');
+define('BLOXX_CORE_VERSION', '0.6');
 ?>

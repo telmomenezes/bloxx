@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_form.php,v 1.4 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_form.php,v 1.5 2005-02-24 04:51:30 secretdraft Exp $
 
 class Bloxx_Form
 {
@@ -52,9 +52,7 @@ class Bloxx_Form
         }
         
         function setFromGlobals()
-        {
-                global $_GET;
-        
+        {        
                 if(isset($_GET['return_mode'])){
                 
                         $this->mode = $_GET['return_mode'];
@@ -84,9 +82,7 @@ class Bloxx_Form
         }
         
         function renderHeader($module, $command, $id = -1)
-        {
-                global $_GET;
-                
+        {                
                 $html_out = '<form enctype="multipart/form-data"';
                 
                 $html_out .= ' name="' . $this->form_name . '"';

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_admin.php,v 1.8 2005-02-22 23:03:22 tmenezes Exp $
+// $Id: bloxx_admin.php,v 1.9 2005-02-24 04:51:31 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -84,8 +84,6 @@ class Bloxx_Admin extends Bloxx_Module
 
         function doRender($mode, $id, $target, $mt)
         {
-
-                global $_POST;
 
                 if(!$this->verifyTrust(TRUST_ADMINISTRATOR, $id)){
 
@@ -480,8 +478,6 @@ class Bloxx_Admin extends Bloxx_Module
                 }
                 else if($mode == 'uninstall_mod_confirm'){
 
-                        global $_POST;
-
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
                         $mm->getRowByID($_POST['module_to_uninstall']);
@@ -530,7 +526,6 @@ class Bloxx_Admin extends Bloxx_Module
                 else if($mode == 'navigator'){
 
                         $html_out = '';
-                        global $_GET;
 
                         if(isset($_GET['mode'])){
                         
@@ -567,8 +562,6 @@ class Bloxx_Admin extends Bloxx_Module
 
         function doProcessForm($command)
         {
-                global $_POST;
-
                 if($command == 'edit'){
 
                         //just used to pass the values from the form
@@ -635,8 +628,6 @@ class Bloxx_Admin extends Bloxx_Module
                         $item->deleteRowByID($_POST['item']);
                 }
                 else if($command == 'uninstall_mod'){
-                
-                        global $_POST;
 
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
@@ -649,8 +640,6 @@ class Bloxx_Admin extends Bloxx_Module
                         $minst->uninstall();
                 }
                 else if($command == 'install_mod'){
-
-                        global $_POST;
 
                         $mname = $_POST['module_to_install'];
                         $mname = substr($mname, 1);

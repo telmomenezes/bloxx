@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_search.php,v 1.3 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_search.php,v 1.4 2005-02-24 04:51:31 secretdraft Exp $
 
 require_once 'defines.php';
 include_once(CORE_DIR.'bloxx_module.php');
@@ -93,8 +93,6 @@ class Bloxx_Search extends Bloxx_Module
                         return $html_out;
                 }
                 else if($mode == 'next'){
-                
-                        global $_GET;
                         
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();
@@ -124,8 +122,6 @@ class Bloxx_Search extends Bloxx_Module
                         }
                 }
                 else if($mode == 'prev'){
-
-                        global $_GET;
 
                         include_module_once('modulemanager');
                         $mm = new Bloxx_ModuleManager();

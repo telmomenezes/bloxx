@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_state.php,v 1.4 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_state.php,v 1.5 2005-02-24 04:51:31 secretdraft Exp $
 
 include_once(CORE_DIR.'bloxx_module.php');
 
@@ -52,8 +52,6 @@ class Bloxx_State extends Bloxx_Module
         
         function getValue($module, $item)
         {
-                global $_COOKIE;
-        
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
                 
@@ -94,8 +92,6 @@ class Bloxx_State extends Bloxx_Module
         
         function setValue($module, $item, $value)
         {
-                global $_COOKIE;
-
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
 

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_workflow.php,v 1.4 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_workflow.php,v 1.5 2005-02-24 04:51:31 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -69,8 +69,6 @@ class Bloxx_Workflow extends Bloxx_Module
 
         function doRender($mode, $id, $target)
         {
-                global $_POST;
-
                 $style = new Bloxx_Style();
                 $style_button = $this->getGlobalStyle('Button');
                 $style_link = $this->getGlobalStyle('Link');
@@ -167,8 +165,6 @@ class Bloxx_Workflow extends Bloxx_Module
 
         function doProcessForm($command)
         {
-                global $_POST;
-
                 if($command == 'accept_reject'){
 
                         if($_POST['submit'] == LANG_WORKFLOW_ACCEPT){

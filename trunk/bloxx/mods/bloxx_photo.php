@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photo.php,v 1.5 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_photo.php,v 1.6 2005-02-24 04:51:29 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -73,7 +73,6 @@ class Bloxx_Photo extends Bloxx_Module
 
                 if($mode == 'form'){
 
-                        global $_GET;
                         unset($_GET['return_id']);
                         unset($_GET['id']);
                         $html_out = $this->renderForm(-1, false);
@@ -152,8 +151,6 @@ class Bloxx_Photo extends Bloxx_Module
         
         function create()
         {
-                global $_FILES;
-
                 if(isset($_FILES['image']['tmp_name'])){
 
                         include_once(CORE_DIR . 'bloxx_image_utils.php');
@@ -176,9 +173,7 @@ class Bloxx_Photo extends Bloxx_Module
 
         //Condition to list photos by gallery
         function insertListConditions()
-        {
-                global $_GET;
-                
+        {       
                 if(isset($_GET['gallery'])){
                 
                         $this->insertWhereCondition('gallery', '=', $_GET['gallery']);

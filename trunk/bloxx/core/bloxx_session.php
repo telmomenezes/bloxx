@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_session.php,v 1.7 2005-02-24 01:35:30 secretdraft Exp $
+// $Id: bloxx_session.php,v 1.8 2005-02-24 04:51:30 secretdraft Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 require_once(CORE_DIR . 'bloxx_modulelogger.php');
@@ -28,7 +28,7 @@ require_once(CORE_DIR . 'bloxx_modulelogger.php');
  * Bloxx_Session Handles everything about user sessions.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_session.php,v 1.7 2005-02-24 01:35:30 secretdraft Exp $
+ * @version   $Id: bloxx_session.php,v 1.8 2005-02-24 04:51:30 secretdraft Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -245,6 +245,25 @@ class Bloxx_Session extends Bloxx_Module
 		 {
 		 	setcookie($name, '', 0, '/', '', 0);
 		 	unset ($_COOKIE[$name]);
-		 }                
+		 }
+		 
+		/**
+		 * getLogin Returns login name.
+		 *
+		 * @return string Login name if session exists, null otherwise.
+		 *
+		 * @access public
+		 */
+		function getLogin()
+		{
+			if ($this->exists())
+			{
+				return $_COOKIE['login'];
+			}
+			else
+			{
+				return null;
+			}
+		}
 }
 ?>

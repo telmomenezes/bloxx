@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: functions.php,v 1.4 2005-02-18 17:34:55 tmenezes Exp $
+// $Id: functions.php,v 1.5 2005-02-24 04:51:31 secretdraft Exp $
 
 function include_module_once($module)
 {
@@ -101,8 +101,6 @@ function include_enum_once($enum)
 
 function build_link($id, $view, $param, $target, $link_text, $return, $vars = null)
 {
-        global $_GET;
-
         $param_before = false;
 
         $html_out = '<a href="index.php?';
@@ -220,7 +218,6 @@ function build_link($id, $view, $param, $target, $link_text, $return, $vars = nu
 
 function getExtraGetVars()
 {
-        global $_GET;
         $extra_vars = array();
         
         foreach($_GET as $k => $v){

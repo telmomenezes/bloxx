@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_page.php,v 1.4 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_page.php,v 1.5 2005-02-24 04:51:30 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -63,8 +63,6 @@ class Bloxx_Page extends Bloxx_Module
                 include_once(CORE_DIR . 'bloxx_tokenizer.php');
                 
                 $tokenizer = new Bloxx_Tokenizer();
-                
-                global $_GET;
                 
                 $this->getRowByID($id);
                 
@@ -209,9 +207,7 @@ class Bloxx_Page extends Bloxx_Module
         }
         
         function preParseBloxx($bloxx_html, &$html_out)
-        {
-                global $_GET;
-                
+        {                
                 if(substr($bloxx_html, 0, 13) == "bloxx_private"){
                         
                         ereg('([^> ]*) ([^> ]*) ([^> ]*)>(.*)', $bloxx_html, $regs);
@@ -267,9 +263,7 @@ class Bloxx_Page extends Bloxx_Module
         }
         
         function parseBloxx($bloxx_html, &$html_out, &$javascript_out)
-        {
-                global $_GET;
-                
+        {                
                 $target = null;
 
                 if(substr($bloxx_html, 0, 9) == "bloxx_mod"){

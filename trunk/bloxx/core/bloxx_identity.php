@@ -20,7 +20,7 @@
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //          Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_identity.php,v 1.7 2005-02-23 21:08:23 secretdraft Exp $
+// $Id: bloxx_identity.php,v 1.8 2005-02-24 04:51:30 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -84,10 +84,8 @@ class Bloxx_Identity extends Bloxx_Module
         {
                 include_once(CORE_DIR . 'bloxx_form.php');
                 
-                global $_COOKIE;
-                
-                if($mode == 'loginbox'){
-                        
+                if ($mode == 'loginbox')
+                {                        
                         $form = new Bloxx_Form();
                         $html_out = $form->renderHeader($this->name, 'login');
                         $mt->setItem('header', $html_out);
@@ -112,11 +110,10 @@ class Bloxx_Identity extends Bloxx_Module
                                 
                         return $mt->renderView();
                 }
-                else if($mode == 'logout_button'){
-                        
+                else if ($mode == 'logout_button')
+                {                        
                         $form = new Bloxx_Form();
 
-                        global $_GET;
                         unset($_GET['return_id']);
                         //unset($_GET['id']);
                         
@@ -127,19 +124,19 @@ class Bloxx_Identity extends Bloxx_Module
                         $mt->setItem('button', $html_out);
                         return $mt->renderView();
                 }
-                else if($mode == 'welcome'){
-
-                        $html_out =  LANG_IDENTITY_WELCOME . ' ' . $_COOKIE["login"];
+                else if ($mode == 'welcome')
+                {
+                        $html_out =  LANG_IDENTITY_WELCOME . ' ' . $this->session->getLogin();
                         $mt->setItem('welcome', $html_out);
 
                         return $mt->renderView();
                 }
-                else if($mode == 'change_password'){
-
+                else if ($mode == 'change_password')
+                {
                         $id = $this->id();
 
-                        if($id != -1){
-
+                        if ($id != -1)
+                        {
                                 $form = new Bloxx_Form();
                                 $html_out = $form->renderHeader($this->name, 'change_password');
                                 $mt->setItem('header', $html_out);
@@ -171,29 +168,25 @@ class Bloxx_Identity extends Bloxx_Module
                                 return $mt->renderView();
                         }
                 }
-                else if($mode == 'register'){
-
-                        global $_GET;
+                else if ($mode == 'register')
+                {
                         unset($_GET['return_id']);
                         unset($_GET['id']);
                         return $this->renderForm(-1, false, $mt);
                 }
-                else if($mode == 'change_data'){
-
-                        global $_GET;
+                else if ($mode == 'change_data')
+                {
                         unset($_GET['return_id']);
                         unset($_GET['id']);
                         return $this->renderForm($this->id(), false, $mt);
                 }
-                else if($mode == 'confirm'){
-
-                        global $_GET;
-                        
+                else if ($mode == 'confirm')
+                {                        
                         $this->insertWhereCondition('confirm_hash', '=', $_GET['code']);
                         $this->runSelect();
 
-                        if ($this->nextRow() && ($this->confirmed == 0) && ($this->email == $_GET['email'])){
-
+                        if ($this->nextRow() && ($this->confirmed == 0) && ($this->email == $_GET['email']))
+                        {
                                 $this->confirmed = 1;
                                 $this->updateRow();
 
@@ -209,7 +202,7 @@ class Bloxx_Identity extends Bloxx_Module
         
         function doProcessForm($command)
         {
-                global $_POST, $warningmessage;
+                global $warningmessage;
 
                 if($command == 'login'){
 
@@ -328,7 +321,6 @@ class Bloxx_Identity extends Bloxx_Module
         
         function create()
         {
-                global $_POST;
                 
                 if($_POST['password'] != $_POST['password_again']){
 
@@ -376,7 +368,6 @@ class Bloxx_Identity extends Bloxx_Module
         
         function update()
         {
-                global $_POST;
 
                 //Allow only admins or indentity owners
                 if((!$this->verifyTrust(TRUST_ADMINISTRATOR))
@@ -429,28 +420,26 @@ class Bloxx_Identity extends Bloxx_Module
         }
         
         function id()
-        {
-        
-                global $_COOKIE;
-        
-                if ($this->isLoggedIn()){
-                
-                        $username = $_COOKIE["login"];
+        {       
+        		$username = $this->session->getLogin();
+        		
+                if ($username != null)
+                {                
                         $this->clearWhereCondition();
                         $this->insertWhereCondition('username', '=', $username);
                         $this->runSelect();
                         
-                        if($this->nextRow()){
-                        
+                        if ($this->nextRow())
+                        {                        
                                 return $this->id;
                         }
-                        else{
-                        
+                        else
+                        {                        
                                 return -1;
                         }
                 }
-                else{
-        
+                else
+                {        
                         return -1;
                 }
         }

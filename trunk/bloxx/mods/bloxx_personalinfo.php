@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_personalinfo.php,v 1.5 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_personalinfo.php,v 1.6 2005-02-24 04:51:29 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -182,8 +182,6 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
                 
-                global $_POST;
-
                 if($_POST['user_id'] != $ident->id()){
                 
                         if(!$this->verifyTrust(TRUST_ADMINISTRATOR)){
@@ -201,8 +199,6 @@ class Bloxx_PersonalInfo extends Bloxx_Module
 
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
-
-                global $_POST;
 
                 if($_POST['user_id'] != $ident->id()){
 

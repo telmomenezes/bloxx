@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_forum.php,v 1.4 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_forum.php,v 1.5 2005-02-24 04:51:29 secretdraft Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -115,7 +115,6 @@ class Bloxx_Forum extends Bloxx_Module
                 }
                 else if($mode == 'form'){
 
-                        global $_GET;
                         unset($_GET['return_id']);
                         unset($_GET['id']);
                         

@@ -21,7 +21,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_module.php,v 1.6 2005-02-22 23:03:31 tmenezes Exp $
+// $Id: bloxx_module.php,v 1.7 2005-02-24 04:51:31 secretdraft Exp $
 
 require_once 'defines.php';
 require_once CORE_DIR . 'bloxx_dbobject.php';
@@ -30,7 +30,7 @@ require_once CORE_DIR . 'bloxx_dbobject.php';
   * This is the class from where all Bloxx Module classes are derived from.
   *
   * @package   bloxx_core
-  * @version   $Id: bloxx_module.php,v 1.6 2005-02-22 23:03:31 tmenezes Exp $
+  * @version   $Id: bloxx_module.php,v 1.7 2005-02-24 04:51:31 secretdraft Exp $
   * @category  Core
   * @copyright Copyright &copy; 2002-2005 The Bloxx Team
   * @license   The GNU General Public License, Version 2
@@ -514,8 +514,6 @@ class Bloxx_Module extends Bloxx_DBObject {
 
     function assignValuesFromPost($new) {
 
-        global $_POST;
-
         $def = $this->tableDefinitionLangComplete();
 
         foreach ($def as $k => $v) {
@@ -538,8 +536,6 @@ class Bloxx_Module extends Bloxx_DBObject {
                         $this-> $k = $ident->id();
                     } else
                         if ($v['TYPE'] == 'IMAGE') {
-
-                            global $_FILES;
 
                             if ((isset ($_FILES[$k]['tmp_name'])) && (!isset ($this-> $k))) {
 
@@ -589,7 +585,6 @@ class Bloxx_Module extends Bloxx_DBObject {
     }
 
     function update($verify_trust = true) {
-        global $_POST;
 
         if ($verify_trust) {
 
@@ -668,7 +663,6 @@ class Bloxx_Module extends Bloxx_DBObject {
     }
 
     function getCurrentPageID() {
-        global $_GET;
 
         if (isset ($_GET['id'])) {
 

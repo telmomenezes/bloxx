@@ -19,10 +19,10 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photogallery.php,v 1.4 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_photogallery.php,v 1.5 2005-02-25 12:24:28 tmenezes Exp $
 
 require_once 'defines.php';
-require_once(CORE_DIR.'bloxx_module.php');
+require_once(CORE_DIR . 'bloxx_module.php');
 
 class Bloxx_PhotoGallery extends Bloxx_Module
 {
@@ -65,23 +65,21 @@ class Bloxx_PhotoGallery extends Bloxx_Module
                 );
         }
 
-        function doRender($mode, $id, $target)
-        {
-                $style = new Bloxx_Style();
-                $style_title = $this->getGlobalStyle('Title');
+        function doRender($mode, $id, $target, $mt)
+        {                
 
                 if($mode == 'form'){
 
-                        $html_out .= $this->renderForm(-1, false);
+                        $html_out .= $this->renderForm(-1, false, $mt);
 
                         return $html_out;
                 }
                 else if($mode == 'title'){
 
                         $this->getRowByID($id);
-                        $html_out = $this->title;
+                        $mt->setItem('title', $this->title);
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'gallery'){
 
@@ -145,30 +143,31 @@ class Bloxx_PhotoGallery extends Bloxx_Module
 
                         $gallery = new Bloxx_PhotoGallery();
                         $gallery->getRowByID($id);
-
-                        $html_out = $style->renderStyleHeader($style_link);
-                        $html_out .= '<a href="index.php?id=' . $gal_page . '&gallery=' . $id . '">';
+                        
+                        $html_out = '<a href="index.php?id=' . $gal_page . '&gallery=' . $id . '">';
                         $html_out .= $gallery->title;
                         $html_out .= '</a>';
-                        $html_out .= $style->renderStyleFooter($style_link);
+                        
+                        $mt->setItem('link', $html_out);                        
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
                 else if($mode == 'gallery_list'){
 
                         $gallery = new Bloxx_PhotoGallery();
                         $gallery->clearWhereCondition();
-                        $gallery->runSelect();
+                        $gallery->runSelect();                        
 
-                        $html_out = null;
-
+						$mt->startLoop('list');
                         while($gallery->nextRow()){
 
-                                $html_out .= $gallery->render('gallery_link', $gallery->id);
-                                $html_out .= '<br>';
+								$mt->nextLoopIteration();
+                                $html_out = $gallery->render('gallery_link', $gallery->id);
+                                
+                                $mt->setLoopItem('link');               
                         }
 
-                        return $html_out;
+                        return $mt->renderView();
                 }
         }
 }

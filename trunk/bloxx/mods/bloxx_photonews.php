@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photonews.php,v 1.4 2005-02-24 04:51:29 secretdraft Exp $
+// $Id: bloxx_photonews.php,v 1.5 2005-02-25 12:24:13 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -127,7 +127,11 @@ class Bloxx_PhotoNews extends Bloxx_Module
         
         function create()
         {
-                if(isset($_FILES['image']['tmp_name'])){
+
+                global $_FILES;
+
+                if (isset($_FILES['image']['tmp_name'])
+                	&& ($_FILES['image']['tmp_name'] != '')) {
 
                         include_once(CORE_DIR . 'bloxx_image_utils.php');
 

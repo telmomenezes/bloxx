@@ -30,6 +30,8 @@ Core Functionalities
 - Local time, correct server time someway;
 - Display photo in photogallery selector, first or random;
 - Configurable timeout of login cookies;
+- Configurable textarea width;
+- Bug: Malformed html destroies render of textarea;
 
 Documentation
 

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: index.php,v 1.4 2005-02-18 17:34:55 tmenezes Exp $
+// $Id: index.php,v 1.5 2005-02-24 03:43:01 secretdraft Exp $
 
 require_once('defines.php');
 require_once('functions.php');
@@ -31,19 +31,16 @@ unset($warningmessage);
 
 $page = new Bloxx_Page();
 
-global $_POST;
-global $_GET;
-
 //Hack para remover o irritante comportamento das magic quotes
 //Será a melhor maneira?
 //Precisa de ser aplicado também a $_GET?
-if(get_magic_quotes_gpc()){
-
+if (get_magic_quotes_gpc())
+{
         $_POST = array_map("stripslashes", $_POST);
 }
         
-if(isset($_POST['module']) && $_POST['module'] != ''){
-
+if (isset($_POST['module']) && $_POST['module'] != '')
+{
         $modname = 'bloxx_'.$_POST['module'];
         
         include_module_once($_POST['module']);
@@ -54,12 +51,12 @@ if(isset($_POST['module']) && $_POST['module'] != ''){
 
 $id = 1;
 
-if(isset($_GET['id'])){
-
+if (isset($_GET['id']))
+{
         $id = $_GET['id'];
 }
-else{
-
+else
+{
         include_module_once('config');
         $config = new Bloxx_Config();
         $id = $config->getMainPage();

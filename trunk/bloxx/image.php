@@ -19,12 +19,10 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: image.php,v 1.5 2005-02-18 17:34:55 tmenezes Exp $
+// $Id: image.php,v 1.6 2005-02-24 03:44:02 secretdraft Exp $
 
 require_once('defines.php');
 require_once('functions.php');
-
-global $_GET;
 
 $mod = $_GET['module'];
 $id = $_GET['id'];
@@ -38,8 +36,8 @@ $mod_inst->clearWhereCondition();
 $mod_inst->insertWhereCondition('id', '=', $id);
 $mod_inst->runSelect();
 
-if($mod_inst->nextRow()){
-
+if ($mod_inst->nextRow())
+{
         $data = $mod_inst->$field;
 
         Header("Content-type: image/jpeg");

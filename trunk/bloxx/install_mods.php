@@ -19,19 +19,19 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: install_mods.php,v 1.6 2005-02-21 15:58:57 secretdraft Exp $
+// $Id: install_mods.php,v 1.7 2005-02-24 03:40:02 secretdraft Exp $
 
-function bloxxInstallMods() {
-
+function bloxxInstallMods() 
+{
 	require_once('defines.php');
 	require_once('functions.php');
 
 	$dh = opendir(MODS_DIR);
 
-	while (($file = readdir($dh)) !== false) {
-
-    	    if(is_file(MODS_DIR . $file) && ($file != '.') && ($file != '..')){
-
+	while (($file = readdir($dh)) !== false) 
+	{
+    	    if (is_file(MODS_DIR . $file) && ($file != '.') && ($file != '..'))
+    	    {
         	        include_once(MODS_DIR . $file);
 
             	    $mod_name = substr($file, 0, -4);
@@ -44,8 +44,8 @@ function bloxxInstallMods() {
 
 	$dh = opendir(MODS_DIR);
 
-	while (($file = readdir($dh)) !== false) {
-
+	while (($file = readdir($dh)) !== false) 
+	{
     	    if(is_file($file) && ($file != '.') && ($file != '..')){
         
         		$mod_name = substr($file, 0, -4);

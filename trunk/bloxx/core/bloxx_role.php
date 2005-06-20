@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_role.php,v 1.3 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_role.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
 
 define('TRUST_GUEST', 0);
 define('TRUST_USER', 1);
@@ -66,12 +66,6 @@ class Bloxx_Role extends Bloxx_Module
                 return $def;
         }
         
-        function doRender($mode, $id, $target)
-        {
-        }
-
-
-        
         function registerRole($rolename, $trust_base)
         {
                 $this->clearWhereCondition();
@@ -80,7 +74,7 @@ class Bloxx_Role extends Bloxx_Module
                 
                 if ($this->nextRow()) {
                 
-                        //Erro: o nome escolhido já existe.';
+                        //Error: name already exists
                         return false;
                 }
                 else{
@@ -89,7 +83,7 @@ class Bloxx_Role extends Bloxx_Module
                         
                         if (!$this->insertRow()){
                         
-                                //Erro:  ocorreu um erro de acesso à nossa base de dados.
+                                //DB Access error
                                 return false;
                         } 
                         else {
@@ -99,11 +93,11 @@ class Bloxx_Role extends Bloxx_Module
                 }
         }
         
-        function install()
+        /*function install()
         {
                 parent::install();
                 $this->registerRole('Administrators', TRUST_BOSS);
-        }
+        }*/
         
         function registerModule($module_name)
         {
@@ -127,7 +121,7 @@ class Bloxx_Role extends Bloxx_Module
                 $this->removeTableColumn($col);
         }
         
-        function getTrust($module_name)
+        function getModuleTrust($module_name)
         {
                 $col = 'trust_' . $module_name;
                 return $this->$col;

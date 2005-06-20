@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_language.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_language.php,v 1.3 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -43,16 +43,6 @@ class Bloxx_Language extends Bloxx_Module
                         'code' => array('TYPE' => 'STRING', 'SIZE' => 2, 'NOTNULL' => true),
                         'language_name' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true)
                 );
-        }
-        
-        function getRenderTrusts()
-        {
-                return array(
-                );
-        }
-        
-        function doRender($mode, $id, $target)
-        {
-        }
+        }        
 }
 ?>

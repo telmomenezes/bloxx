@@ -19,9 +19,11 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_lang_PT_headerfooter.php,v 1.3 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_lang_PT_headerfooter.php,v 1.4 2005-06-20 11:26:07 tmenezes Exp $
 
-define('F_LANG_HEADERFOOTER_TITLE', 'Título');
-define('F_LANG_HEADERFOOTER_HEADER_HTML', 'Cabeçalho');
-define('F_LANG_HEADERFOOTER_FOOTER_HTML', 'Rodapé');
+define('F_LANG_HEADERFOOTER_TITLE', 'T&iacute;tulo');
+define('F_LANG_HEADERFOOTER_HEADER_HTML', 'Cabe&ccedil;alho');
+define('F_LANG_HEADERFOOTER_FOOTER_HTML', 'Rodap&eacute;');
+define('F_LANG_HEADERFOOTER_EXTRA_HEAD_CODE', 'C&oacute;digo HEAD Adicional');
+define('F_LANG_HEADERFOOTER_BODYTAG_PARAMS', 'C&oacute;digo Adiocional para a tag BODY');
 ?>

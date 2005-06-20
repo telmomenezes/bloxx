@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_topicalnewstopic.php,v 1.3 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_topicalnewstopic.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -47,7 +47,7 @@ class Bloxx_TopicalNewsTopic extends Bloxx_Module
                 );
         }
 
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'topic_symbol' => TRUST_GUEST,
@@ -55,36 +55,24 @@ class Bloxx_TopicalNewsTopic extends Bloxx_Module
                 );
         }
 
-        function getStyleList()
-        {
-                return array(
-                        'Title' => 'NormalTitle',
-                        'Text' => 'NormalText',
-                        'Link' => 'NormalLink'
-                );
-        }
+//  Render methods .............................................................
+        
+	function doRenderTopic_Symbol($param, $target, $jump, $other_params, $mt)
+	{
 
-        function doRender($mode, $id, $target)
-        {
-                $style = new Bloxx_Style();
-                $style_title = $this->getGlobalStyle('Title');
-                $style_text = $this->getGlobalStyle('Text');
-                $style_link = $this->getGlobalStyle('Link');
+		$this->getRowByID($param);
 
-                if($mode == 'topic_symbol'){
+		$html_out .= $this->topic_symbol;
 
-                        $this->getRowByID($id);
+		return $html_out;
+	}
+	
+	function doRenderTopic_Form($param, $target, $jump, $other_params, $mt)
+	{
 
-                        $html_out .= $this->topic_symbol;
+		$html_out .= $this->renderForm(-1, false);
 
-                        return $html_out;
-                }
-                else if($mode == 'topic_form'){
-
-                        $html_out .= $this->renderForm(-1, false);
-
-                        return $html_out;
-                }
-        }
+		return $html_out;
+	}
 }
 ?>

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photo.php,v 1.7 2005-03-04 20:49:37 tmenezes Exp $
+// $Id: bloxx_photo.php,v 1.8 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -49,7 +49,7 @@ class Bloxx_Photo extends Bloxx_Module
                 );
         }
 
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'form' => TRUST_EDITOR,
@@ -57,81 +57,47 @@ class Bloxx_Photo extends Bloxx_Module
                         'thumbnail' => TRUST_GUEST,
                         'title' => TRUST_GUEST
                 );
-        }
-
-        function getStyleList()
-        {
-                return array(
-                        'Title' => 'NormalLink'
-                );
-        }
-
-        function doRender($mode, $id, $target, $mt)
-        {                
-                if($mode == 'form'){
-
-                        unset($_GET['return_id']);
-                        unset($_GET['id']);
-                        $html_out = $this->renderForm(-1, false, $mt);
-
-                        return $html_out;
-                }
-                else if($mode == 'full'){
-                        
-                        $this->getRowByID($id);
-                        $html_out = $this->renderImage('image');
-                        $mt->setItem('image', $html_out);
-                        
-                        return $mt->renderView();
-                }
-                else if($mode == 'title'){
-
-                        $this->getRowByID($id);
-                        $html_out = $this->title;
-						$mt->setItem('title', $html_out);
-                        
-                        return $mt->renderView();
-                }
-                else if($mode == 'thumbnail'){
-
-                        $full_image_page = $this->getConfig('full_photo_page');
-
-                        $this->getRowByID($id);
-
-                        $html_out = '<a href="index.php?id=' . $full_image_page . '&param=' . $id . '">';
-                        $html_out .= $this->renderImage('thumb');
-                        $html_out .= '</a>';
-                        
-                        $mt->setItem('thumb', $html_out);                        
-                        
-                        $html_out = '<a href="index.php?id=' . $full_image_page . '&param=' . $id . '">';
-                        $html_out .= $this->title;
-                        $html_out .= '</a>';
-                        
-                        $mt->setItem('title', $html_out);
-
-                        return $mt->renderView();
-                }
-        }
+        }        
         
         function create()
         {
-                if(isset($_FILES['image']['tmp_name'])){
+                if(isset($_FILES['image']['tmp_name']))
+                {
 
 						$thumb_side = $this->getConfig('thumb_side');
+						$full_side = $this->getConfig('full_side');
 
                         include_once(CORE_DIR . 'bloxx_image_utils.php');
                         
                         $or_width = getJpegWidth($_FILES['image']['tmp_name']);
                         $or_height = getJpegHeight($_FILES['image']['tmp_name']);
                         
-                        if($or_width > $or_height){
+                        if (($or_width > $thumb_side) || ($or_height > $thumb_side))
+                        {
+                        	if ($or_width > $or_height)
+                        	{
                         
                                 $this->thumb = scaleJpegWidth($_FILES['image']['tmp_name'], $thumb_side);
-                        }
-                        else{
+                        	}
+                        	else
+                        	{
                         
                                 $this->thumb = scaleJpegHeight($_FILES['image']['tmp_name'], $thumb_side);
+                        	}
+                        }
+                        
+                        if (($or_width > $full_side) || ($or_height > $full_side))
+                        {
+                        	if ($or_width > $or_height)
+                        	{
+                        
+                                $this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $full_side);
+                        	}
+                        	else
+                        	{
+                        
+                                $this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $full_side);
+                        	}
                         }
                 }
 
@@ -146,5 +112,59 @@ class Bloxx_Photo extends Bloxx_Module
                         $this->insertWhereCondition('gallery', '=', $_GET['gallery']);
                 }
         }
+
+//  Render methods .............................................................
+        
+	function doRenderForm($param, $target, $jump, $other_params, $mt)                
+	{                
+
+		unset($_GET['return_id']);
+		unset($_GET['id']);
+		$html_out = $this->renderForm(-1, false, $mt);
+
+		return $html_out;
+	}
+	
+	function doRenderFull($param, $target, $jump, $other_params, $mt)
+	{
+                        
+		$this->getRowByID($param);
+		$html_out = $this->renderImage('image');
+		$mt->setItem('image', $html_out);
+                        
+		return $mt->renderView();
+	}
+	
+	function doRenderTitle($param, $target, $jump, $other_params, $mt)
+	{
+
+		$this->getRowByID($param);
+		$html_out = $this->title;
+		$mt->setItem('title', $html_out);
+                        
+		return $mt->renderView();
+	}
+	
+	function doRenderThumbnail($param, $target, $jump, $other_params, $mt)
+	{
+
+		$full_image_page = $this->getConfig('full_photo_page');
+
+		$this->getRowByID($param);
+
+		$html_out = '<a href="index.php?id=' . $full_image_page . '&param=' . $param . '">';
+		$html_out .= $this->renderImage('thumb');
+		$html_out .= '</a>';
+                        
+		$mt->setItem('thumb', $html_out);                        
+                        
+		$html_out = '<a href="index.php?id=' . $full_image_page . '&param=' . $param . '">';
+		$html_out .= $this->title;
+		$html_out .= '</a>';
+                        
+		$mt->setItem('title', $html_out);
+
+		return $mt->renderView();
+	}
 }
 ?>

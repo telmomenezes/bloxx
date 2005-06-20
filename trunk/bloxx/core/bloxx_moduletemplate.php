@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_moduletemplate.php,v 1.7 2005-02-26 20:26:03 tmenezes Exp $
+// $Id: bloxx_moduletemplate.php,v 1.8 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -47,6 +47,15 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
                 $this->curent_loop = '';
                 
                 $this->Bloxx_Module();
+        }
+        
+        function init()
+        {
+       		$this->items = array();
+        	$this->loops = array();
+            $this->loop_count = 0;
+            $this->loop_index = 0;
+            $this->curent_loop = '';
         }
         
         function getTableDefinition()

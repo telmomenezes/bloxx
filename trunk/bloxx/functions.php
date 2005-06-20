@@ -19,37 +19,39 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: functions.php,v 1.5 2005-02-24 04:51:31 secretdraft Exp $
+// $Id: functions.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
 
 function include_module_once($module)
 {
         global $BLOXX_INCLUDED_MODULES;
+        global $G_LANGUAGE;
         
         if(isset($BLOXX_INCLUDED_MODULES[$module])){
         
                 return;
         }
         
-        $BLOXX_INCLUDED_MODULES[$module] = true;
+        if(isset($G_LANGUAGE)
+        	&& ($G_LANGUAGE != null)){
+                
+        	$BLOXX_INCLUDED_MODULES[$module] = true;
+        }                
 
         $file_name = 'bloxx_' . strtolower($module) . '.php';
         
-        if(file_exists(CORE_DIR.$file_name)){
+        if (file_exists(CORE_DIR . $file_name)) {
         
-                include_once(CORE_DIR.$file_name);
+                include_once(CORE_DIR . $file_name);
         }
-        else if(file_exists(MODS_DIR.$file_name)){
+        else if (file_exists(MODS_DIR . $file_name)) {
 
-                include_once(MODS_DIR.$file_name);
+                include_once(MODS_DIR . $file_name);
         }
         
         include_once(CORE_DIR.'bloxx_config.php');
-        
-        $config = new Bloxx_Config();
-        $lang = $config->getConfig('default_language');
 
         //Include module language module
-        $lang_file = LANG_DIR . $lang . '/' . 'bloxx_lang_' . $lang . '_' . strtolower($module) . '.php';
+        $lang_file = LANG_DIR . $G_LANGUAGE . '/' . 'bloxx_lang_' . $G_LANGUAGE . '_' . strtolower($module) . '.php';        
         
         if(file_exists($lang_file)){
 
@@ -57,7 +59,7 @@ function include_module_once($module)
         }
 
         //Inlude global language module
-        $lang_file = LANG_DIR . $lang . '/' . 'bloxx_lang_' . $lang . '.php';
+        $lang_file = LANG_DIR . $G_LANGUAGE . '/' . 'bloxx_lang_' . $G_LANGUAGE . '.php';
 
         if(file_exists($lang_file)){
 
@@ -87,11 +89,10 @@ function include_enum_once($enum)
 
         include_once(CORE_DIR.'bloxx_config.php');
 
-        $config = new Bloxx_Config();
-        $lang = $config->getConfig('default_language');
+        global $G_LANGUAGE;
 
         //Include module language module
-        $lang_file = LANG_DIR . $lang . '/' . 'enum_lang_' . $lang . '_' . strtolower($enum) . '.php';
+        $lang_file = LANG_DIR . $G_LANGUAGE . '/' . 'enum_lang_' . $G_LANGUAGE . '_' . strtolower($enum) . '.php';
 
         if(file_exists($lang_file)){
 
@@ -99,7 +100,7 @@ function include_enum_once($enum)
         }
 }
 
-function build_link($id, $view, $param, $target, $link_text, $return, $vars = null)
+function build_link($id, $view, $param, $target, $link_text, $return, $vars = null, $anchor = null)
 {
         $param_before = false;
 
@@ -150,17 +151,29 @@ function build_link($id, $view, $param, $target, $link_text, $return, $vars = nu
         
         if($return == true){
 
-                if(isset($_GET['id'])){
-                
-                        if($param_before){
+				if ($param_before)
+				{
 
-                                $html_out .= '&';
-                        }
-
-                        $html_out .= 'return_id=' . $_GET['id'];
-
-                        $param_before = true;
+                	$html_out .= '&';
                 }
+                
+                $param_before = true;
+                
+                $retid = '';
+
+                if (isset($_GET['id']))
+                {
+					$retid = $_GET['id'];                
+                }
+                else
+                {
+                	include_once(CORE_DIR . 'bloxx_config.php');
+					$system = new Bloxx_Config();
+					$retid =  $system->getMainPage();
+                }
+                
+                $html_out .= 'return_id=' . $retid;
+                
                 if(isset($_GET['view'])){
 
                         if($param_before){
@@ -211,6 +224,11 @@ function build_link($id, $view, $param, $target, $link_text, $return, $vars = nu
                 }
         }
         
+        if ($anchor != null)
+        {
+        	$html_out .= '#' . $anchor;
+        }
+        
         $html_out .= '">' . $link_text . '</a>';
         
         return $html_out;
@@ -240,6 +258,13 @@ function getExtraGetVars()
 
 function getDateAndTimeString($timestamp)
 {
+		global $DELTA_TIME;
+		
+		if (isset($DELTA_TIME))
+		{
+			$timestamp += $DELTA_TIME * 3600;
+		}
+	
         $dts = date("Y-m-d H:i", $timestamp);
         
         return $dts;
@@ -247,6 +272,13 @@ function getDateAndTimeString($timestamp)
 
 function getDateString($timestamp)
 {
+		global $DELTA_TIME;
+		
+		if (isset($DELTA_TIME))
+		{
+			$timestamp += $DELTA_TIME * 3600;
+		}
+	
         $dts = date("Y-m-d", $timestamp);
 
         return $dts;

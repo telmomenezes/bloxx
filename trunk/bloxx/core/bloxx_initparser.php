@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_initparser.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_initparser.php,v 1.3 2005-06-20 11:26:08 tmenezes Exp $
 
 define('PARSE_STATE_FIND_ROW', 0);
 define('PARSE_STATE_FIND_FIELD', 1);
@@ -60,7 +60,9 @@ class Bloxx_InitParser
         function parse()
         {
 
-                $mod_block  = $this->data;
+				$def = $this->module->getTableDefinition();
+
+                $mod_block = $this->data;
                 $separator = '[MODULE ' . $this->module->name . ']';
                 $pieces = explode($separator, $mod_block);
                 $count = count($pieces);
@@ -138,6 +140,13 @@ class Bloxx_InitParser
                                         $value = str_replace('$dolar', '$', $value);
                                         $value = str_replace('$open_bracket', '[', $value);
                                         
+                                        //Binary types must be decoded to binary format
+                                        $v = $def[$field];
+										if($v['TYPE'] == 'IMAGE')
+										{											
+											$value = base64_decode($value);
+										}
+                                        
                                         $this->module->$field = $value;
                                         
                                         //echo $field . ' => ' . $value . '<br>';
@@ -155,5 +164,3 @@ class Bloxx_InitParser
         }
 }
 ?>
-
-

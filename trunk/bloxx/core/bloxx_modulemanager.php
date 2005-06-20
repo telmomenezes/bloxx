@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_modulemanager.php,v 1.5 2005-02-26 00:36:18 secretdraft Exp $
+// $Id: bloxx_modulemanager.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -31,7 +31,7 @@ class Bloxx_ModuleManager extends Bloxx_Module
                 $this->name = 'modulemanager';
                 $this->module_version = 1;
                 $this->label_field = 'module_name';
-                $this->use_init_file = false;
+                $this->use_init_file = true;
                 $this->no_private = true;
                 
                 $this->Bloxx_Module();
@@ -74,34 +74,50 @@ class Bloxx_ModuleManager extends Bloxx_Module
         
         function getModuleID($module)
         {
-                $this->clearWhereCondition();
-                $this->insertWhereCondition('module_name', '=', $module);
-                $this->runSelect();
+        		global $CACHE_MOD_ID;
+        		
+        		if (!isset($CACHE_MOD_ID[$module]))
+        		{
+                	$this->clearWhereCondition();
+                	$this->insertWhereCondition('module_name', '=', $module);
+                	$this->runSelect();
                 
-                if($this->nextRow()){
+                	if($this->nextRow()){
 
-                        return $this->id;
-                }
-                else{
+						$CACHE_MOD_ID[$module] = $this->id;
+                	}
+                	else
+                	{
 
-                        return -1;
-                }
+                        $CACHE_MOD_ID[$module] =  -1;
+                	}
+        		}
+        		
+        		return $CACHE_MOD_ID[$module];
         }
         
         function getModuleName($moduleId)
         {
-                $this->clearWhereCondition();
-                $this->insertWhereCondition('id', '=', $moduleId);
-                $this->runSelect();
+        		global $CACHE_MOD_NAME;
+        		
+        		if (!isset($CACHE_MOD_NAME[$moduleId]))        		
+        		{
+        	
+                	$this->clearWhereCondition();
+                	$this->insertWhereCondition('id', '=', $moduleId);
+                	$this->runSelect();
                 
-                if($this->nextRow()){
+                	if($this->nextRow()){
 
-                        return $this->module_name;
-                }
-                else{
+                        $CACHE_MOD_NAME[$moduleId] = $this->module_name;
+                	}
+                	else{
 
-                        return -1;
-                }
+                        $CACHE_MOD_NAME[$moduleId] = -1;
+                	}
+        		}
+        		
+        		return $CACHE_MOD_NAME[$moduleId];
         }
         
         function isCoreModule($mod_name = '')
@@ -117,6 +133,7 @@ class Bloxx_ModuleManager extends Bloxx_Module
         
         function getModuleInstance()
         {
+        	
                 include_module_once($this->module_name);
                 $mname = 'Bloxx_' . $this->module_name;
                 $minst = new $mname();

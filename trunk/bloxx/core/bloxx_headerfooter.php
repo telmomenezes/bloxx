@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_headerfooter.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_headerfooter.php,v 1.3 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -42,18 +42,10 @@ class Bloxx_HeaderFooter extends Bloxx_Module
                 return array(
                         'title' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true),
                         'header_html' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false, 'LANG' => true),
-                        'footer_html' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false, 'LANG' => true)
+                        'footer_html' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false, 'LANG' => true),
+                        'extra_head_code' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false),
+                        'bodytag_params' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false)
                 );
-        }
-        
-        function getRenderTrusts()
-        {
-                return array(
-                );
-        }
-        
-        function doRender($mode, $id, $target)
-        {
-        }
+        }        
 }
 ?>

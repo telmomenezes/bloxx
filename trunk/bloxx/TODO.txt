@@ -8,7 +8,6 @@ Core Functionalities
 - Doxygen stuff;
 - Caching system / search engine friendly mode;
 - Meta tag system;
-- Language selector;
 - RSS Feed;
 - Forms validation (client side/server side);
 - Improve configuration system;
@@ -25,7 +24,7 @@ Core Functionalities
 - General spell-checking system;
 - Verify IMAGE format;
 - Support other IMAGE formats (gif, etc..);
-- doRender() passa a chamar funções, para benificiar de herança de módulos;
+- doRender() calls functions to benefit from OO;
 - Local time, correct server time someway;
 - Display photo in photogallery selector, first or random;
 - Configurable textarea width;
@@ -34,9 +33,10 @@ Core Functionalities
 - Check if all user input are being filtered;
 - Review identity because the use of deprecated hidden hash var;
 - Check index.php for possibilities of transversal directory attack;
-- Correct <bloxx_item> or moduletemplates behaviour that ignores
-everything that comes after a bad/wrong item.
-- Solve security issues with image.php.
+- Correct <bloxx_item> or moduletemplates behaviour that ignores;
+everything that comes after a bad/wrong item;
+- Solve security issues with image.php;
+- .css file created upon install;
 
 Documentation
 

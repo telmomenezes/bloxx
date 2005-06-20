@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_config.php,v 1.3 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_config.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
 
 //require_once 'defines.php';
 include_once(CORE_DIR.'bloxx_module.php');
@@ -47,25 +47,31 @@ class Bloxx_Config extends Bloxx_Module
                 );
         }
         
-        function doRender($mode, $id, $target)
-        {
-        }
-        
         function getValue($module_id, $item)
         {
-                $this->clearWhereCondition();
-                $this->insertWhereCondition('item_name', '=', $item);
-                $this->insertWhereCondition('owner_module_id', '=', $module_id);
-                $this->runSelect();
+        		global $CACHE_CONFIG;        		
+        		
+        		if (!isset($CACHE_CONFIG[$module_id][$item]))
+        		{	
+        	
+                	$this->clearWhereCondition();
+                	$this->insertWhereCondition('item_name', '=', $item);
+                	$this->insertWhereCondition('owner_module_id', '=', $module_id);
+                	$this->runSelect();
                 
-                if (!$this->nextRow()){
+                	if (!$this->nextRow())
+                	{
 
                         return null;
-                }
-                else {
+                	}
+               	 	else
+               	 	{
                 
-                        return $this->item_value;
-                }
+                		$CACHE_CONFIG[$module_id][$item] = $this->item_value;                        
+                	}
+        		}
+        		
+        		return $CACHE_CONFIG[$module_id][$item];
         }
         
         function getConfig($item)

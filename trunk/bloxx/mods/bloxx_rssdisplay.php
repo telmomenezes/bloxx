@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_rssdisplay.php,v 1.4 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_rssdisplay.php,v 1.5 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -41,7 +41,7 @@ class Bloxx_RssDisplay extends Bloxx_Module
                 return array();
         }
         
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'rss_display' => TRUST_GUEST

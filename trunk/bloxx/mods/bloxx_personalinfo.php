@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_personalinfo.php,v 1.6 2005-02-24 04:51:29 secretdraft Exp $
+// $Id: bloxx_personalinfo.php,v 1.7 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -53,7 +53,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                 );
         }
 
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'info' => TRUST_GUEST,

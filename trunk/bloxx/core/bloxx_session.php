@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_session.php,v 1.10 2005-02-26 00:36:18 secretdraft Exp $
+// $Id: bloxx_session.php,v 1.11 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -27,7 +27,7 @@ require_once(CORE_DIR . 'bloxx_module.php');
  * Bloxx_Session Handles everything about user sessions.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_session.php,v 1.10 2005-02-26 00:36:18 secretdraft Exp $
+ * @version   $Id: bloxx_session.php,v 1.11 2005-06-20 11:26:08 tmenezes Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -132,7 +132,8 @@ class Bloxx_Session extends Bloxx_Module
 		 * @access public
 		 */        
         function exists() 
-        {        
+        {
+        	        
                 if (isset($_COOKIE['login']) && isset($_COOKIE['session'])) 
                 {                        
                         $this->clearWhereCondition();
@@ -142,6 +143,7 @@ class Bloxx_Session extends Bloxx_Module
 
                         if ($this->nextRow()) 
                         {
+                        	
                                 if ($this->addr != $_SERVER['REMOTE_ADDR']) 
                                 {                                        
                                         $this->writeLog(LOG_CRIT, 'Hijack attempt to' 
@@ -153,7 +155,7 @@ class Bloxx_Session extends Bloxx_Module
                                 else
                                 {                                        
                                         if (time() < $this->timelimit) 
-                                        {                                               
+                                        {
                                                 return true;                                                
                                         } 
                                         else 
@@ -167,6 +169,7 @@ class Bloxx_Session extends Bloxx_Module
                         {                              
                                 $this->writeLog(LOG_WARNING,'Identify attempt as '
                                 	. $_COOKIE['login'] . ' but session doesnt exist.');
+                                	
                                 
                                 $this->removeCookie('login');
                                 $this->removeCookie('session');

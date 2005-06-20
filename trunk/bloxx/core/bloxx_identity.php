@@ -20,7 +20,7 @@
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //          Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_identity.php,v 1.8 2005-02-24 04:51:30 secretdraft Exp $
+// $Id: bloxx_identity.php,v 1.9 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -58,7 +58,7 @@ class Bloxx_Identity extends Bloxx_Module
                 );
         }
         
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'loginbox' => TRUST_GUEST,
@@ -71,173 +71,15 @@ class Bloxx_Identity extends Bloxx_Module
                 );
         }
         
-        function getFormTrusts()
+        function getLocalCommandTrusts()
         {
                 return array(
                         'login' => TRUST_GUEST,
                         'logout' => TRUST_GUEST,
+                        'register' => TRUST_GUEST,
                         'change_password' => TRUST_USER
                 );
-        }
-        
-        function doRender($mode, $id, $target, $mt)
-        {
-                include_once(CORE_DIR . 'bloxx_form.php');
-                
-                if ($mode == 'loginbox')
-                {                        
-                        $form = new Bloxx_Form();
-                        $html_out = $form->renderHeader($this->name, 'login');
-                        $mt->setItem('header', $html_out);
-
-                        $html_out =  LANG_IDENTITY_USERNAME;
-                        $mt->setItem('username_label', $html_out);
-
-                        $html_out = $form->renderInput('username', '', '');
-                        $mt->setItem('username', $html_out);
-
-                        $html_out =  LANG_IDENTITY_PASSWORD;
-                        $mt->setItem('password_label', $html_out);
-
-                        $html_out = $form->renderInput('password', 'password', '');
-                        $mt->setItem('password', $html_out);
-
-                        $html_out = $form->renderSubmitButton(LANG_IDENTITY_LOGIN);
-                        $mt->setItem('button', $html_out);
-                        
-                        $html_out = $form->renderFooter();
-                        $mt->setItem('footer', $html_out);
-                                
-                        return $mt->renderView();
-                }
-                else if ($mode == 'logout_button')
-                {                        
-                        $form = new Bloxx_Form();
-
-                        unset($_GET['return_id']);
-                        //unset($_GET['id']);
-                        
-                        $html_out = $form->renderHeader($this->name, 'logout');
-                        $html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGOUT);
-                        $html_out .= $form->renderFooter();
-                        
-                        $mt->setItem('button', $html_out);
-                        return $mt->renderView();
-                }
-                else if ($mode == 'welcome')
-                {
-                        $html_out =  LANG_IDENTITY_WELCOME . ' ' . $this->session->getLogin();
-                        $mt->setItem('welcome', $html_out);
-
-                        return $mt->renderView();
-                }
-                else if ($mode == 'change_password')
-                {
-                        $id = $this->id();
-
-                        if ($id != -1)
-                        {
-                                $form = new Bloxx_Form();
-                                $html_out = $form->renderHeader($this->name, 'change_password');
-                                $mt->setItem('header', $html_out);
-
-                                $html_out =  LANG_IDENTITY_OLD_PASSWORD;
-                                $mt->setItem('old_password_label', $html_out);
-
-                                $html_out = $form->renderInput('old_password', 'password', '');
-                                $mt->setItem('old_password', $html_out);
-
-                                $html_out =  LANG_IDENTITY_NEW_PASSWORD;
-                                $mt->setItem('new_password_label', $html_out);
-
-                                $html_out = $form->renderInput('new_password', 'password', '');
-                                $mt->setItem('new_password', $html_out);
-
-                                $html_out =  LANG_IDENTITY_NEW_PASSWORD_AGAIN;
-                                $mt->setItem('new_password_again_label', $html_out);
-
-                                $html_out = $form->renderInput('new_password_again', 'password', '');
-                                $mt->setItem('new_password_again', $html_out);
-
-                                $html_out = $form->renderSubmitButton(LANG_IDENTITY_CHANGE_PASSWORD);
-                                $mt->setItem('button', $html_out);
-                                
-                                $html_out = $form->renderFooter();
-                                $mt->setItem('footer', $html_out);
-
-                                return $mt->renderView();
-                        }
-                }
-                else if ($mode == 'register')
-                {
-                        unset($_GET['return_id']);
-                        unset($_GET['id']);
-                        return $this->renderForm(-1, false, $mt);
-                }
-                else if ($mode == 'change_data')
-                {
-                        unset($_GET['return_id']);
-                        unset($_GET['id']);
-                        return $this->renderForm($this->id(), false, $mt);
-                }
-                else if ($mode == 'confirm')
-                {                        
-                        $this->insertWhereCondition('confirm_hash', '=', $_GET['code']);
-                        $this->runSelect();
-
-                        if ($this->nextRow() && ($this->confirmed == 0) && ($this->email == $_GET['email']))
-                        {
-                                $this->confirmed = 1;
-                                $this->updateRow();
-
-                                $html_out = LANG_IDENTITY_CONFIRMATION_MESSAGE;
-                                $mt->setItem('message', $html_out);
-                        }
-                        
-                        //Give no information on failure type for security reasons.
-                        
-                        return $mt->renderView();
-                }
-        }
-        
-        function doProcessForm($command)
-        {
-                global $warningmessage;
-
-                if($command == 'login'){
-
-                        $this->login($_POST['username'], $_POST['password']);
-                }
-                else if($command == 'logout'){
-
-                        $this->logout();
-                }
-                else if($command == 'change_password'){
-
-                        if(!$this->checkPassword($this->id(), $_POST['old_password'])){
-                        
-                                $warningmessage = LANG_IDENTITY_ERROR_WRONG_PASSWORD;
-                                return;
-                        }
-                        
-                        if($_POST['new_password'] != $_POST['new_password_again']){
-                        
-                                $warningmessage = LANG_IDENTITY_ERROR_NEW_PASSWORD_MISMATCH;
-                                return;
-                        }
-                        
-                        $this->password = md5($_POST['new_password']);
-                        
-                        if($this->updateRow()){
-                        
-                                $warningmessage = LANG_IDENTITY_PASSWORD_UPDATED;
-                        }
-                        else{
-                        
-                                $warningmessage = LANG_GLOBAL_DBERROR;
-                        }
-                }
-        }
+        }        
 
         function login($login, $password)
         {
@@ -264,19 +106,19 @@ class Bloxx_Identity extends Bloxx_Module
                         $this->runSelect();
                         
                         if (!$this->nextRow()){
-                                //Erro - Utilizador não encontrado ou código de acesso incorrecto
+                                //Error - User not found or invalid password
                                 $warningmessage = LANG_IDENTITY_ERROR_LOGIN_DENIED;
                                 return false;
                         } 
                         else {
                                 if ($this->confirmed == 1) {
                                 
-                                        $this->session->createSession($login);
+                                        $this->session->createSession($login);                                        
                                         return true;
                                 }
                                 else {
                                 
-                                        //Erro - Ainda não confirmou o seu registo
+                                        //Error - registration not confirmed yet
                                         $warningmessage = LANG_IDENTITY_ERROR_UNCONFIRMED_REGISTRATION;
                                         return false;
                                 }
@@ -314,18 +156,41 @@ class Bloxx_Identity extends Bloxx_Module
                         return true;
                 } // WARNING Must check if this is safe
                 
-                $this->is_loged_in = $this->session->exists();
+                $this->is_loged_in = $this->session->exists();				
 
                 return $this->is_loged_in;
         }
         
         function create()
         {
+        		global $warningmessage;
                 
                 if($_POST['password'] != $_POST['password_again']){
 
                         $warningmessage = LANG_IDENTITY_ERROR_NEW_PASSWORD_MISMATCH;
                         return false;
+                }
+                
+                $ident = new Bloxx_Identity();
+                $ident->clearWhereCondition();
+                $ident->insertWhereCondition('username', '=', $_POST['username']);
+                $ident->runSelect();
+                        
+                if ($ident->nextRow())
+                {
+                	$warningmessage = 'Lamentamos, o nome de utilizador ja existe.';
+                    return false;
+                }
+                
+                $ident = new Bloxx_Identity();
+                $ident->clearWhereCondition();
+                $ident->insertWhereCondition('email', '=', $_POST['email']);
+                $ident->runSelect();
+                        
+                if ($ident->nextRow())
+                {
+                	$warningmessage = 'Lamentamos, o email ja existe.';
+                    return false;
                 }
 
 
@@ -359,9 +224,7 @@ class Bloxx_Identity extends Bloxx_Module
                 
                 //echo $message;
 
-                mail($this->email, LANG_IDENTITY_CONFIRM_EMAIL_SUBJECT, $message, 'From: ' . $confirm_email);
-                
-                global $warningmessage;
+                mail($this->email, LANG_IDENTITY_CONFIRM_EMAIL_SUBJECT, $message, 'From: ' . $confirm_email);                
 
                 $warningmessage = LANG_IDENTITY_CONFIRM_MAIL_SENT;
         }
@@ -512,6 +375,205 @@ class Bloxx_Identity extends Bloxx_Module
 
                 return false;
         }
-}
 
+//  Render methods .............................................................
+
+	function doRenderLoginbox($param, $target, $jump, $other_params, $mt)
+    {
+    	
+    	include_once(CORE_DIR . 'bloxx_form.php');
+                	                        
+        $form = new Bloxx_Form();
+        $html_out = $form->renderHeader($this->name, 'login');
+        $mt->setItem('header', $html_out);
+
+        $html_out =  LANG_IDENTITY_USERNAME;
+		$mt->setItem('username_label', $html_out);
+
+		$html_out = $form->renderInput('username', '', '');
+		$mt->setItem('username', $html_out);
+
+		$html_out =  LANG_IDENTITY_PASSWORD;
+		$mt->setItem('password_label', $html_out);
+
+		$html_out = $form->renderInput('password', 'password', '');
+		$mt->setItem('password', $html_out);
+
+		$html_out = $form->renderSubmitButton(LANG_IDENTITY_LOGIN);
+		$mt->setItem('button', $html_out);
+                        
+		$html_out = $form->renderFooter();
+		$mt->setItem('footer', $html_out);
+                                
+		return $mt->renderView();
+	}
+
+	function doRenderLogout_Button($param, $target, $jump, $other_params, $mt)
+    {
+    	
+		include_once(CORE_DIR . 'bloxx_form.php');
+                	                        
+		$form = new Bloxx_Form();
+                        
+		$html_out = $form->renderHeader($this->name, 'logout', $this->getCurrentPageID());
+		$html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGOUT);
+		$html_out .= $form->renderFooter();
+                        
+		$mt->setItem('button', $html_out);
+		return $mt->renderView();
+	}
+	
+	function doRenderWelcome($param, $target, $jump, $other_params, $mt)
+	{
+		
+		$login = $this->session->getLogin();
+		$username = '';
+        		
+		if ($login != null)
+		{                
+			$this->clearWhereCondition();
+			$this->insertWhereCondition('username', '=', $login);
+			$this->runSelect();
+                        
+			if ($this->nextRow())
+			{                        
+				$username = $this->realname;
+			}
+		}
+                    
+		$html_out =  LANG_IDENTITY_WELCOME . ' ' . $username;
+		$mt->setItem('welcome', $html_out);
+
+		return $mt->renderView();
+	}
+	
+	function doRenderChange_Password($param, $target, $jump, $other_params, $mt)
+	{
+		
+		$id = $this->id();
+
+		if ($id != -1)
+		{
+			include_once(CORE_DIR . 'bloxx_form.php');
+                        	
+			$form = new Bloxx_Form();
+			$html_out = $form->renderHeader($this->name, 'change_password');
+			$mt->setItem('header', $html_out);
+
+			$html_out =  LANG_IDENTITY_OLD_PASSWORD;
+			$mt->setItem('old_password_label', $html_out);
+
+			$html_out = $form->renderInput('old_password', 'password', '');
+			$mt->setItem('old_password', $html_out);
+
+			$html_out =  LANG_IDENTITY_NEW_PASSWORD;
+			$mt->setItem('new_password_label', $html_out);
+
+			$html_out = $form->renderInput('new_password', 'password', '');
+			$mt->setItem('new_password', $html_out);
+
+			$html_out =  LANG_IDENTITY_NEW_PASSWORD_AGAIN;
+			$mt->setItem('new_password_again_label', $html_out);
+
+			$html_out = $form->renderInput('new_password_again', 'password', '');
+			$mt->setItem('new_password_again', $html_out);
+
+			$html_out = $form->renderSubmitButton(LANG_IDENTITY_CHANGE_PASSWORD);
+			$mt->setItem('button', $html_out);
+                                
+			$html_out = $form->renderFooter();
+			$mt->setItem('footer', $html_out);
+			
+		}
+		
+		return $mt->renderView();
+	}
+	
+	function doRenderRegister($param, $target, $jump, $other_params, $mt)
+	{                        
+		return $this->renderForm(-1, false, $mt, $this->getMainPageID(), 'register');
+	}
+	
+	function doRenderChange_Data($param, $target, $jump, $other_params, $mt)
+	{                        
+		return $this->renderForm($this->id(), false, $mt, $this->getMainPageID());
+	}
+	
+	function doRenderConfirm($param, $target, $jump, $other_params, $mt)
+	{                 
+		       
+		$this->insertWhereCondition('confirm_hash', '=', $_GET['code']);
+		$this->runSelect();
+
+		if ($this->nextRow() 
+			&& ($this->confirmed == 0) 
+			&& ($this->email == $_GET['email']))
+		{
+			
+			$this->confirmed = 1;
+			$this->updateRow();
+
+			$html_out = LANG_IDENTITY_CONFIRMATION_MESSAGE;
+			$mt->setItem('message', $html_out);
+		}
+                        
+		//Give no information on failure type for security reasons.
+                        
+		return $mt->renderView();
+	}
+
+	
+//  Command methods ............................................................
+	
+	function execCommandLogin()
+	{                
+
+		$this->login($_POST['username'], $_POST['password']);
+	}
+	
+	function execCommandLogout()
+	{
+
+		$this->logout();
+	}
+	
+	function execCommandRegister()
+	{
+		
+		$this->create();
+	}
+	
+	function execCommandChange_Password()
+	{
+		
+		global $warningmessage;
+
+		if (!$this->checkPassword($this->id(), $_POST['old_password']))
+		{
+                        
+			$warningmessage = LANG_IDENTITY_ERROR_WRONG_PASSWORD;
+			return;
+		}
+                        
+		if ($_POST['new_password'] != $_POST['new_password_again'])
+		{
+                        
+			$warningmessage = LANG_IDENTITY_ERROR_NEW_PASSWORD_MISMATCH;
+			return;
+		}
+                        
+		$this->password = md5($_POST['new_password']);
+                        
+		if ($this->updateRow())
+		{
+                        
+			$warningmessage = LANG_IDENTITY_PASSWORD_UPDATED;
+		}
+		else
+		{
+                        
+			$warningmessage = LANG_GLOBAL_DBERROR;
+		}
+	}
+}
 ?>

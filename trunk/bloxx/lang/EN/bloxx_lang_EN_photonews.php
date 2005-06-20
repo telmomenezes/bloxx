@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_lang_EN_photonews.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_lang_EN_photonews.php,v 1.3 2005-06-20 11:26:07 tmenezes Exp $
 
 define('F_LANG_PHOTONEWS_PUBLISH_DATE', 'Publish Date');
 define('F_LANG_PHOTONEWS_TITLE', 'Title');
@@ -27,5 +27,6 @@ define('F_LANG_PHOTONEWS_INTRO', 'Introduction');
 define('F_LANG_PHOTONEWS_EXTENDED', 'Extended Text');
 define('F_LANG_PHOTONEWS_IMAGE', 'Photo');
 define('F_LANG_PHOTONEWS_THUMB', 'Thumbnail');
-define('F_LANG_PHOTONEWS_PHOTOPOS', 'Photo position');
+define('F_LANG_PHOTONEWS_IMPORTANCE', 'Importance');
+define('F_LANG_PHOTONEWS_TOPIC', 'Topic');
 ?>

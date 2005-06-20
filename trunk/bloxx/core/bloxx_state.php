@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_state.php,v 1.5 2005-02-24 04:51:31 secretdraft Exp $
+// $Id: bloxx_state.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
 
 include_once(CORE_DIR.'bloxx_module.php');
 
@@ -44,11 +44,7 @@ class Bloxx_State extends Bloxx_Module
                         'item_name' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true),
                         'item_value' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true)
                 );
-        }
-        
-        function doRender($mode, $id, $target)
-        {
-        }
+        }        
         
         function getValue($module, $item)
         {

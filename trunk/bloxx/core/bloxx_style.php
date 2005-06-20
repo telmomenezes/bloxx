@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_style.php,v 1.3 2005-03-04 20:49:37 tmenezes Exp $
+// $Id: bloxx_style.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -43,8 +43,6 @@ class Bloxx_Style extends Bloxx_Module
                         'title' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true, 'LANG' => true),
                         'css' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false)
                 );
-
-
         }
         
         function generateStyleSheetFile()

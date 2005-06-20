@@ -19,13 +19,14 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_lang_PT_photonews.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_lang_PT_photonews.php,v 1.3 2005-06-20 11:26:07 tmenezes Exp $
 
-define('F_LANG_PHOTONEWS_PUBLISH_DATE', 'Data de Publicação');
-define('F_LANG_PHOTONEWS_TITLE', 'Título');
-define('F_LANG_PHOTONEWS_INTRO', 'Introdução');
+define('F_LANG_PHOTONEWS_PUBLISH_DATE', 'Data de Publica&ccedil;&atilde;o');
+define('F_LANG_PHOTONEWS_TITLE', 'T&iacute;tulo');
+define('F_LANG_PHOTONEWS_INTRO', 'Introdu&ccedil;&atilde;o');
 define('F_LANG_PHOTONEWS_EXTENDED', 'Corpo do Texto');
 define('F_LANG_PHOTONEWS_IMAGE', 'Foto');
 define('F_LANG_PHOTONEWS_THUMB', 'Thumbnail');
-define('F_LANG_PHOTONEWS_PHOTOPOS', 'Posição da Foto');
+define('F_LANG_PHOTONEWS_IMPORTANCE', 'Importancia');
+define('F_LANG_PHOTONEWS_TOPIC', 'T&oacute;pico');
 ?>

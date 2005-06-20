@@ -19,9 +19,11 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_lang_EN_headerfooter.php,v 1.3 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_lang_EN_headerfooter.php,v 1.4 2005-06-20 11:26:07 tmenezes Exp $
 
 define('F_LANG_HEADERFOOTER_TITLE', 'Title');
 define('F_LANG_HEADERFOOTER_HEADER_HTML', 'Header');
 define('F_LANG_HEADERFOOTER_FOOTER_HTML', 'Footer');
+define('F_LANG_HEADERFOOTER_EXTRA_HEAD_CODE', 'Extra HEAD Code');
+define('F_LANG_HEADERFOOTER_BODYTAG_PARAMS', 'BODY Params');
 ?>

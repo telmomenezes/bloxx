@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_form.php,v 1.5 2005-02-24 04:51:30 secretdraft Exp $
+// $Id: bloxx_form.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
 
 class Bloxx_Form
 {
@@ -88,14 +88,14 @@ class Bloxx_Form
                 $html_out .= ' name="' . $this->form_name . '"';
                 $html_out .= ' action="index.php';
                 
-                $url_params = array();
-                
+                $url_params = array();				
+				
                 if($id > 0){
                 
-                        $url_params['id'] = $id;
+                        $url_params['id'] = $id;                        
                 }
                 else if(isset($_GET['return_id'])){
-
+						
                         $url_params['id'] = $_GET['return_id'];
                 }
                 else if(isset($_GET['id'])){

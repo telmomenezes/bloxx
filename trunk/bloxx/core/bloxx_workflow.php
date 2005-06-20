@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_workflow.php,v 1.5 2005-02-24 04:51:31 secretdraft Exp $
+// $Id: bloxx_workflow.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -43,7 +43,7 @@ class Bloxx_Workflow extends Bloxx_Module
                 return null;
         }
 
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'submissions_list' => TRUST_MODERATOR,
@@ -52,141 +52,140 @@ class Bloxx_Workflow extends Bloxx_Module
                 );
         }
 
-        function getFormTrusts()
+        function getLocalCommandTrusts()
         {
                 return array(
                         'accept_reject' => TRUST_MODERATOR
                 );
         }
         
-        function getStyleList()
-        {
-                return array(
-                        'Button' => 'SmallFormButton',
-                        'Link' => 'NormalLink'
-                );
-        }
+//  Render methods .............................................................
 
-        function doRender($mode, $id, $target)
-        {
-                $style = new Bloxx_Style();
-                $style_button = $this->getGlobalStyle('Button');
-                $style_link = $this->getGlobalStyle('Link');
+	function doRenderSubmissions_List($param, $target, $jump, $other_params, $mt)
+	{
 
-                if($mode == 'submissions_list'){
-
-                        include_module_once('modulemanager');
-                        $mm = new Bloxx_ModuleManager();
+		include_module_once('modulemanager');
+		$mm = new Bloxx_ModuleManager();
                         
-                        $mm->clearWhereCondition();
-                        $mm->runSelect();
+		$mm->clearWhereCondition();
+		$mm->runSelect();
                         
-                        $html_out = '';
+		$html_out = '';
                         
-                        while($mm->nextRow()){
+		while ($mm->nextRow())
+		{
 
-                                $mod = $mm->getModuleInstance();
+			$mod = $mm->getModuleInstance();
                                 
-                                if($mod->hasWorkflow()){
+			if ($mod->hasWorkflow())
+			{
                                         
-                                        $count = $mod->submissionCount();
+				$count = $mod->submissionCount();
 
-                                        $workflow_page = $this->getConfig('workflow_page');
+				$workflow_page = $this->getConfig('workflow_page');
                                         
-                                        if($count == 1){
+				if ($count == 1)
+				{
 
-                                                $link_text = $mm->module_name . '  (' .  $count . ' ' . LANG_WORKFLOW_ONE_NEW . ')';
-                                                $html_out = $style->renderStyleHeader($style_link);
-                                                $html_out .= build_link($workflow_page, 'workflow', $mm->id, 0, $link_text, false);
-                                                $html_out .= $style->renderStyleFooter($style_link);
-                                                $html_out .= '<br>';
-                                        }
-                                        if($count > 1){
+					$link_text = $mm->module_name . '  (' .  $count . ' ' . LANG_WORKFLOW_ONE_NEW . ')';
+					$html_out = $style->renderStyleHeader($style_link);
+					$html_out .= build_link($workflow_page, 'workflow', $mm->id, 0, $link_text, false);
+					$html_out .= $style->renderStyleFooter($style_link);
+					$html_out .= '<br />';
+				}
+				if ($count > 1)
+				{
 
-                                                $link_text = $mm->module_name . '  (' .  $count . ' ' . LANG_WORKFLOW_NEW . ')';
-                                                $html_out .= $style->renderStyleHeader($style_link);
-                                                $html_out .= build_link($workflow_page, 'workflow', $mm->id, 0, $link_text, false);
-                                                $html_out .= $style->renderStyleFooter($style_link);
-                                                $html_out .= '<br>';
-                                        }
+					$link_text = $mm->module_name . '  (' .  $count . ' ' . LANG_WORKFLOW_NEW . ')';
+					$html_out .= $style->renderStyleHeader($style_link);
+					$html_out .= build_link($workflow_page, 'workflow', $mm->id, 0, $link_text, false);
+					$html_out .= $style->renderStyleFooter($style_link);
+					$html_out .= '<br />';
+				}
 
-                                }
-                        }
-                        return $html_out;
-                }
-                else if($mode == 'workflow'){
+			}
+		}
+		
+		return $html_out;
+	}
+	
+	function doRenderWorkflow($param, $target, $jump, $other_params, $mt)
+	{
                         
-                        include_module_once('modulemanager');
-                        $mm = new Bloxx_ModuleManager();
-                        $mm->getRowByID($id);
-                        $mod = $mm->getModuleInstance();
+		include_module_once('modulemanager');
+		$mm = new Bloxx_ModuleManager();
+		$mm->getRowByID($param);
+		$mod = $mm->getModuleInstance();
                 
-                        $mod->clearWhereCondition();
-                        $mod->insertWhereCondition('workflow', '<=', '0');
-                        $mod->runSelect();
+		$mod->clearWhereCondition();
+		$mod->insertWhereCondition('workflow', '<=', '0');
+		$mod->runSelect();
                         
-                        while($mod->nextRow()){
+		while ($mod->nextRow())
+		{
 
-                                $workflow_page = $this->getConfig('workflow_page');
+			$workflow_page = $this->getConfig('workflow_page');
                         
-                                $link_text = $mod->renderLabel();
-                                $html_out .= $style->renderStyleHeader($style_link);
-                                $html_out .= build_link($workflow_page, 'accept_edit_reject', $id, $mod->id, $link_text, false);
-                                $html_out .= $style->renderStyleFooter($style_link);
-                                $html_out .= '<br>';
-                        }
+			$link_text = $mod->renderLabel();
+			$html_out .= $style->renderStyleHeader($style_link);
+			$html_out .= build_link($workflow_page, 'accept_edit_reject', $id, $mod->id, $link_text, false);
+			$html_out .= $style->renderStyleFooter($style_link);
+			$html_out .= '<br />';
+		}
                         
-                        return $html_out;
-                }
-                else if($mode == 'accept_edit_reject'){
+		return $html_out;
+	}
+	
+	function doRenderAccept_Edit_Reject($param, $target, $jump, $other_params, $mt)
+	{
                 
-                        include_module_once('modulemanager');
-                        $mm = new Bloxx_ModuleManager();
-                        $mm->getRowByID($id);
-                        $mod = $mm->getModuleInstance();
+		include_module_once('modulemanager');
+		$mm = new Bloxx_ModuleManager();
+		$mm->getRowByID($param);
+		$mod = $mm->getModuleInstance();
 
-                        $html_out .= $mod->render($mod->default_mode, $target);
+		$html_out .= $mod->render($mod->default_mode, $target);
 
-                        include_once(CORE_DIR.'bloxx_form.php');
-                        $form = new Bloxx_Form();
-                        $form->setMode('workflow');
-                        $form->setParam($id);
+		include_once(CORE_DIR.'bloxx_form.php');
+		$form = new Bloxx_Form();
+		$form->setMode('workflow');
+		$form->setParam($param);
 
-                        $html_out .= $form->renderHeader('workflow', 'accept_reject');
-                        $html_out .= $form->renderInput('moduleid', 'hidden', $id, '', 0, 0);
-                        $html_out .= $form->renderInput('itemid', 'hidden', $target, '', 0, 0);
-                        $html_out .= $form->renderSubmitButton(LANG_WORKFLOW_ACCEPT, $style_button);
-                        $html_out .= $form->renderSubmitButton(LANG_WORKFLOW_REJECT, $style_button);
-                        $html_out .= $form->renderFooter();
+		$html_out .= $form->renderHeader('workflow', 'accept_reject');
+		$html_out .= $form->renderInput('moduleid', 'hidden', $param, '', 0, 0);
+		$html_out .= $form->renderInput('itemid', 'hidden', $target, '', 0, 0);
+		$html_out .= $form->renderSubmitButton(LANG_WORKFLOW_ACCEPT, $style_button);
+		$html_out .= $form->renderSubmitButton(LANG_WORKFLOW_REJECT, $style_button);
+		$html_out .= $form->renderFooter();
                         
-                        return $html_out;
-                }
-        }
+		return $html_out;
+	}
+	
+//  Command methods ............................................................
+	function execCommandAccept_Reject()
+	{
 
-        function doProcessForm($command)
-        {
-                if($command == 'accept_reject'){
-
-                        if($_POST['submit'] == LANG_WORKFLOW_ACCEPT){
+		if ($_POST['submit'] == LANG_WORKFLOW_ACCEPT)
+		{
                         
-                                include_module_once('modulemanager');
-                                $mm = new Bloxx_ModuleManager();
-                                $mm->getRowByID($_POST['moduleid']);
-                                $mod = $mm->getModuleInstance();
+			include_module_once('modulemanager');
+			$mm = new Bloxx_ModuleManager();
+			$mm->getRowByID($_POST['moduleid']);
+			$mod = $mm->getModuleInstance();
                                 
-                                $mod->getRowByID($_POST['itemid']);
-                                $mod->workflow = 1;
-                                $mod->updateRow(true);
-                        }
-                        else if($_POST['submit'] == LANG_WORKFLOW_REJECT){
+			$mod->getRowByID($_POST['itemid']);
+			$mod->workflow = 1;
+			$mod->updateRow(true);
+		}
+		else if ($_POST['submit'] == LANG_WORKFLOW_REJECT)
+		{
                         
-                                include_module_once('modulemanager');
-                                $mm = new Bloxx_ModuleManager();
-                                $mm->getRowByID($_POST['moduleid']);
-                                $mod = $mm->getModuleInstance();
+			include_module_once('modulemanager');
+			$mm = new Bloxx_ModuleManager();
+			$mm->getRowByID($_POST['moduleid']);
+			$mod = $mm->getModuleInstance();
 
-                                $mod->deleteRowByID($_POST['itemid']);
-                        }
-                }
-        }
+			$mod->deleteRowByID($_POST['itemid']);
+		}
+	}
 }

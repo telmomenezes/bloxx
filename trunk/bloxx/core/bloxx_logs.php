@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_logs.php,v 1.5 2005-02-26 00:36:18 secretdraft Exp $
+// $Id: bloxx_logs.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -27,7 +27,7 @@ require_once(CORE_DIR . 'bloxx_module.php');
  * Bloxx_Logs Implements log system.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_logs.php,v 1.5 2005-02-26 00:36:18 secretdraft Exp $
+ * @version   $Id: bloxx_logs.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -57,58 +57,12 @@ class Bloxx_Logs extends Bloxx_Module
                         'message'       => array('TYPE' => 'STRING', 'SIZE' => 256, 'NOTNULL' => true));
         }
         
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'logs' => TRUST_ADMINISTRATOR
                 );
-        }
-
-		function doRender($mode, $id, $target, $mt)
-		{
-			include_once(CORE_DIR . 'bloxx_form.php');
-			
-			if ($mode == 'logs')
-			{	
-				$form = new Bloxx_Form();
-				
-				$html_out = $form->renderHeader($this->name, 'view');
-				$html_out .= $form->startSelect('priority', '1');
-				$html_out .= $form->addSelectItem(LOG_CRIT, $this->getPriorityName(LOG_CRIT));
-				$html_out .= $form->addSelectItem(LOG_ERR, $this->getPriorityName(LOG_ERR));
-				$html_out .= $form->addSelectItem(LOG_WARNING, $this->getPriorityName(LOG_WARNING));
-				$html_out .= $form->addSelectItem(LOG_NOTICE, $this->getPriorityName(LOG_NOTICE));
-				$html_out .= $form->endSelect();
-				$html_out .= $form->renderSubmitButton('Show');	
-				$html_out .= $form->renderFooter();
-				$mt->setItem('loglevel', $html_out);
-											
-				if (isset($_POST['priority']))
-				{
-					$this->clearWhereCondition();
-					$this->insertWhereCondition('priority', '<=', $_POST['priority']);
-					$this->runSelect();
-					
-					$html_out = '';
-					
-					include_module_once('manager');
-					$mm = new Bloxx_ModuleManager();
-					
-					while ($this->nextRow())
-					{
-						$html_out .= '[' . $this->addr . '] ' . '[' . $mm->getModuleName($this->ownerModuleId) . '] '
-							. ' [' . date('r', $this->timestamp) . '] ' 
-							. '[' . $this->getPriorityName($this->priority) . '] '
-							. $this->message . "<br>";
-					}
-					
-					$mt->setItem('logs', $html_out);
-				}				
-				
-				return $mt->renderView();
-			}
-			
-		}
+        }		
         		
 		/**
 		 * writeLog Logs a message.
@@ -152,5 +106,50 @@ class Bloxx_Logs extends Bloxx_Module
 				default: return '';
 			}
 		}
+		
+	function doRenderLogs($param, $target, $jump, $other_params, $mt)
+	{
+		
+		include_once(CORE_DIR . 'bloxx_form.php');
+			
+		$form = new Bloxx_Form();
+				
+		$html_out = $form->renderHeader($this->name, 'view');
+		$html_out .= $form->startSelect('priority', '1');
+		$html_out .= $form->addSelectItem(LOG_CRIT, $this->getPriorityName(LOG_CRIT));
+		$html_out .= $form->addSelectItem(LOG_ERR, $this->getPriorityName(LOG_ERR));
+		$html_out .= $form->addSelectItem(LOG_WARNING, $this->getPriorityName(LOG_WARNING));
+		$html_out .= $form->addSelectItem(LOG_NOTICE, $this->getPriorityName(LOG_NOTICE));
+		$html_out .= $form->endSelect();
+		$html_out .= $form->renderSubmitButton('Show');	
+		$html_out .= $form->renderFooter();
+		$mt->setItem('loglevel', $html_out);
+											
+		if (isset($_POST['priority']))
+		{
+			
+			$this->clearWhereCondition();
+			$this->insertWhereCondition('priority', '<=', $_POST['priority']);
+			$this->runSelect();
+					
+			$html_out = '';
+					
+			include_module_once('modulemanager');
+			$mm = new Bloxx_ModuleManager();
+					
+			while ($this->nextRow())
+			{
+				
+				$html_out .= '[' . $this->addr . '] ' . '[' . $mm->getModuleName($this->ownerModuleId) . '] '
+					. ' [' . date('r', $this->timestamp) . '] ' 
+					. '[' . $this->getPriorityName($this->priority) . '] '
+					. $this->message . '<br />';
+			}
+					
+			$mt->setItem('logs', $html_out);
+		}				
+				
+		return $mt->renderView();
+	}
 }
 ?>

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_dbobject.php,v 1.3 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_dbobject.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'DB.php';
 require_once 'PEAR.php';
@@ -48,6 +48,7 @@ class Bloxx_DBObject
         function getRowByID($id, $all_lang_fields = false)
         {
         
+        		$this->clearWhereCondition();        		
                 $this->insertWhereCondition('id', '=', $id);
         
                 $ret = $this->runSelect();
@@ -65,7 +66,6 @@ class Bloxx_DBObject
         {
                 $this->N = 0;
                 $tmpcond = $this->_condition;
-                $this->_build_condition($this->tableDefinition());
                 $this->_query('SELECT ' .
                 $this->_data_select .
                         ' FROM ' . $this->name . " " .
@@ -82,10 +82,37 @@ class Bloxx_DBObject
 
                 return $this->N;
         }
+        
+        function getCount()
+        {
+                $this->N = 0;
+                $tmpcond = $this->_condition;
+                $this->_query('SELECT ' .
+                'COUNT(id) as value' .
+                        ' FROM ' . $this->name . " " .
+                $this->_join .
+                $this->_condition . ' '.
+           
+                $this->_group_by . ' '.
+                $this->_having . ' '.
+                $this->_order_by . ' '.
+            
+                $this->_limit);
+
+                $this->_condition = $tmpcond;
+                
+                $result = &$this->_results;
+                $array = $result->fetchRow(DB_FETCHMODE_ASSOC);
+
+				return $array['value'];
+        }
 
         //telmo
         function nextRow($only_selected_lang_field = true)
         {
+        		
+        		global $G_LANGUAGE;
+        	
                 if (!@$this->N) {
 
                         return false;
@@ -107,14 +134,8 @@ class Bloxx_DBObject
                         if((substr($kk, -8, 6) == "_LANG_") && $only_selected_lang_field){
 
                                 include_once(CORE_DIR.'bloxx_config.php');
-
-                                if(!isset($lang)){
-
-                                        $config = new Bloxx_Config();
-                                        $lang = $config->getConfig('default_language');
-                                }
                                 
-                                if(substr($kk, -2, 2) == $lang){
+                                if(substr($kk, -2, 2) == $G_LANGUAGE){
 
                                         $kglobal = substr($kk, 0, -8);
                                         $this->$kglobal = $array[$k];
@@ -567,27 +588,37 @@ class Bloxx_DBObject
 
         function _connect()
         {
-                if (!$this->_database) {
+        		global $dbconnection;
+        		
+                if (!$dbconnection)
+                {
 
-                        $this->_database = DB::connect($this->_database_dsn);
+                        $dbconnection = DB::connect($this->_database_dsn);
                         
-                        if (DB::isError($this->_database)) {
+                        if (DB::isError($dbconnection)) {
 
                                 echo 'DB connection error.<br>';
-                                echo $this->_database->toString();
+                                return;                                
                         }
                 }
+                
+                $this->_database = $dbconnection;
 
                 return true;
         }
 
         function _query($string)
         {
+        		//global $query_count;
+        		//$query_count++;
+        		//echo $query_count . ' ';
+        		//echo $string . '<br>';
+        	
                 $this->_connect();
 
                 $result = $this->_database->query($string);
                 
-                //echo $string . ' count: ' . $result->numrows() . '<br>';
+                //echo $string . ' count: ' . $result->numrows() . '<br>';                
 
                 if (DB::isError($result)) {
 
@@ -609,44 +640,6 @@ class Bloxx_DBObject
                 if (method_exists($result, 'numrows')) {
         
                         $this->N = $result->numrows();
-                }
-        }
-
-        function _build_condition($keys, $filter = array(), $negative_filter = array())
-        {
-                $this->_connect();
-
-                $__DB  = &$this->_database;
-
-                foreach($keys as $k => $v) {
-
-                        if ($filter) {
-                
-                                if (!in_array($k, $filter)) {
-                        
-                                        continue;
-                                }
-                        }
-                        if ($negative_filter) {
-                
-                                if (in_array($k, $negative_filter)) {
-                        
-                                        continue;
-                                }
-                        }
-                        if (!isset($this->$k)) {
-                
-                                continue;
-                        }
-                        
-                        if (strtolower($this->$k) === 'null') {
-                
-                                $this->insertIsNullCondition($k);
-                        }
-                        else{
-
-                                $this->insertWhereCondition($k, '=', $this->$k);
-                        }
                 }
         }
     
@@ -824,6 +817,44 @@ class Bloxx_DBObject
                 }
                 
                 return false;
+        }
+        
+        function _build_condition($keys, $filter = array(), $negative_filter = array())
+        {
+                $this->_connect();
+
+                $__DB  = &$this->_database;
+
+                foreach($keys as $k => $v) {
+
+                        if ($filter) {
+                
+                                if (!in_array($k, $filter)) {
+                        
+                                        continue;
+                                }
+                        }
+                        if ($negative_filter) {
+                
+                                if (in_array($k, $negative_filter)) {
+                        
+                                        continue;
+                                }
+                        }
+                        if (!isset($this->$k)) {
+                
+                                continue;
+                        }
+                        
+                        if (strtolower($this->$k) === 'null') {
+                
+                                $this->insertIsNullCondition($k);
+                        }
+                        else{
+
+                                $this->insertWhereCondition($k, '=', $this->$k);
+                        }
+                }
         }
 }
 ?>

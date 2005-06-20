@@ -3,6 +3,10 @@ BLOXX CHANGELOG
 Version 0.7 - 
 =========================
 
+- Language selction system implemented;
+- Bloxx_StyleLink discontinued, now only ModuleTemplate is used;
+- Several bug corrections on database connections;
+- Several optimizations on the core modules;
 - 
 
 Version 0.6 - 6/Mar/2005

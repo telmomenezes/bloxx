@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: install.php,v 1.8 2005-02-25 03:29:12 secretdraft Exp $
+// $Id: install.php,v 1.9 2005-06-20 11:26:08 tmenezes Exp $
 
 function bloxxInstall() 
 {
@@ -46,49 +46,44 @@ function bloxxInstall()
 	include_once(CORE_DIR.'bloxx_list.php');
 
 	$module_manager = new Bloxx_ModuleManager();
-	$module_manager->install();
-	$role = new Bloxx_Role();
-	$role->install();
-	$role->registerModule('modulemanager');
-	$role->registerModule('role');
+	$module_manager->install(false);
 	$system = new Bloxx_Config();
-	$system->install();
+	$system->install(false);
 	$language = new Bloxx_Language();
-	$language->install();
+	$language->install(false);
 	$language->afterInstall();
 	$page = new Bloxx_Page();
-	$page->install();
+	$page->install(false);
 	$user = new Bloxx_Identity();
-	$user->install();
+	$user->install(false);
 	$admin = new Bloxx_Admin();
-	$admin->install();
+	$admin->install(false);
 	$logs = new Bloxx_Logs();
-	$logs->install();
+	$logs->install(false);
 	$session = new Bloxx_Session();
-	$session->install();
+	$session->install(false);
 	$style = new Bloxx_Style();
-	$style->install();
+	$style->install(false);
 	$stylelink = new Bloxx_StyleLink();
-	$stylelink->install();
+	$stylelink->install(false);
 	$mt = new Bloxx_ModuleTemplate();
-	$mt->install();
+	$mt->install(false);
 	$headerfooter = new Bloxx_HeaderFooter();
-	$headerfooter->install();
+	$headerfooter->install(false);
 	$resource = new Bloxx_Resource();
-	$resource->install();
+	$resource->install(false);
 	$group = new Bloxx_UserGroup();
-	$group->install();
+	$group->install(false);
 	$grouplink = new Bloxx_GroupLink();
-	$grouplink->install();
+	$grouplink->install(false);
 	$wf = new Bloxx_Workflow();
-	$wf->install();
+	$wf->install(false);
 	$state = new Bloxx_State();
-	$state->install();
+	$state->install(false);
 	$list = new Bloxx_List();
-	$list->install();
+	$list->install(false);
 
 	$module_manager->afterInstall();
-	$role->afterInstall();
 	$system->afterInstall();
 	$page->afterInstall();
 	$user->afterInstall();
@@ -104,9 +99,4 @@ function bloxxInstall()
 	$grouplink->afterInstall();
 	$wf->afterInstall();
 	$state->afterInstall();
-	$list->afterInstall();
-	
-	include('install_mods.php');
-	bloxxInstallMods();
-}
-?>
+	$list->afterInsta

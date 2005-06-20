@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_datetime.php,v 1.3 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_datetime.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -44,31 +44,20 @@ class Bloxx_DateTime extends Bloxx_Module
                 return array();
         }
 
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                 
                         'date' => TRUST_GUEST
                 );
-        }
-        
-        function getFormTrusts()
-        {
-                return array();
-        }
+        }                
 
-        function getStyleList()
-        {
-                return array();
-        }
+//  Render methods .............................................................
 
-        function doRender($mode, $id, $target)
-        {
-
-                if($mode == 'date'){
+	function doRenderDate($param, $target, $jump, $other_params, $mt)
+    {
                 
-                        return date("j/n/Y");
-                }
-        }
+		return date("j/n/Y");
+	}
 }
 ?>

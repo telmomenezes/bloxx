@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: image.php,v 1.7 2005-03-04 20:49:37 tmenezes Exp $
+// $Id: image.php,v 1.8 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once('defines.php');
 require_once('functions.php');
@@ -40,7 +40,8 @@ if ($mod_inst->nextRow())
 {
         $data = $mod_inst->$field;
 
-        Header("Content-type: image/jpeg");
+        header("Content-type: image/jpeg");
+        header("Expires: Mon, 26 Jul 2100 05:00:00 GMT");
         echo $data;
 }
 ?>

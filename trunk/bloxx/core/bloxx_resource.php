@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_resource.php,v 1.2 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_resource.php,v 1.3 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -41,22 +41,7 @@ class Bloxx_Resource extends Bloxx_Module
                 return array(
                         'resourcename' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true)
                 );
-        }
-
-        function getRenderTrusts()
-        {
-
-        }
-
-        function getFormTrusts()
-        {
-
-        }
-
-        function doRender($mode, $id, $target)
-        {
-
-        }
+        }                
 
         function doProcessForm($command)
         {

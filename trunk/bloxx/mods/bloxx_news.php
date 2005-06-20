@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_news.php,v 1.6 2005-02-22 23:03:36 tmenezes Exp $
+// $Id: bloxx_news.php,v 1.7 2005-06-20 11:26:09 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -49,7 +49,7 @@ class Bloxx_News extends Bloxx_Module
                 );
         }
 
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'news_header' => TRUST_GUEST,
@@ -58,59 +58,60 @@ class Bloxx_News extends Bloxx_Module
                 );
         }        
 
-        function doRender($mode, $id, $target, $mt)
-        {                
-                
-                $html_out = '';
+//  Render methods .............................................................
+        
+	function doRenderNews_Header($param, $target, $jump, $other_params, $mt)
+	{
 
-                if($mode == 'news_header'){
+		$detailed_link = $this->getConfig('detailed_link');
+		$detailed_page = $this->getConfig('detailed_page');
 
-                        $detailed_link = $this->getConfig('detailed_link');
-                        $detailed_page = $this->getConfig('detailed_page');
+		$this->getRowByID($param);
+                        
+		$html_out = $this->title;
+		$mt->setItem('title', $html_out);
+                        
+		$html_out = getDateAndTimeString($this->publish_date);
+		$mt->setItem('datetime', $html_out);                                                
+                        
+		$html_out = $this->renderAutoText($this->intro);
+		$mt->setItem('intro', $html_out);                        
+                        
+		$html_out = '<a href="index.php?id=' . $detailed_page . '&param=' . $param . '&target=news">';
+		$html_out .= $detailed_link;
+		$html_out .= '</a>';
+		$mt->setItem('detailed_link', $html_out);
 
-                        $this->getRowByID($id);
-                        
-                        $html_out = $this->title;
-                        $mt->setItem('title', $html_out);
-                        
-                        $html_out = getDateAndTimeString($this->publish_date);
-                        $mt->setItem('datetime', $html_out);                                                
-                        
-                        $html_out = $this->renderAutoText($this->intro);
-                        $mt->setItem('intro', $html_out);                        
-                        
-                        $html_out = '<a href="index.php?id=' . $detailed_page . '&param=' . $id . '&target=news">';
-                        $html_out .= $detailed_link;
-                        $html_out .= '</a>';
-                        $mt->setItem('detailed_link', $html_out);
+		return $mt->renderView();
+	}
+	
+	function doRenderNews($param, $target, $jump, $other_params, $mt)
+	{
 
-                        return $mt->renderView();
-                }
-                else if($mode == 'news'){
-
-                        $this->getRowByID($id);
+		$this->getRowByID($param);
                         
-                        $html_out = $this->title;
-                        $mt->setItem('title', $html_out);
+		$html_out = $this->title;
+		$mt->setItem('title', $html_out);
                         
-                        $html_out = getDateAndTimeString($this->publish_date);
-                        $mt->setItem('datetime', $html_out);
+		$html_out = getDateAndTimeString($this->publish_date);
+		$mt->setItem('datetime', $html_out);
                         
-                        $html_out = $this->renderAutoText($this->intro);
-                        $mt->setItem('intro', $html_out);
+		$html_out = $this->renderAutoText($this->intro);
+		$mt->setItem('intro', $html_out);
                         
-                        $html_out = $this->renderAutoText($this->extended);
-                        $mt->setItem('extended', $html_out);                      
+		$html_out = $this->renderAutoText($this->extended);
+		$mt->setItem('extended', $html_out);                      
 
-                        return $html_out;
-                }
-                else if($mode == 'news_form'){
+		return $mt->renderView();
+	}
+	
+	function doRenderNews_Form($param, $target, $jump, $other_params, $mt)
+	{
 
-                        $this->publish_date = time();
-                        $html_out .= $this->renderForm(-1, false, $mt);
+		$this->publish_date = time();
+		$html_out .= $this->renderForm(-1, false, $mt);
 
-                        return $html_out;
-                }                
-        }
+		return $html_out;
+	}                
 }
 ?>

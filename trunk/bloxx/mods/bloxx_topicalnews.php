@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_topicalnews.php,v 1.3 2005-02-18 17:35:46 tmenezes Exp $
+// $Id: bloxx_topicalnews.php,v 1.4 2005-06-20 11:26:09 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -51,7 +51,7 @@ class Bloxx_TopicalNews extends Bloxx_Module
                 );
         }
 
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'news_header' => TRUST_GUEST,

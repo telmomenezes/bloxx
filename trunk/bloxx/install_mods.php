@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: install_mods.php,v 1.7 2005-02-24 03:40:02 secretdraft Exp $
+// $Id: install_mods.php,v 1.8 2005-06-20 11:26:08 tmenezes Exp $
 
 function bloxxInstallMods() 
 {
@@ -36,7 +36,7 @@ function bloxxInstallMods()
 
             	    $mod_name = substr($file, 0, -4);
                 	$mod = new $mod_name();
-                	$mod->install();
+                	$mod->install(false);
         	}
 	}
 
@@ -46,7 +46,7 @@ function bloxxInstallMods()
 
 	while (($file = readdir($dh)) !== false) 
 	{
-    	    if(is_file($file) && ($file != '.') && ($file != '..')){
+    	    if(is_file(MODS_DIR . $file) && ($file != '.') && ($file != '..')){
         
         		$mod_name = substr($file, 0, -4);
            		$mod = new $mod_name();

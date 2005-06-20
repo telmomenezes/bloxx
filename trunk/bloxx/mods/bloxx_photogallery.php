@@ -20,7 +20,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photogallery.php,v 1.6 2005-03-04 20:49:37 tmenezes Exp $
+// $Id: bloxx_photogallery.php,v 1.7 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once (CORE_DIR.'bloxx_module.php');
@@ -45,164 +45,174 @@ class Bloxx_PhotoGallery extends Bloxx_Module
         return array ('title' => array ('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true, 'LANG' => true, 'USER' => true));
     }
 
-    function getRenderTrusts()
+    function getLocalRenderTrusts()
     {
-        return array ('form' => TRUST_EDITOR, 'title' => TRUST_GUEST, 'gallery' => TRUST_GUEST, 'gallery_link' => TRUST_GUEST, 'gallery_list' => TRUST_GUEST);
-    }
+        return array ('form' => TRUST_EDITOR,
+					  'title' => TRUST_GUEST, 
+                      'gallery' => TRUST_GUEST, 
+                      'gallery_link' => TRUST_GUEST, 
+                      'gallery_list' => TRUST_GUEST);
+    }    
 
-    function getStyleList()
-    {
-        return array ('Title' => 'NormalLink');
-    }
+//  Render methods .............................................................
+        
+	function doRenderForm($param, $target, $jump, $other_params, $mt)
+	{
 
-    function doRender($mode, $id, $target, $mt)
-    {
+		$html_out .= $this->renderForm(-1, false, $mt);
 
-        if ($mode == 'form')
-        {
+		return $html_out;
+	}
+	
+	function doRenderTitle($param, $target, $jump, $other_params, $mt)
+	{
+		
+		if (isset($_GET['gallery']))
+		{
+			$this->getRowByID($_GET['gallery']);
+		}
+		else
+		{
+			$this->getRowByID($param);
+		}
+				
+		$mt->setItem('title', $this->title);
 
-            $html_out .= $this->renderForm(-1, false, $mt);
+		return $mt->renderView();
+	}
+	
+	function doRenderGallery($param, $target, $jump, $other_params, $mt)
+	{
 
-            return $html_out;
-        } else
-            if ($mode == 'title')
-            {
+		$ppl = $this->getConfig('pics_per_line');
 
-                $this->getRowByID($id);
-                $mt->setItem('title', $this->title);
+		include_module_once('photo');
+		$img = new Bloxx_Photo();
+		$img->clearWhereCondition();
+		$img->insertWhereCondition('gallery', '=', $_GET['gallery']);
+		$img->setOrderBy('id');
+		$img->runSelect();
 
-                return $mt->renderView();
-            } else
-                if ($mode == 'gallery')
-                {
+		$counter = 0;
 
-                    $ppl = $this->getConfig('pics_per_line');
+		$html_out = '<table border=0 cellpadding=0 cellspacing=0>';
+		$mt->setItem('table_start', $html_out);
 
-                    include_module_once('photo');
-                    $img = new Bloxx_Photo();
-                    $img->clearWhereCondition();
-                    $img->insertWhereCondition('gallery', '=', $id);
-                    $img->runSelect();
+		$mt->startLoop('table');
 
-                    $counter = 0;
+		while ($img->nextRow())
+		{
 
-                    $html_out = '<table border=0 cellpadding=0 cellspacing=0>';
-                    $mt->setItem('table_start', $html_out);
+        	$mt->nextLoopIteration();
 
-                    $mt->startLoop('table');
+        	$html_out = '';
 
-                    while ($img->nextRow())
-                    {
+			if (($counter % $ppl) == 0)
+			{
 
-                        $mt->nextLoopIteration();
+				$html_out = '<tr>';
+			}
 
-                        $html_out = '';
+			$mt->setLoopItem('start_row', $html_out);
 
-                        if (($counter % $ppl) == 0)
-                        {
+			$html_out = '<td>';
+			$mt->setLoopItem('start_cell', $html_out);
 
-                            $html_out = '<tr>';
-                        }
+			$img_render = new Bloxx_Photo();
+			$html_out = $img_render->render('thumbnail', $img->id);			
+			$mt->setLoopItem('thumbnail', $html_out);
 
-                        $mt->setLoopItem('start_row', $html_out);
+			$html_out = '</td>';
+			$mt->setLoopItem('end_cell', $html_out);
 
-                        $html_out = '<td>';
-                        $mt->setLoopItem('start_cell', $html_out);
+			$html_out = '';
 
-                        $img_render = new Bloxx_Photo();
-                        $html_out = $img_render->render('thumbnail', $img->id);
-                        $mt->setLoopItem('thumbnail', $html_out);
+			if (($counter % $ppl) == ($ppl -1))
+			{
 
-                        $html_out = '</td>';
-                        $mt->setLoopItem('end_cell', $html_out);
+				$html_out = '</tr>';
+			}
 
-                        $html_out = '';
+			$mt->setLoopItem('end_row', $html_out);
 
-                        if (($counter % $ppl) == ($ppl -1))
-                        {
+			$counter ++;
+		}
 
-                            $html_out = '</tr>';
-                        }
+		while (($counter % $ppl) != 0)
+		{
 
-                        $mt->setLoopItem('end_row', $html_out);
+			$mt->nextLoopIteration();
 
-                        $counter ++;
-                    }
+			$html_out = '';
 
-                    while (($counter % $ppl) != 0)
-                    {
+			if (($counter % $ppl) == 0)
+			{
 
-                        $mt->nextLoopIteration();
+				$html_out = '<tr>';
+			}
 
-                        $html_out = '';
+			$mt->setLoopItem('start_row', $html_out);
 
-                        if (($counter % $ppl) == 0)
-                        {
+			$html_out = '<td>';
+			$mt->setLoopItem('start_cell', $html_out);
+			$mt->setLoopItem('thumbnail', '');
+			$html_out = '</td>';
+			$mt->setLoopItem('end_cell', $html_out);
 
-                            $html_out = '<tr>';
-                        }
+			$html_out = '';
 
-                        $mt->setLoopItem('start_row', $html_out);
+			if (($counter % $ppl) == ($ppl -1))
+			{
 
-                        $html_out = '<td>';
-                        $mt->setLoopItem('start_cell', $html_out);
-                        $mt->setLoopItem('thumbnail', '');
-                        $html_out = '</td>';
-                        $mt->setLoopItem('end_cell', $html_out);
+				$html_out = '</tr>';
+			}
 
-                        $html_out = '';
+			$mt->setLoopItem('end_row', $html_out);
 
-                        if (($counter % $ppl) == ($ppl -1))
-                        {
+			$counter ++;
+		}
 
-                            $html_out = '</tr>';
-                        }
+		$html_out = '</table>';
+		$mt->setItem('table_end', $html_out);
 
-                        $mt->setLoopItem('end_row', $html_out);
+		return $mt->renderView();
+	}
+	
+	function doRenderGallery_Link($param, $target, $jump, $other_params, $mt)
+	{
 
-                        $counter ++;
-                    }
+		$gal_page = $this->getConfig('view_gallery_page');
 
-                    $html_out = '</table>';
-                    $mt->setItem('table_end', $html_out);
+		$gallery = new Bloxx_PhotoGallery();
+		$gallery->getRowByID($param);
 
-                    return $mt->renderView();
-                } else
-                    if ($mode == 'gallery_link')
-                    {
+		$html_out = '<a href="index.php?id='.$gal_page.'&gallery=' . $param . '">';
+		$html_out .= $gallery->title;
+		$html_out .= '</a>';
 
-                        $gal_page = $this->getConfig('view_gallery_page');
+		$mt->setItem('link', $html_out);
 
-                        $gallery = new Bloxx_PhotoGallery();
-                        $gallery->getRowByID($id);
+		return $mt->renderView();
+	}
+	
+	function doRenderGallery_List($param, $target, $jump, $other_params, $mt)
+	{
+		
+		$gallery = new Bloxx_PhotoGallery();
+		$gallery->clearWhereCondition();
+		$gallery->runSelect();
 
-                        $html_out = '<a href="index.php?id='.$gal_page.'&gallery='.$id.'">';
-                        $html_out .= $gallery->title;
-                        $html_out .= '</a>';
+		$mt->startLoop('list');
+		while ($gallery->nextRow())
+		{
 
-                        $mt->setItem('link', $html_out);
+			$mt->nextLoopIteration();
+			$html_out = $gallery->render('gallery_link', $gallery->id);
 
-                        return $mt->renderView();
-                    } else
-                        if ($mode == 'gallery_list')
-                        {
+			$mt->setLoopItem('link', $html_out);
+		}
 
-                            $gallery = new Bloxx_PhotoGallery();
-                            $gallery->clearWhereCondition();
-                            $gallery->runSelect();
-
-                            $mt->startLoop('list');
-                            while ($gallery->nextRow())
-                            {
-
-                                $mt->nextLoopIteration();
-                                $html_out = $gallery->render('gallery_link', $gallery->id);
-
-                                $mt->setLoopItem('link');
-                            }
-
-                            return $mt->renderView();
-                        }
-    }
+		return $mt->renderView();
+	}
 }
 ?>

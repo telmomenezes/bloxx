@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_page.php,v 1.7 2005-03-04 20:49:37 tmenezes Exp $
+// $Id: bloxx_page.php,v 1.8 2005-06-20 11:26:08 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -46,7 +46,7 @@ class Bloxx_Page extends Bloxx_Module
                 );
         }
         
-        function getRenderTrusts()
+        function getLocalRenderTrusts()
         {
                 return array(
                         'normal' => TRUST_GUEST,
@@ -54,155 +54,178 @@ class Bloxx_Page extends Bloxx_Module
                 );
         }
         
-        function doRender($mode, $id, $target)
-        {
-                global $warningmessage;
+	function renderPage($view, $param, $target, $jump, $other_params, $mt)
+    {
+        	
+    	global $warningmessage;
         
-                include_once(CORE_DIR.'bloxx_style.php');
-                include_once(CORE_DIR.'bloxx_headerfooter.php');
-                include_once(CORE_DIR . 'bloxx_tokenizer.php');
+        include_module_once('style');
+        include_module_once('headerfooter');
+        include_once(CORE_DIR . 'bloxx_tokenizer.php');
                 
-                $tokenizer = new Bloxx_Tokenizer();
+        $tokenizer = new Bloxx_Tokenizer();
                 
-                $this->getRowByID($id);
+        $this->getRowByID($param);                
+                                                
+        $html_part_1 = '<html><head>';
                 
-                if($mode == 'internal'){
+        include_module_once('config');
+        $config = new Bloxx_Config();
                 
-                        return $this->content;
-                }
+        $site_name = $config->getConfig('site_name');
+        $config = new Bloxx_Config();
+        $page_title_separator = $config->getConfig('page_title_separator');
                 
-                $html_part_1 = '<html><head>';
+        $html_part_1 .= '<title>' . $site_name . $page_title_separator . $this->title . '</title>';
                 
-                include_module_once('config');
-                $config = new Bloxx_Config();
+        $javascript_part = '';
+        $body_part = '';
                 
-                $site_name = $config->getConfig('site_name');
-                $config = new Bloxx_Config();
-                $page_title_separator = $config->getConfig('page_title_separator');
+        if (isset($warningmessage))
+        {
                 
-                $html_part_1 .= '<title>' . $site_name . $page_title_separator . $this->title . '</title>';
-                
-                $javascript_part = '';
-                
-                if(isset($warningmessage)){
-                
-                        $javascript_part .= '<script language="JavaScript">alert("' . $warningmessage . '")</script>';
-                }
-                
-                $style = new Bloxx_Style();
-                $html_part_2 = $style->renderStyleSheet();
-
-                $hf = new Bloxx_HeaderFooter();
-                $hf->getRowByID($this->headerfooter);
-                
-                //Fist Pass---------------------------------------------
-                $content = $hf->header_html . $this->content . $hf->footer_html;
-                
-                $begin_tag = true;
-                
-                if(substr($content, 0, 1) != "<"){
-                
-                        $begin_tag = false;
-                }
-                
-                $tok = $tokenizer->getToken($content, '<');
-                $count = strlen($tok) + 1;
-                
-                $bloxx_content = '';
-                $first_pass = '';
-                
-                $waiting_for_bloxx_end = false;
-                
-                while($tok){
-                        
-                        if((substr($tok, 0, 13) == "bloxx_private")
-                        || (substr($tok, 0, 13) == "bloxx_discard")){
-                        
-                                $waiting_for_bloxx_end = true;
-                                $bloxx_content = $tok;
-                        }
-                        else if(substr($tok, 0, 14) == "/bloxx_private"){
-                        
-                                $this->preParseBloxx($bloxx_content, $first_pass);
-
-                                $waiting_for_bloxx_end = false;
-                        }
-                        else if(substr($tok, 0, 14) == "/bloxx_discard"){
-
-                                $this->preParseBloxx($bloxx_content, $first_pass);
-
-                                $waiting_for_bloxx_end = false;
-                        }
-                        else if($waiting_for_bloxx_end){
-                        
-                                $bloxx_content .= '<' . $tok;
-                        }
-                        else{
-                        
-                                if($begin_tag){
-                                
-                                        $first_pass .= "<";
-                                }
-                                
-                                $first_pass .= $tok;
-                        }
-                        
-                        $begin_tag = true;
-                        
-                        $tok = $tokenizer->getToken('<');
-                }
-                
-                //Second Pass---------------------------------------------
-                $begin_tag = true;
-
-                if(substr($first_pass, 0, 1) != "<"){
-
-                        $begin_tag = false;
-                }
-
-                $tok = $tokenizer->getToken($first_pass, '<');
-                $count = strlen($tok) + 1;
-
-                $bloxx_content = '';
-
-                while($tok){
-
-                        if(substr($tok, 0, 9) == "bloxx_mod"){
-
-                                $waiting_for_bloxx_end = true;
-                                $bloxx_content = $tok;
-                        }
-                        else if(substr($tok, 0, 10) == "/bloxx_mod"){
-
-                                $this->parseBloxx($bloxx_content, $html_part_2, $javascript_part);
-
-                                $waiting_for_bloxx_end = false;
-                        }
-                        else if($waiting_for_bloxx_end){
-
-                                $bloxx_content .= '<' . $tok;
-                        }
-                        else{
-
-                                if($begin_tag){
-
-                                        $html_part_2 .= "<";
-                                }
-
-                                $html_part_2 .= $tok;
-                        }
-
-                        $begin_tag = true;
-
-                        $tok = $tokenizer->getToken('<');
-                }
-                
-                $html_part_2 = '</head>' . $html_part_2 . '</html>';
-                
-                $html_out = $html_part_1 . $javascript_part . $html_part_2;
-                
-                return $html_out;
+        	$javascript_part .= '<script language="JavaScript">alert("' . $warningmessage . '")</script>';
         }
+                
+        $style = new Bloxx_Style();
+        $html_part_2 = $style->renderStyleSheet();
+
+        $hf = new Bloxx_HeaderFooter();
+        $hf->getRowByID($this->headerfooter);
+                
+        //Fist Pass---------------------------------------------
+        $content = $hf->header_html . $this->content . $hf->footer_html;
+                
+        $begin_tag = true;
+                
+        if (substr($content, 0, 1) != "<")
+        {
+                
+        	$begin_tag = false;
+        }
+                
+       	$tok = $tokenizer->getToken($content, '<');
+        $count = strlen($tok) + 1;
+                
+        $bloxx_content = '';
+        $first_pass = '';
+                
+        $waiting_for_bloxx_end = false;
+                
+        while($tok)
+        {
+                        
+        	if ((substr($tok, 0, 13) == "bloxx_private")
+            	|| (substr($tok, 0, 13) == "bloxx_discard"))
+            {
+                        
+            	$waiting_for_bloxx_end = true;
+            	$bloxx_content = $tok;
+            }
+            else if (substr($tok, 0, 14) == "/bloxx_private")
+            {
+                        
+            	$this->preParseBloxx($bloxx_content, $first_pass);
+
+                $waiting_for_bloxx_end = false;
+            }
+            else if (substr($tok, 0, 14) == "/bloxx_discard")
+            {
+
+            	$this->preParseBloxx($bloxx_content, $first_pass);
+
+                $waiting_for_bloxx_end = false;
+            }
+            else if ($waiting_for_bloxx_end)
+            {
+                        
+            	$bloxx_content .= '<' . $tok;
+            }
+            else
+            {
+                        
+            	if ($begin_tag)
+            	{
+                                
+                	$first_pass .= "<";
+                }
+                                
+                $first_pass .= $tok;
+            }
+                        
+            $begin_tag = true;
+                        
+            $tok = $tokenizer->getToken('<');
+        }
+                
+        //Second Pass---------------------------------------------
+        $begin_tag = true;
+
+        if (substr($first_pass, 0, 1) != "<")
+        {
+
+        	$begin_tag = false;
+        }
+
+        $tok = $tokenizer->getToken($first_pass, '<');
+        $count = strlen($tok) + 1;
+
+        $bloxx_content = '';
+
+        while($tok)
+        {
+
+        	if (substr($tok, 0, 9) == "bloxx_mod")
+        	{
+
+            	$waiting_for_bloxx_end = true;
+                $bloxx_content = $tok;
+            }
+            else if (substr($tok, 0, 10) == "/bloxx_mod")
+            {
+
+            	$this->parseBloxx($bloxx_content, $html_part_2, $javascript_part, $body_part);
+
+                $waiting_for_bloxx_end = false;
+            }
+            else if ($waiting_for_bloxx_end)
+            {
+
+            	$bloxx_content .= '<' . $tok;
+            }
+            else
+            {
+
+            	if($begin_tag)
+            	{
+
+                	$html_part_2 .= "<";
+                }
+
+                $html_part_2 .= $tok;
+            }
+
+            $begin_tag = true;
+
+            $tok = $tokenizer->getToken('<');
+		}
+                
+        if($view == 'internal')
+        {
+                
+        	return $html_part_2;
+        }
+                
+        $body = '<body ' . $body_part . ' ' . $hf->bodytag_params . '>';
+        $html_part_2 = '</head>'
+        	. $body
+            . $html_part_2
+            . '</body></html>';
+                
+        $html_out = $html_part_1 . $hf->extra_head_code . $javascript_part . $html_part_2;
+                
+        return $html_out;
+	}
         
         function preParseBloxx($bloxx_html, &$html_out)
         {                
@@ -260,7 +283,7 @@ class Bloxx_Page extends Bloxx_Module
                 }
         }
         
-        function parseBloxx($bloxx_html, &$html_out, &$javascript_out)
+        function parseBloxx($bloxx_html, &$html_out, &$javascript_out, &$body_out)
         {                
                 $target = null;
 
@@ -279,14 +302,38 @@ class Bloxx_Page extends Bloxx_Module
 
                         ereg($regex, $bloxx_html, $regs);
                         $tag = $regs[1];
+                        
+                        $other_params = array();
 
                         for($n = 0; $n < $nparams; $n++){
 
                                 ereg('(.*)="(.*)"', $regs[$n + 2], $par);
-                                $$par[1] = $par[2];
+                                
+                                if (($par[1] == 'module')
+                                	|| ($par[1] == 'view')
+                                	|| ($par[1] == 'param')
+                                	|| ($par[1] == 'target')
+                                	|| ($par[1] == 'jump'))
+                                {
+                                	
+                                	$$par[1] = $par[2];
+                                }
+                                else
+                                {
+                                	$other_params[$par[1]] = $par[2];
+                                }
                         }
 
                         $content = $regs[$n + 2];
+                        
+                        if($module == 'from_url'){
+
+                                if (isset($_GET['module']))
+                                {
+
+                                        $module = $_GET['module'];
+                                }                                
+                        }
 
                         $mname = 'Bloxx_' . $module;
 
@@ -298,7 +345,7 @@ class Bloxx_Page extends Bloxx_Module
 
                                 if(isset($_GET['mode'])){
 
-                                        $view = $_GET['mode'];
+                                       $view = $_GET['mode'];
                                 }
                                 else{
 
@@ -394,16 +441,31 @@ class Bloxx_Page extends Bloxx_Module
                         }
 
                         $javascript_out .= $module_inst->renderJavaScript($view, $param, $target);
+                        $body_out .= $module_inst->renderBodyParams($view, $param, $target) . ' ';
                         
                         if (isset($template))
                         {
-                        	$html_out .= $module_inst->render($view, $param, $target, $template);                        
+                        	$html_out .= $module_inst->render($view, $param, $target, $jump, $other_params, $template);                        
                         }
                         else
                         {
-                        	$html_out .= $module_inst->render($view, $param, $target);
+                        	$html_out .= $module_inst->render($view, $param, $target, $jump, $other_params);
                         }
                 }
         }
+
+//  Render methods .............................................................
+        
+	function doRenderNormal($param, $target, $jump, $other_params, $mt)
+    {
+        	
+    	return $this->renderPage('normal', $param, $target, $jump, $other_params, $mt);
+	}
+	
+	function doRenderInternal($param, $target, $jump, $other_params, $mt)
+    {
+        	
+    	return $this->renderPage('internal', $param, $target, $jump, $other_params, $mt);
+	}
 }
 ?>

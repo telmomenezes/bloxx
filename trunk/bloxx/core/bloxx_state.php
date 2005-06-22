@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_state.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_state.php,v 1.7 2005-06-22 20:05:35 tmenezes Exp $
 
 include_once(CORE_DIR.'bloxx_module.php');
 
@@ -30,7 +30,7 @@ class Bloxx_State extends Bloxx_Module
                 $this->name = 'state';
                 $this->module_version = 1;
                 $this->label_field = 'item_name';
-                $this->use_init_file = true;
+                $this->use_init_file = false;
                 $this->no_private = true;
                 
                 $this->Bloxx_Module();

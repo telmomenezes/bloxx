@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_forumvisit.php,v 1.1 2005-06-20 11:26:09 tmenezes Exp $
+// $Id: bloxx_forumvisit.php,v 1.2 2005-06-22 20:05:35 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -32,7 +32,7 @@ class Bloxx_ForumVisit extends Bloxx_Module
                 $this->module_version = 1;
                 $this->label_field = 'title';
 
-                $this->use_init_file = true;
+                $this->use_init_file = false;
 
                 $this->default_mode = 'default_view';
                 

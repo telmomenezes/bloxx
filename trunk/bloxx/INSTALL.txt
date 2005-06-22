@@ -18,9 +18,9 @@ web documents directory (usually public_html);
 
 3. Make sure file permissions are correct;
 
-4. From your browser run wizard.php (www.<yoursite>.com/wizard.php) and 
+4. From your browser run wizard.php (www.<yoursite>.com/install.php) and 
 will be created defines.php with your settings before
-installation of bloxx starts (if defines.php already exists wizard wont run);
+installation of bloxx starts (if defines.php already exists installation wont run);
 
 6. From your browser use bloxx.php to access the bloxx backend and administer
 your site (www.<yoursite>.com/bloxx.php);

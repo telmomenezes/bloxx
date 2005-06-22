@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_admin.php,v 1.10 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_admin.php,v 1.11 2005-06-22 20:05:34 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -207,7 +207,7 @@ class Bloxx_Admin extends Bloxx_Module
         include_once(CORE_DIR . 'bloxx_form.php');
 
         $form = new Bloxx_Form();
-        $form->setMode('new_row');
+        $form->setView('new_row');
         $form->setParam($item->name);
         $new_button = $form->renderHeader('admin', 'edit');
         $new_button .= $form->renderSubmitButton(LANG_ADMIN_NEW);
@@ -235,7 +235,7 @@ class Bloxx_Admin extends Bloxx_Module
             $label = $item->renderLabel();
                                 
             $form = new Bloxx_Form();
-            $form->setMode('edit_row');
+            $form->setView('edit_row');
             $form->setParam($item->name);
             $edit_item = $form->renderHeader('admin', 'edit');
             $edit_item .= $form->renderInput('item', 'hidden', $item->id);
@@ -245,7 +245,7 @@ class Bloxx_Admin extends Bloxx_Module
             $mt->setLoopItem('edit_item', $edit_item);
                                 
             $form = new Bloxx_Form();
-            $form->setMode('delete_row');
+            $form->setView('delete_row');
             $form->setParam($item->name);
             $delete_item = $form->renderHeader('admin', 'edit');
             $delete_item .= $form->renderInput('item', 'hidden', $item->id);
@@ -276,7 +276,7 @@ class Bloxx_Admin extends Bloxx_Module
     	include_once(CORE_DIR . 'bloxx_form.php');
 
         $form = new Bloxx_Form();
-        $form->setMode('save_db');
+        $form->setView('saveall');
         $form->setParam($this->name);
 
         $html_out = $form->renderHeader('admin', 'save_db');
@@ -304,7 +304,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->startLoop('options');
 
         $form = new Bloxx_Form();
-        $form->setMode('saveall');
+        $form->setView('saveall');
         $form->setParam($this->name);
         $html_out = $form->renderHeader('admin', 'saveall');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_SAVE_ALL);
@@ -313,7 +313,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->nextLoopIteration();
 
         $form = new Bloxx_Form();
-        $form->setMode('module_list');
+        $form->setView('module_list');
         $form->setParam($this->name);
         $html_out = $form->renderHeader('admin', 'module_list');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_HOME);
@@ -322,7 +322,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->nextLoopIteration();
 
         $form = new Bloxx_Form();
-        $form->setMode('');
+        $form->setView('');
         $form->setParam('');
         include_module_once('config');
         $config = new Bloxx_Config();
@@ -334,7 +334,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->nextLoopIteration();
 
         $form = new Bloxx_Form();
-        $form->setMode('change_password');
+        $form->setView('change_password');
         $form->setParam($this->name);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_CHANGE_PASSWORD);
@@ -343,7 +343,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->nextLoopIteration();
 
 		$form = new Bloxx_Form();
-        $form->setMode('install_mod');
+        $form->setView('install_mod');
         $form->setParam($this->name);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_INSTALL_MOD);
@@ -352,7 +352,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->nextLoopIteration();
 
         $form = new Bloxx_Form();
-        $form->setMode('uninstall_mod');
+        $form->setView('uninstall_mod');
         $form->setParam($this->name);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_UNINSTALL_MOD);
@@ -361,7 +361,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->nextLoopIteration();
 
         $form = new Bloxx_Form();
-        $form->setMode('update_mod');
+        $form->setView('update_mod');
         $form->setParam($this->name);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_UPDATE_MOD);
@@ -370,7 +370,7 @@ class Bloxx_Admin extends Bloxx_Module
         $mt->nextLoopIteration();
 
         $form = new Bloxx_Form();
-        $form->setMode('about');
+        $form->setView('about');
         $form->setParam($this->name);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_ABOUT);
@@ -434,7 +434,7 @@ class Bloxx_Admin extends Bloxx_Module
 		include_once(CORE_DIR . 'bloxx_form.php');
 
 		$form = new Bloxx_Form();
-		$form->setMode('module');
+		$form->setView('module');
 		$form->setParam($param);
 
 		$html_out = $form->renderHeader($param, 'generic_delete');
@@ -465,7 +465,7 @@ class Bloxx_Admin extends Bloxx_Module
 		include_once(CORE_DIR.'bloxx_form.php');
 
 		$form = new Bloxx_Form();
-		$form->setMode('module_list');
+		$form->setView('module_list');
 
 		$html_out = $form->renderHeader('admin', 'install_mod');
 		$mt->setItem('header', $html_out);
@@ -520,7 +520,7 @@ class Bloxx_Admin extends Bloxx_Module
 		include_once(CORE_DIR . 'bloxx_form.php');
 
 		$form = new Bloxx_Form();
-		$form->setMode('uninstall_mod_confirm');
+		$form->setView('uninstall_mod_confirm');
 
 		$html_out = $form->renderHeader('admin', 'dummy');
 		$mt->setItem('header', $html_out);
@@ -570,7 +570,7 @@ class Bloxx_Admin extends Bloxx_Module
 		$mt->setItem('warning', $html_out);
                         
 		$form = new Bloxx_Form();
-		$form->setMode('module_list');
+		$form->setView('module_list');
 
 		$html_out = $form->renderHeader('admin', 'uninstall_mod');
 		$html_out .= $form->renderInput('module_to_uninstall', 'hidden', $_POST['module_to_uninstall']);

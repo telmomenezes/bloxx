@@ -20,7 +20,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_module.php,v 1.13 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_module.php,v 1.14 2005-06-22 20:05:35 tmenezes Exp $
 
 require_once 'defines.php';
 require_once CORE_DIR.'bloxx_dbobject.php';
@@ -29,7 +29,7 @@ require_once CORE_DIR.'bloxx_dbobject.php';
   * This is the class from where all Bloxx Module classes are derived from.
   *
   * @package   bloxx_core
-  * @version   $Id: bloxx_module.php,v 1.13 2005-06-20 11:26:08 tmenezes Exp $
+  * @version   $Id: bloxx_module.php,v 1.14 2005-06-22 20:05:35 tmenezes Exp $
   * @category  Core
   * @copyright Copyright &copy; 2002-2005 The Bloxx Team
   * @license   The GNU General Public License, Version 2
@@ -184,6 +184,17 @@ class Bloxx_Module extends Bloxx_DBObject
 				$mt->setItem('generic_delete_button', $html_out);
 			}			
 
+			global $GLOBAL_CURRENT_JUMP_STRING;
+			
+			if ($jump != -1)
+			{
+				$GLOBAL_CURRENT_JUMP_STRING = $jump;
+			}
+			else
+			{
+				unset($GLOBAL_CURRENT_JUMP_STRING);
+			}
+
 			$do_render_method = 'doRender' . $view;			
 			return $this->$do_render_method($param, $target, $jump, $other_params, $mt);
 		}
@@ -279,7 +290,7 @@ class Bloxx_Module extends Bloxx_DBObject
 
 			$ret = $this->createTable();
 
-			if (PEAR :: isError($ret))
+			if (PEAR::isError($ret))
 			{
 
 				return $ret;
@@ -1098,7 +1109,7 @@ class Bloxx_Module extends Bloxx_DBObject
 			include_once(CORE_DIR . 'bloxx_form.php');
 
 			$form = new Bloxx_Form();
-			$form->setMode('module');
+			$form->setView('module');
 			$form->setParam($this->name);
 
 			$html_out = $form->renderHeader($this->name, 'generic_delete');

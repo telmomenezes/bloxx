@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_workflow.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_workflow.php,v 1.7 2005-06-22 20:05:34 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -148,7 +148,7 @@ class Bloxx_Workflow extends Bloxx_Module
 
 		include_once(CORE_DIR.'bloxx_form.php');
 		$form = new Bloxx_Form();
-		$form->setMode('workflow');
+		$form->setView('workflow');
 		$form->setParam($param);
 
 		$html_out .= $form->renderHeader('workflow', 'accept_reject');

@@ -1,13 +1,27 @@
 BLOXX CHANGELOG
 
-Version 0.7 - 
+Version 0.8 -
+=========================
+
+- more API uniformaztion: Bloxx_Form->setMode() changes to Boxx_Form->setView();
+- jump parameter in <bloxx_mod> created;
+- 
+
+Version 0.7 - 20/Jun/2005
 =========================
 
 - Language selction system implemented;
 - Bloxx_StyleLink discontinued, now only ModuleTemplate is used;
 - Several bug corrections on database connections;
-- Several optimizations on the core modules;
-- 
+- Several optimizations on the core modules - some caching of moduletemplates and config values;
+- PhotoNews improved a lot;
+- HTMLArea module created;
+- Major changes in module definition API: now renders and commands are defined by methods and not switches on main functions;
+- Nice demo installation created;
+- Major imprpvements to forum module;
+- Saving bin/images on init files now works fine;
+- Generic renders and generic commands created, used for generic edit/delete/create functions;
+- Every view may now support generic edit / generic delete buttons by default;
 
 Version 0.6 - 6/Mar/2005
 =========================

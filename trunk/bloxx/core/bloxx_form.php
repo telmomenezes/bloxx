@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_form.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_form.php,v 1.7 2005-06-22 20:05:34 tmenezes Exp $
 
 class Bloxx_Form
 {
@@ -29,7 +29,8 @@ class Bloxx_Form
         {
                 global $G_FORM_COUNT;
                 
-                if(!isset($G_FORM_COUNT)){
+                if (!isset($G_FORM_COUNT))
+                {
                 
                         $G_FORM_COUNT = 0;
                 }
@@ -41,9 +42,9 @@ class Bloxx_Form
                 $this->form_name = 'form' . $G_FORM_COUNT;
         }
         
-        function setMode($mode)
+        function setView($view)
         {
-                $this->mode = $mode;
+                $this->view = $view;
         }
         
         function setParam($param)
@@ -53,94 +54,121 @@ class Bloxx_Form
         
         function setFromGlobals()
         {        
-                if(isset($_GET['return_mode'])){
+                if (isset($_GET['return_mode']))
+                {
                 
-                        $this->mode = $_GET['return_mode'];
+                        $this->view = $_GET['return_mode'];
                 }
-                else if(isset($_GET['mode'])){
+                else if (isset($_GET['mode']))
+                {
 
                         $this->mode = $_GET['mode'];
                 }
                 
-                if(isset($_GET['return_param'])){
+                if (isset($_GET['return_param']))
+                {
 
                         $this->param = $_GET['return_param'];
                 }
-                else if(isset($_GET['param'])){
+                else if (isset($_GET['param']))
+                {
 
                         $this->param = $_GET['param'];
                 }
                 
-                if(isset($_GET['return_target'])){
+                if (isset($_GET['return_target']))
+                {
 
                         $this->target = $_GET['return_target'];
                 }
-                else if(isset($_GET['target'])){
+                else if (isset($_GET['target']))
+                {
 
                         $this->target = $_GET['target'];
                 }
         }
         
         function renderHeader($module, $command, $id = -1)
-        {                
-                $html_out = '<form enctype="multipart/form-data"';
-                
-                $html_out .= ' name="' . $this->form_name . '"';
-                $html_out .= ' action="index.php';
-                
-                $url_params = array();				
+        {
+        		global $GLOBAL_CURRENT_JUMP_STRING;
+        		
+        		$action = '';
+        		
+        		if (isset($GLOBAL_CURRENT_JUMP_STRING))
+        		{
+        			$action = $GLOBAL_CURRENT_JUMP_STRING;
+        		}
+        		else
+        		{
+        			$action = 'index.php';
+        			
+        			$url_params = array();				
 				
-                if($id > 0){
+                	if ($id > 0)
+                	{
                 
                         $url_params['id'] = $id;                        
-                }
-                else if(isset($_GET['return_id'])){
+                	}
+                	else if (isset($_GET['return_id']))
+                	{
 						
                         $url_params['id'] = $_GET['return_id'];
-                }
-                else if(isset($_GET['id'])){
+                	}
+                	else if (isset($_GET['id']))
+                	{
                 
                         $url_params['id'] = $_GET['id'];
-                }
+                	}
                 
-                if(isset($this->mode)){
+                	if (isset($this->view))
+                	{
                 
-                        $url_params['mode'] = $this->mode;
-                }
+                        $url_params['mode'] = $this->view;
+                	}
                 
-                if(isset($this->param)){
+                	if (isset($this->param))
+                	{
 
                         $url_params['param'] = $this->param;
-                }
+                	}
                 
-                if(isset($this->target)){
+                	if (isset($this->target))
+                	{
 
                         $url_params['target'] = $this->target;
-                }
+                	}
                 
-                if(count($url_params) > 0){
+                	if (count($url_params) > 0)
+                	{
 
-                        $html_out .= '?';
-                }
+                        $action .= '?';
+                	}
                 
-                $first_param = true;
+                	$first_param = true;
                 
-                foreach($url_params as $k => $v){
+                	foreach ($url_params as $k => $v)
+                	{
 
-                        if($first_param){
+                        if ($first_param)
+                        {
                         
                                 $first_param = false;
                         }
-                        else{
+                        else
+                        {
                         
-                                $html_out .=  '&';
+                                $action .=  '&';
                         }
                 
-                        $html_out .=  $k . '=' . $v;
-                }
+                        $action .=  $k . '=' . $v;
+                	}
+        		}
+        	                
+                $html_out = '<form enctype="multipart/form-data"';
                 
-                $html_out .=  '" method="POST">';
-                
+                $html_out .= ' name="' . $this->form_name . '"';
+                $html_out .= ' action="' . $action;                
+                $html_out .=  '" method="POST">';                
                 $html_out .= '
                 <input name="module" type="hidden" value="'.$module.'">
                 <input name="command" type="hidden" value="'.$command.'">

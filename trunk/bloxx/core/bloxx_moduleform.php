@@ -20,7 +20,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_moduleform.php,v 1.1 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_moduleform.php,v 1.2 2005-06-22 20:05:34 tmenezes Exp $
 
 require_once 'defines.php';
 
@@ -54,7 +54,7 @@ class Bloxx_ModuleForm
 		if ($this->inadmin)
 		{
 
-			$this->form->setMode('module');
+			$this->form->setView('module');
 			$this->form->setParam($this->owner_module->name);
 		}
 		else

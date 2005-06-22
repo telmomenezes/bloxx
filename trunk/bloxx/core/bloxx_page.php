@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_page.php,v 1.8 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_page.php,v 1.9 2005-06-22 20:05:34 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -182,7 +182,7 @@ class Bloxx_Page extends Bloxx_Module
                 $bloxx_content = $tok;
             }
             else if (substr($tok, 0, 10) == "/bloxx_mod")
-            {
+            {				
 
             	$this->parseBloxx($bloxx_content, $html_part_2, $javascript_part, $body_part);
 
@@ -287,13 +287,16 @@ class Bloxx_Page extends Bloxx_Module
         {                
                 $target = null;
 
-                if(substr($bloxx_html, 0, 9) == "bloxx_mod"){
+                if (substr($bloxx_html, 0, 9) == "bloxx_mod")
+                {
 
-                        $nparams = substr_count($bloxx_html, "=");
+                        $nparams = substr_count($bloxx_html, '"');
+                        $nparams /= 2;                        
 
                         $regex = '([^> ]*)';
 
-                        for($n = 0; $n < $nparams; $n++){
+                        for ($n = 0; $n < $nparams; $n++)
+                        {
 
                                 $regex .= ' ([^> ]*)';
                         }
@@ -305,7 +308,8 @@ class Bloxx_Page extends Bloxx_Module
                         
                         $other_params = array();
 
-                        for($n = 0; $n < $nparams; $n++){
+                        for ($n = 0; $n < $nparams; $n++)
+                        {								
 
                                 ereg('(.*)="(.*)"', $regs[$n + 2], $par);
                                 
@@ -326,7 +330,8 @@ class Bloxx_Page extends Bloxx_Module
 
                         $content = $regs[$n + 2];
                         
-                        if($module == 'from_url'){
+                        if ($module == 'from_url')
+                        {
 
                                 if (isset($_GET['module']))
                                 {
@@ -341,9 +346,11 @@ class Bloxx_Page extends Bloxx_Module
 
                         $module_inst = new $mname();
 
-                        if($view == 'from_url'){
+                        if ($view == 'from_url')
+                        {
 
-                                if(isset($_GET['mode'])){
+                                if (isset($_GET['mode']))
+                                {
 
                                        $view = $_GET['mode'];
                                 }
@@ -353,9 +360,11 @@ class Bloxx_Page extends Bloxx_Module
                                 }
                         }
 
-                        if($target == 'from_url'){
+                        if ($target == 'from_url')
+                        {
 
-                                if(isset($_GET['target'])){
+                                if (isset($_GET['target']))
+                                {
 
                                         $target = $_GET['target'];
                                 }
@@ -364,39 +373,48 @@ class Bloxx_Page extends Bloxx_Module
                                         $target = 0;
                                 }
                         }
-                        else if(substr($target, 0, 4) == "var_"){
+                        else if (substr($target, 0, 4) == "var_")
+                        {
                         
                                 ereg('last-(.*)', $target, $regs);
                                 $varname = $regs[1];
                                 
-                                if(isset($_GET[$varname])){
+                                if (isset($_GET[$varname]))
+                                {
 
                                         $target = $_GET[$varname];
                                 }
-                                else{
+                                else
+                                {
 
                                         $target = 0;
                                 }
                         }
 
-                        if(isset($param)){
+                        if (isset($param))
+                        {
                         
-                                if(($param == -1) || ($param == 'from_url')){
+                                if (($param == -1) || ($param == 'from_url'))
+                                {
 
-                                        if(isset($_GET['param'])){
+                                        if (isset($_GET['param']))
+                                        {
 
                                                 $param = $_GET['param'];
                                         }
-                                        else{
+                                        else
+                                        {
 
                                                 $param = 0;
                                         }
                                 }
-                                else if(substr($param, 0, 4) == "last"){
+                                else if (substr($param, 0, 4) == "last")
+                                {
 
                                         $count_back = 1;
 
-                                        if($param != "last"){
+                                        if ($param != "last")
+                                        {
 
                                                 ereg('last-(.*)', $param, $regs);
                                                 $count_back = $regs[1] + 1;
@@ -404,7 +422,8 @@ class Bloxx_Page extends Bloxx_Module
 
                                         $param = $module_inst->getRowIDFromEnd($count_back);
                                 }
-                                else if(substr($param, 0, 10) == "targetlast"){
+                                else if (substr($param, 0, 10) == "targetlast")
+                                {
 
                                         $tname = 'Bloxx_'.$target;
                                         include_module_once($target);
@@ -412,7 +431,8 @@ class Bloxx_Page extends Bloxx_Module
 
                                         $count_back = 1;
 
-                                        if($param != "targetlast"){
+                                        if ($param != "targetlast")
+                                        {
 
                                                 ereg('targetlast-(.*)', $param, $regs);
                                                 $count_back = $regs[1] + 1;
@@ -420,22 +440,26 @@ class Bloxx_Page extends Bloxx_Module
 
                                         $param = $target_module->getRowIDFromEnd($count_back);
                                 }
-                                else if(substr($param, 0, 4) == "var_"){
+                                else if (substr($param, 0, 4) == "var_")
+                                {
 
                                         ereg('var_(.*)', $param, $regs);
                                         $varname = $regs[1];
 
-                                        if(isset($_GET[$varname])){
+                                        if (isset($_GET[$varname]))
+                                        {
 
                                                 $param = $_GET[$varname];
                                         }
-                                        else{
+                                        else
+                                        {
 
                                                 $param = 0;
                                         }
                                 }
                         }
-                        else{
+                        else
+                        {
                         
                                 $param = null;
                         }

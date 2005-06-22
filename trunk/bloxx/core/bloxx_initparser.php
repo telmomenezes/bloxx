@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_initparser.php,v 1.3 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_initparser.php,v 1.4 2005-06-22 20:05:35 tmenezes Exp $
 
 define('PARSE_STATE_FIND_ROW', 0);
 define('PARSE_STATE_FIND_FIELD', 1);
@@ -98,7 +98,7 @@ class Bloxx_InitParser
                 //echo $count;
                 //echo '<br><br><br>===============================<br><br><br>';
                 //$count_inserts = 0;
-                //return;
+				//return;
         
                 $tok = strtok($mod_block, '[');
                 

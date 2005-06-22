@@ -1,6 +1,6 @@
 Core Functionalities
 
-- Test site save with images/bin data
+- AJAX system!;
 - General search system;
 - Better module file structure;
 - Module dependencies;
@@ -24,7 +24,6 @@ Core Functionalities
 - General spell-checking system;
 - Verify IMAGE format;
 - Support other IMAGE formats (gif, etc..);
-- doRender() calls functions to benefit from OO;
 - Local time, correct server time someway;
 - Display photo in photogallery selector, first or random;
 - Configurable textarea width;
@@ -37,6 +36,8 @@ Core Functionalities
 everything that comes after a bad/wrong item;
 - Solve security issues with image.php;
 - .css file created upon install;
+- Revamp install script;
+- Make sure data is not saved to init files when $this->use_init_file == false;
 
 Documentation
 

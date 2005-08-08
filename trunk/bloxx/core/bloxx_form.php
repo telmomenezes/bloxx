@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_form.php,v 1.7 2005-06-22 20:05:34 tmenezes Exp $
+// $Id: bloxx_form.php,v 1.8 2005-08-08 16:38:34 tmenezes Exp $
 
 class Bloxx_Form
 {
@@ -171,8 +171,10 @@ class Bloxx_Form
                 $html_out .=  '" method="POST">';                
                 $html_out .= '
                 <input name="module" type="hidden" value="'.$module.'">
-                <input name="command" type="hidden" value="'.$command.'">
-                ';
+                <input name="command" type="hidden" value="'.$command.'">';                
+                $html_out .= '<input name="QUERY_STRING" type="hidden" value="'
+                			. $_SERVER['QUERY_STRING']
+                			. '">';
                 
                 return $html_out;
         }
@@ -214,12 +216,17 @@ class Bloxx_Form
                 return $html_out;
         }
         
-        function startSelect($name, $size)
+        function startSelect($name, $size, $auto_submit = false)
         {
         
-                $html_out = '
-                <SELECT size="' . $size . '" name="' . $name . '">
-                ';
+                $html_out = '<SELECT size="' . $size . '" name="' . $name . '"';
+                
+                if ($auto_submit)
+                {
+                	$html_out .= ' onchange="' . $this->form_name . '.submit()"';
+                }
+                
+                $html_out .= '>';                
                 
                 return $html_out;
         }

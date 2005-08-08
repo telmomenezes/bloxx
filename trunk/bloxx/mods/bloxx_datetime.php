@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_datetime.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_datetime.php,v 1.5 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_DateTime extends Bloxx_Module
 {
         function Bloxx_DateTime()
         {
-                $this->name = 'datetime';
-                $this->module_version = 1;
-                $this->label_field = 'nill';
-
-                $this->use_init_file = false;
-
-                $this->default_mode = 'date';
+                $this->_BLOXX_MOD_PARAM['name'] = 'datetime';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'nill';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = false;
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'date';
                 
                 $this->Bloxx_Module();
         }

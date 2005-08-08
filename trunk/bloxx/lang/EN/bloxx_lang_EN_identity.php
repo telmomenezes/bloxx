@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_lang_EN_identity.php,v 1.3 2005-02-18 17:34:56 tmenezes Exp $
+// $Id: bloxx_lang_EN_identity.php,v 1.4 2005-08-08 16:38:45 tmenezes Exp $
 
 define('F_LANG_IDENTITY_REALNAME', 'Real Name');
 define('F_LANG_IDENTITY_USERNAME', 'User Name');
@@ -50,4 +50,6 @@ define('LANG_IDENTITY_CONFIRM_EMAIL_SUBJECT', 'Registration');
 define('LANG_IDENTITY_CHANGE_EMAIL', 'You changed email so you will have to reconfim your registration.  Please use the following link to confirm. After confirmation you will be able to login using your username and password.');
 define('LANG_IDENTITY_CHANGE_EMAIL_SUBJECT', 'Email change');
 define('LANG_IDENTITY_CONFIRM_MAIL_SENT', 'A confirmation message was sent to your mailbox.');
+define('LANG_IDENTITY_USER_EXISTS', 'We are sorry, this username already exists.');
+define('LANG_IDENTITY_EMAIL_EXISTS', 'We are sorry, this is email is already in use.');
 ?>

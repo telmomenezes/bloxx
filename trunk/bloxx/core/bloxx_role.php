@@ -19,8 +19,9 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_role.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_role.php,v 1.5 2005-08-08 16:38:35 tmenezes Exp $
 
+define('TRUST_CUSTOM', -1);
 define('TRUST_GUEST', 0);
 define('TRUST_USER', 1);
 define('TRUST_MODERATOR', 2);
@@ -37,11 +38,11 @@ class Bloxx_Role extends Bloxx_Module
 {
         function Bloxx_Role()
         {
-                $this->name = 'role';
-                $this->module_version = 1;
-                $this->label_field = 'rolename';
-                $this->use_init_file = true;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'role';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'rolename';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }

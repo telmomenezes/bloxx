@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_forummessage.php,v 1.1 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_forummessage.php,v 1.2 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_ForumMessage extends Bloxx_Module
 {
         function Bloxx_ForumMessage()
         {
-                $this->name = 'forummessage';
-                $this->module_version = 1;
-                $this->label_field = 'subject';
-                
-                $this->use_init_file = true;
-                
-                $this->default_mode = 'default_view';
+                $this->_BLOXX_MOD_PARAM['name'] = 'forummessage';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'subject';                
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;                
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'default_view';
                 
                 $this->Bloxx_Module();
         }
@@ -170,7 +168,7 @@ class Bloxx_ForumMessage extends Bloxx_Module
 		include_module_once($target);
 		$target_module = new $tname();
 
-		$html_out = $target_module->render($target_module->default_mode, $param);
+		$html_out = $target_module->render($target_module->_BLOXX_MOD_PARAM['default_mode'], $param);
 		$mt->setItem('target_view', $html_out);
                 
 		$this->parent_id = $param;
@@ -193,7 +191,7 @@ class Bloxx_ForumMessage extends Bloxx_Module
                         
 		include_module_once('identity');
 		$ident = new Bloxx_Identity();
-		$this->user_id = $ident->id();
+		$this->user_id = $ident->userID();
                         
 		return $this->renderForm(-1, false, $mt, -1, 'newmsg');
 	}

@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_personalinfo.php,v 1.7 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_personalinfo.php,v 1.8 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,12 +28,11 @@ class Bloxx_PersonalInfo extends Bloxx_Module
 {
         function Bloxx_PersonalInfo()
         {
-                $this->name = 'personalinfo';
-                $this->module_version = 1;
-                $this->label_field = 'full_name';
-
-                $this->use_init_file = true;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'personalinfo';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'full_name';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }
@@ -97,7 +96,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                         include_module_once('identity');
                         $ident = new Bloxx_Identity();
 
-                        $this->user_id = $ident->id();
+                        $this->user_id = $ident->userID();
                         $html_out = $this->renderForm($id, false);
 
                         return $html_out;
@@ -113,7 +112,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                                 
                                 $info = new Bloxx_PersonalInfo();
                                 $info->clearWhereCondition();
-                                $info->insertWhereCondition('user_id', '=', $ident->id());
+                                $info->insertWhereCondition('user_id', '=', $ident->userID());
                                 $info->runSelect();
                                 $info->nextRow();
                 
@@ -170,7 +169,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
         
                 $info = new Bloxx_PersonalInfo();
                 $info->clearWhereCondition();
-                $info->insertWhereCondition('user_id', '=', $ident->id());
+                $info->insertWhereCondition('user_id', '=', $ident->userID());
 
                 return ($info->runSelect() > 0);
         }
@@ -182,7 +181,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
                 
-                if($_POST['user_id'] != $ident->id()){
+                if($_POST['user_id'] != $ident->userID()){
                 
                         if(!$this->verifyTrust(TRUST_ADMINISTRATOR)){
 
@@ -200,7 +199,7 @@ class Bloxx_PersonalInfo extends Bloxx_Module
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
 
-                if($_POST['user_id'] != $ident->id()){
+                if($_POST['user_id'] != $ident->userID()){
 
                         if(!$this->verifyTrust(TRUST_ADMINISTRATOR)){
 

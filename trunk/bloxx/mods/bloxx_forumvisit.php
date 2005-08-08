@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_forumvisit.php,v 1.2 2005-06-22 20:05:35 tmenezes Exp $
+// $Id: bloxx_forumvisit.php,v 1.3 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_ForumVisit extends Bloxx_Module
 {
         function Bloxx_ForumVisit()
         {
-                $this->name = 'forumvisit';
-                $this->module_version = 1;
-                $this->label_field = 'title';
-
-                $this->use_init_file = false;
-
-                $this->default_mode = 'default_view';
+                $this->_BLOXX_MOD_PARAM['name'] = 'forumvisit';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'title';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = false;
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'default_view';
                 
                 $this->Bloxx_Module();
         }
@@ -53,7 +51,7 @@ class Bloxx_ForumVisit extends Bloxx_Module
         	include_module_once('identity');
             $ident = new Bloxx_Identity();
             
-            $user_id = $ident->id();
+            $user_id = $ident->userID();
             
             if ($user_id < 0)
             {
@@ -85,7 +83,7 @@ class Bloxx_ForumVisit extends Bloxx_Module
         	include_module_once('identity');
             $ident = new Bloxx_Identity();
             
-            $user_id = $ident->id();
+            $user_id = $ident->userID();
             
             if ($user_id < 0)
             {

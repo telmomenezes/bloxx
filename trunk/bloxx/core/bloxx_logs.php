@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_logs.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_logs.php,v 1.7 2005-08-08 16:38:35 tmenezes Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -27,7 +27,7 @@ require_once(CORE_DIR . 'bloxx_module.php');
  * Bloxx_Logs Implements log system.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_logs.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
+ * @version   $Id: bloxx_logs.php,v 1.7 2005-08-08 16:38:35 tmenezes Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -37,10 +37,10 @@ class Bloxx_Logs extends Bloxx_Module
 {
 		function Bloxx_Logs($ownerModuleId = '-1')
 		{
-			$this->name = 'logs';
-			$this->module_version = 1;
-			$this->use_init_file = false;
-			$this->no_private = true;
+			$this->_BLOXX_MOD_PARAM['name'] = 'logs';
+			$this->_BLOXX_MOD_PARAM['module_version'] = 1;
+			$this->_BLOXX_MOD_PARAM['use_init_file'] = false;
+			$this->_BLOXX_MOD_PARAM['no_private'] = true;
 			
 			$this->_ownerModuleId = $ownerModuleId;
 			
@@ -54,7 +54,7 @@ class Bloxx_Logs extends Bloxx_Module
                         'addr'          => array('TYPE' => 'STRING', 'SIZE' => 15, 'NOTNULL' => true),
                         'timestamp'     => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
                         'priority'      => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
-                        'message'       => array('TYPE' => 'STRING', 'SIZE' => 256, 'NOTNULL' => true));
+                        'message'       => array('TYPE' => 'STRING', 'SIZE' => 255, 'NOTNULL' => true));
         }
         
         function getLocalRenderTrusts()
@@ -114,7 +114,7 @@ class Bloxx_Logs extends Bloxx_Module
 			
 		$form = new Bloxx_Form();
 				
-		$html_out = $form->renderHeader($this->name, 'view');
+		$html_out = $form->renderHeader($this->_BLOXX_MOD_PARAM['name'], 'view');
 		$html_out .= $form->startSelect('priority', '1');
 		$html_out .= $form->addSelectItem(LOG_CRIT, $this->getPriorityName(LOG_CRIT));
 		$html_out .= $form->addSelectItem(LOG_ERR, $this->getPriorityName(LOG_ERR));

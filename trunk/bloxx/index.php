@@ -19,12 +19,16 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: index.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: index.php,v 1.7 2005-08-08 16:38:32 tmenezes Exp $
 
 require_once('defines.php');
 require_once('functions.php');
 require_once(CORE_DIR . 'bloxx_page.php');
 require_once(CORE_DIR . 'bloxx_identity.php');
+require_once(CORE_DIR . 'bloxx_error.php');
+
+global $BLOXX_ERROR;
+$BLOXX_ERROR = new Bloxx_Error(ERROR_REPORT_MODE_PRINT_SENSITIVE, WARNING_REPORT_MODE_PRINT, DEBUG_REPORT_MODE_PRINT);
 
 global $warningmessage;
 unset($warningmessage);
@@ -35,17 +39,17 @@ global $G_LANGUAGE;
 include_module_once('state');
 $state = new Bloxx_State();
 
-if (isset($_GET['lang'])) {
-	
+if (isset($_GET['lang']))
+{	
 	$G_LANGUAGE = $_GET['lang'];
 	$state->setValue('language', 'current_language', $G_LANGUAGE);
 }
-else{
-	
+else
+{	
 	$G_LANGUAGE = $state->getValue('language', 'current_language');
 
-	if ($G_LANGUAGE == null) {
-
+	if ($G_LANGUAGE == null)
+	{
 		include_module_once('config');	
 		$config = new Bloxx_Config();
 		$G_LANGUAGE = $config->getConfig('default_language');
@@ -70,7 +74,15 @@ if (isset($_POST['module']) && $_POST['module'] != '')
         include_module_once($_POST['module']);
 
         $mod = new $modname();
-        $mod->execCommand($_POST['command']);
+        if ($mod->validateCommand($_POST['command']))
+        {
+        	$mod->execCommand($_POST['command']);
+        }
+        else
+        {        	
+        	// Error, redirect to form page to display errors
+        	parse_str($_POST['QUERY_STRING'], $_GET);        	
+        }        
 }
 
 $id = 1;

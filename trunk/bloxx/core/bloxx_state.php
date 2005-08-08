@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_state.php,v 1.7 2005-06-22 20:05:35 tmenezes Exp $
+// $Id: bloxx_state.php,v 1.8 2005-08-08 16:38:34 tmenezes Exp $
 
 include_once(CORE_DIR.'bloxx_module.php');
 
@@ -27,11 +27,11 @@ class Bloxx_State extends Bloxx_Module
 {
         function Bloxx_State()
         {
-                $this->name = 'state';
-                $this->module_version = 1;
-                $this->label_field = 'item_name';
-                $this->use_init_file = false;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'state';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'item_name';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = false;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }
@@ -51,7 +51,7 @@ class Bloxx_State extends Bloxx_Module
                 include_module_once('identity');
                 $ident = new Bloxx_Identity();
                 
-                if($ident->id() == -1){
+                if($ident->userID() == -1){
 
                         if(isset($_COOKIE['bloxx_state' . $module . $item])){
                         
@@ -71,7 +71,7 @@ class Bloxx_State extends Bloxx_Module
                 $ident = new Bloxx_Identity();
         
                 $this->clearWhereCondition();
-                $this->insertWhereCondition('owner_identity', '=', $ident->id());
+                $this->insertWhereCondition('owner_identity', '=', $ident->userID());
                 $this->insertWhereCondition('item_name', '=', $item);
                 $this->insertWhereCondition('owner_module', '=', $module_id);
                 $this->runSelect();
@@ -94,7 +94,7 @@ class Bloxx_State extends Bloxx_Module
                 setcookie('bloxx_state' . $module . $item, $value, (time()+2592000),'/','',0);
                 $_COOKIE['bloxx_state' . $module . $item] = $value;
                 
-                if($ident->id() == -1){
+                if($ident->userID() == -1){
                 
                         return;
                 }
@@ -107,7 +107,7 @@ class Bloxx_State extends Bloxx_Module
                 $ident = new Bloxx_Identity();
 
                 $this->clearWhereCondition();
-                $this->insertWhereCondition('owner_identity', '=', $ident->id());
+                $this->insertWhereCondition('owner_identity', '=', $ident->userID());
                 $this->insertWhereCondition('item_name', '=', $item);
                 $this->insertWhereCondition('owner_module', '=', $module_id);
                 $this->runSelect();
@@ -115,7 +115,7 @@ class Bloxx_State extends Bloxx_Module
                 if (!$this->nextRow()){
 
                         $this->item_value = $value;
-                        $this->owner_identity = $ident->id();
+                        $this->owner_identity = $ident->userID();
                         $this->owner_module = $module_id;
                         $this->item_name = $item;
                         $this->insertRow();
@@ -138,7 +138,7 @@ class Bloxx_State extends Bloxx_Module
                 $ident = new Bloxx_Identity();
 
                 $this->clearWhereCondition();
-                $this->insertWhereCondition('owner_identity', '=', $ident->id());
+                $this->insertWhereCondition('owner_identity', '=', $ident->userID());
                 $this->insertWhereCondition('item_name', '=', $item);
                 $this->insertWhereCondition('owner_module', '=', $module_id);
                 $this->runSelect();

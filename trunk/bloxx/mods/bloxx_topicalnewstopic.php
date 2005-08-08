@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_topicalnewstopic.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_topicalnewstopic.php,v 1.5 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_TopicalNewsTopic extends Bloxx_Module
 {
         function Bloxx_TopicalNewsTopic()
         {
-                $this->name = 'topicalnewstopic';
-                $this->module_version = 1;
-                $this->label_field = 'topic_name';
-
-                $this->use_init_file = true;
-
-                $this->default_mode = 'topic_symbol';
+                $this->_BLOXX_MOD_PARAM['name'] = 'topicalnewstopic';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'topic_name';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'topic_symbol';
                 
                 $this->Bloxx_Module();
         }

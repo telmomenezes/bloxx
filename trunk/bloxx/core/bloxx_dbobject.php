@@ -19,842 +19,1136 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_dbobject.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_dbobject.php,v 1.5 2005-08-08 16:38:34 tmenezes Exp $
 
-require_once 'DB.php';
-require_once 'PEAR.php';
-//require_once 'defines.php';
+require_once 'adodb/adodb.inc.php';
 
+/**
+ * This class is the Bloxx data base abstraction layer.
+ * 
+ * Bloxx_DBObject is the parent class of Bloxx_Module and takes care
+ * of abstracting object data persistence and data base operations.
+ * 
+ * Bloxx_DBObject uses ADOdb.
+ * 
+ * @author 	Telmo Menezes <telmo@cognitiva.net>
+ * @package core
+ * @see 	Bloxx_Module
+ */
 class Bloxx_DBObject
-{
+{		
+   /**
+	* Constructor
+ 	* 
+    */
+	function Bloxx_DBObject($host = false)
+	{		       
+        $this->_condition = '';
+        $this->_group_by = '';
+        $this->_order_by = '';
+        $this->_having = '';        
+        $this->_data_select = $this->_BLOXX_MOD_PARAM['name'] . '.*';
+        $this->_join = '';
+		$this->_limit = false;
+		
+		$this->connect($host);
+	}
 
-        var $name;
-        var $N = 0;
-        var $_database_dsn = DATABASE_DSN;
-        var $_database = '';
-        var $_results = '';
-        var $_condition = '';
-        var $_group_by = '';
-        var $_order_by = '';
-        var $_having = '';
-        var $_limit = '';
-        var $_data_select = '*';
-        var $_join = '';
-        
-        //Abstract function to be implemented in child classes
-        function tableDefinition(){}
+   /**
+	* Connects to the database.
+ 	*
+ 	* If an active connection already exists, do nothing. The active connection
+ 	* will be used.
+    * 
+    */	
+	function connect($host)
+	{
+		global $DB_CONNECTION;
+				
+		if (!$DB_CONNECTION)
+		{
+			if (!$host)
+			{
+				$DB_CONNECTION = NewADOConnection(DATABASE_DSN);
+			}
+			else
+			{
+				$DB_CONNECTION = NewADOConnection($host);
+			}
+                        
+			if (!$DB_CONNECTION)
+			{
 
-        //telmo
-        function getRowByID($id, $all_lang_fields = false)
-        {
-        
-        		$this->clearWhereCondition();        		
-                $this->insertWhereCondition('id', '=', $id);
-        
-                $ret = $this->runSelect();
-                
-                if ($ret > 0) {
+				global $BLOXX_ERROR;
+				$BLOXX_ERROR->error('DBObject', 'connect(): ' . $DB_CONNECTION->ErrorMsg(), DATABASE_DSN);
+				
+				return false;                                
+			}
+			
+			$DB_CONNECTION->SetFetchMode(ADODB_FETCH_ASSOC);
+		}
+		
+		return true;
+	}
 
-                        $this->nextRow(!$all_lang_fields);
-                }
-                
-                return $ret;
-        }
+   /**
+	* Performs a database query
+ 	*
+	* @return true on success, false otherwise.
+	* 
+    */	
+	function query($string)
+	{
+		global $DB_CONNECTION;
+		
+		if ($this->_limit)
+		{
+			$this->_results = $DB_CONNECTION->SelectLimit($string,
+												$this->_limit_num_rows,
+												$this->_limit_offset);
+		}
+		else
+		{		
+			$this->_results = $DB_CONNECTION->Execute($string);
+		}
+		
+		if (!$this->_results)
+		{
+			global $BLOXX_ERROR;			
+			$BLOXX_ERROR->error('DBObject', 'query(): ' . $DB_CONNECTION->ErrorMsg(), $string);
+			
+			return false;
+		} 		
 
-        //telmo
-        function runSelect()
-        {
-                $this->N = 0;
-                $tmpcond = $this->_condition;
-                $this->_query('SELECT ' .
-                $this->_data_select .
-                        ' FROM ' . $this->name . " " .
-                $this->_join .
-                $this->_condition . ' '.
-           
-                $this->_group_by . ' '.
-                $this->_having . ' '.
-                $this->_order_by . ' '.
-            
-                $this->_limit);
-
-                $this->_condition = $tmpcond;
-
-                return $this->N;
-        }
-        
-        function getCount()
-        {
-                $this->N = 0;
-                $tmpcond = $this->_condition;
-                $this->_query('SELECT ' .
-                'COUNT(id) as value' .
-                        ' FROM ' . $this->name . " " .
-                $this->_join .
-                $this->_condition . ' '.
-           
-                $this->_group_by . ' '.
-                $this->_having . ' '.
-                $this->_order_by . ' '.
-            
-                $this->_limit);
-
-                $this->_condition = $tmpcond;
-                
-                $result = &$this->_results;
-                $array = $result->fetchRow(DB_FETCHMODE_ASSOC);
-
-				return $array['value'];
-        }
-
-        //telmo
-        function nextRow($only_selected_lang_field = true)
-        {
+		return true;
+	}
+	
+   /**
+	* Performs a database SELECT.
+	* 
+	* Uses parameters previously set by other methods.
+ 	*
+	* @return true on success, false otherwise.
+	* 
+    */
+	function runSelect()
+	{
+		$query = 'SELECT '
+			. $this->_data_select
+			. ' FROM '
+			. $this->_BLOXX_MOD_PARAM['name']
+			. ' '
+			. $this->_join
+			. ' '
+			. $this->_condition
+			. ' '
+			. $this->_group_by
+			. ' '
+			. $this->_having
+			. ' '
+			. $this->_order_by;
+						
+		return $this->query($query);
+	}
+	
+   /**
+	* Fetches the next row in the result set.
+ 	*
+ 	* @param $lang_fields use language fields
+ 	*
+	* @return true on success, false otherwise.
+	* 
+    */
+	function nextRow($lang_fields = true)
+	{
         		
-        		global $G_LANGUAGE;
+		global $G_LANGUAGE;
         	
-                if (!@$this->N) {
-
-                        return false;
-                }
+		if (!$this->_results)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->warning('DBObject', 'nextRow: no valid result set');
+				
+			return false;
+		}
+		
+		if ($this->_results->EOF)
+		{
+			// Not an error, normal use causes this.			
+			return false;
+		}                
+		
+		foreach($this->_results->fields as $k => $v)
+		{			        	
+			$kk = str_replace(".", "_", $k);
+			$kk = str_replace(" ", "_", $kk);
                 
-                $result = &$this->_results;
-                $array = $result->fetchRow(DB_FETCHMODE_ASSOC);
+			if ($lang_fields && (substr($kk, -8, 6) == "_LANG_"))
+			{
 
-                if (!is_array($array)) {
-
-                        return false;
-                }
-
-                foreach($array as $k => $v) {
-        
-                        $kk = str_replace(".", "_", $k);
-                        $kk = str_replace(" ", "_", $kk);
-                
-                        if((substr($kk, -8, 6) == "_LANG_") && $only_selected_lang_field){
-
-                                include_once(CORE_DIR.'bloxx_config.php');
+				include_once(CORE_DIR . 'bloxx_config.php');
                                 
-                                if(substr($kk, -2, 2) == $G_LANGUAGE){
+				if (substr($kk, -2, 2) == $G_LANGUAGE)
+				{
 
-                                        $kglobal = substr($kk, 0, -8);
-                                        $this->$kglobal = $array[$k];
-                                }
-                        }
-                        else{
+					$kglobal = substr($kk, 0, -8);
+					$this->$kglobal = $this->_results->fields[$k];
+				}
+			}
+			else
+			{
                 
-                                $this->$kk = $array[$k];
-                        }
-                }
-                
-                if (!empty($this->_data_select)) {
+				$this->$kk = $this->_results->fields[$k];
+			}
+		}
+		
+		$this->_results->MoveNext();
+		
+		return true;
+	}
+	
+   /**
+	* Fetches the row with the specidied id.
+	* 
+	* @param $id			row id
+	* @param $lang_fields 	use language fields
+ 	*
+	* @return true on success, false otherwise.
+	* 
+    */
+	function getRowByID($id, $all_lang_fields = false)
+	{
         
-                        foreach(array('_join','_group_by','_order_by', '_having', '_limit','_condition') as $k) {
-            
-                                $this->$k = '';
-                        }
+		$this->clearWhereCondition();        		
+		$this->insertWhereCondition('id', '=', $id);
+        
+		$ret = $this->runSelect();
                 
-                        $this->_data_select = '*';
-                }
+		if ($ret > 0)
+		{
+			$this->nextRow(!$all_lang_fields);
+		}
+                
+		return $ret;
+	}
+	
+   /**
+	* Returns the number of rows in this table.
+	* 	
+	* @return numer of rows, -1 on failure
+	* 
+    */	
+	function getCount()
+	{
+		if (!$this->query('SELECT '
+			. 'COUNT(id) as value'
+			. ' FROM '
+			. $this->_BLOXX_MOD_PARAM['name']
+			. ' '
+			. $this->_join
+			. ' '
+			. $this->_condition
+			. ' '
+			. $this->_group_by
+			. ' '
+			. $this->_having
+			. ' '
+			. $this->_order_by))
+		{
+			
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'getCount: error in query');
 
-                return true;
-        }
+			return -1;
+		}
+		
+		if (!$this->_results)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'getCount: no valid result set');
+				
+			return -1;
+		}
+		
+		if ($this->_results->EOF)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'getCount: empty result set');
+			
+			return -1;
+		}      
 
-        //telmo
-        function clearWhereCondition()
-        {
-                $this->_condition = '';
-        }
+		return $this->_results->fields['value'];		
+	}
+
+   /**
+	* Returns the array with the table definition.
+	*
+	* Function to be implemented in child classes
+	*  	
+	* @return array with table definition, null if it doesn't exist
+	* 
+    */        
+	function tableDefinition()
+	{
+		return null;
+	}
+
+   /**
+	* Clears the select WHERE condition.
+	* 
+    */
+	function clearWhereCondition()
+	{
+		$this->_condition = '';
+	}
     
-        //telmo
-        function unsetAllFields()
-        {
+   /**
+	* Unsets all table field member variables.
+	* 
+    */
+	function unsetAllFields()
+	{
     
-                $def = $this->tableDefinition();
+		$def = $this->tableDefinition();
                 
-                if($def != null){
+		if ($def != null)
+		{
         
-                        foreach($def as $k => $v){
+			foreach ($def as $k => $v)
+			{
         
-                                unset($this->$k);
-                        }
-                }
-        }
+				unset($this->$k);
+			}
+		}
+	}
     
-        //telmo
-        function insertIsNullCondition($field, $logic = 'AND')
-        {
+   /**
+	* Inserts the condition that the give field is null to the query.
+	* 
+	* @param $field		field to test
+	* @param $logic 	logical connector to use, default is AND.
+	* 
+    */
+	function insertIsNullCondition($field, $logic = 'AND')
+	{
 
-                $cond = $field . ' IS NULL';
+		$cond = $field . ' IS NULL';
         
-                if ($this->_condition) {
+		if ($this->_condition)
+		{
         
-                        $this->_condition .= ' ' . $logic . ' ' . $cond;
-            
-                        return true;
-                }
-        
-                $this->_condition = ' WHERE ' . $cond;
-        
-                return true;
+			$this->_condition .= ' ' . $logic . ' ' . $cond;
+                                    
+		}
+        else
+        {
+			$this->_condition = ' WHERE ' . $cond;            
         }
+	}
         
-        //telmo
-        function insertWhereCondition($field, $op, $value, $logic = 'AND')
-        {
+   /**
+	* Inserts a condition to the query.
+	* 
+	* @param $field		field to test
+	* @param $op	 	logical operator to use (<, >, =, <>, etc..).
+	* @param $value		value to test
+	* @param $logic 	logical connector to use, default is AND.
+	* 
+    */
+	function insertWhereCondition($field, $op, $value, $logic = 'AND')
+	{
 
-                // Value must be filtered for sql injection
+		// TODO: Value must be filtered for sql injection!
+		
+		$def = $this->getTableDefinition();
 
-                $def = $this->getTableDefinition();
+		if (isset($def[$field]))
+		{
 
-                if(isset($def[$field])){
+			$fdef = $def[$field];
+			$type = $fdef['TYPE'];
 
-                        $fdef = $def[$field];
-                        $type = $fdef['TYPE'];
+			if ($this->needsQuotes($type))
+			{
 
-                        if($this->needsQuotes($type)){
+				$value = '"' . $value . '"';
+			}
+		}
 
-                                $value = '"' . $value . '"';
-                        }
-                }
+		$cond = $field . $op . $value;
 
-                $cond = $field . $op . $value;
+		if ($this->_condition)
+		{
 
-                if ($this->_condition) {
+			$this->_condition .= ' ' . $logic . ' ' . $cond;
 
-                        $this->_condition .= ' ' . $logic . ' ' . $cond;
+			return;
+		}
 
-                        return true;
-                }
+		$this->_condition = ' WHERE ' . $cond;
+	}
 
-                $this->_condition = ' WHERE ' . $cond;
-
-                return true;
-        }
-
-        //telmo
-        function setOrderBy($order = false, $desc = false)
-        {
-                $desc_cond = '';
+   /**
+	* Sets field to order by the query.
+	* 
+	* If called with no parameters, clears any previous order condition.
+	* 
+	* @param $field		field to order by
+	* @param $desc	 	true = ascending, false = descending (default)
+	* 
+    */
+	function setOrderBy($field = false, $desc = false)
+	{
+		$desc_cond = '';
         
-                if($desc){
+		if($desc)
+		{
         
-                        $desc_cond = ' desc ';
-                }
+			$desc_cond = ' desc ';
+		}
     
-                if ($order === false) {
+		if ($field === false)
+		{
                 
-                        $this->_order_by = '';
-                        return true;
-                }
+			$this->_order_by = '';
+			return;
+		}		
+        
+		if (!$this->_order_by)
+		{
+        
+			$this->_order_by = ' ORDER BY ' . $field . ' ' . $desc_cond;
+			return;
+		}
+        
+		$this->_order_by .= ' , ' . $field . ' ' . $desc_cond;
+	}
 
-                if (!trim($order)) {
-        
-                        return false;
-                }
-        
-                if (!$this->_order_by) {
-        
-                        $this->_order_by = " ORDER BY {$order} " . $desc_cond;
-                        return true;
-                }
-        
-                $this->_order_by .= " , {$order}" . $desc_cond;
-        
-                return true;
-        }
-
-        //telmo
-        function setGroupBy($group = false)
-        {
-                if ($group === false) {
+   /**
+	* Sets field to group by the query.
+	* 
+	* If called with no parameters, clears any previous group by condition.
+	* 
+	* @param $field		field to group by
+	* 
+    */
+	function setGroupBy($field = false)
+	{
+		if ($field === false)
+		{
                 
-                        $this->_group_by = '';
-                        return true;
-                }
+			$this->_group_by = '';
+		}        
+                
+		if (!$this->_group_by)
+		{
 
-                if (!trim($group)) {
-        
-                        return false;
-                }
-        
-        
-                if (!$this->_group_by) {
+			$this->_group_by = ' GROUP BY ' . $field . ' ';
+			return;
+		}
+		$this->_group_by .= ' , ' . $field;
+	}
 
-                        $this->_group_by = " GROUP BY {$group} ";
-                        return true;
-                }
-                $this->_group_by .= " , {$group}";
+   /**
+	* Sets having condition on the query.
+	* 
+	* If called with no parameters, clears any previous having condition.
+	* 
+	* @param $having	having condition
+	* 
+    */
+	function setHaving($having = false)
+	{
+		if ($having === false)
+		{
+        
+			$this->_having = '';
+			return;
+		}        
+        
+		if (!$this->_having)
+		{
+        
+			$this->_having = ' HAVING ' . $having . ' ';
+            return;
+		}
+        
+		$this->_having .= ' , ' . $having;                
+	}
 
-                return true;
-        }
+   /**
+	* Sets limit on the query.
+	* 
+	* First parameter is the maximum number of rows to be returned by the
+	* query, second parameter is the offset.
+	* 
+	* @param $num_rows	maximum number of rows to be returned
+	* @param $offset	offset to start query by
+	* 
+    */
+	function setLimit($num_rows, $offset = 0)
+	{		       
+		$this->_limit = true;
+		$this->_limit_num_rows = $num_rows;
+		$this->_limit_offset = $offset;        
+	}
+	
+   /**
+	* Sets join on select query.
+	* 
+	* Provide another DBObject to join with in the query,
+	* 
+	* @param $obj			object to join with
+	* @param $local_key 	field to join with on the local object
+	* @param $outside_key	field to join with on the outside object
+	* @param $type			join type: LEFT, RIGHT or INNER (default)
+	* 
+    */
+	function setJoin($obj, $local_key, $outside_key = 'id', $type = 'INNER')
+	{		       
+		$this->_join = $type
+						. ' JOIN '
+						. $obj->_BLOXX_MOD_PARAM['name']
+						. ' ON '
+						. $this->_BLOXX_MOD_PARAM['name']
+						. '.'
+						. $local_key
+						. '='
+						. $obj->_BLOXX_MOD_PARAM['name']
+						. '.'
+						. $outside_key;         
+	}
 
-        //telmo
-        function setHaving($having = false)
-        {
-                if ($having === false) {
-        
-                        $this->_having = '';
-            
-                        return true;
-                }
+   /**
+	* Inserts row using current data in database field methods.
+	* 
+	* @param $set_key	use value on $this->id, do not by default (false).
+	* 
+	* @return inserted row id on success, -1 on failure
+    */
+	function insertRow($set_key = false)
+	{
+		if (!$set_key)
+		{
+			unset($this->id);
+		}
+                
+		$items = $this->tableDefinition();
+		$leftq = '';
+		$rightq = '';
 
-                if (!trim($having)) {
-        
-                        return false;
-                }
-        
-        
-                if (!$this->_having) {
-        
-                        $this->_having = " HAVING {$having} ";
-            
-                        return true;
-                }
-        
-                $this->_having .= " , {$having}";
-                return true;
-        }
-
-        //telmo
-        function setLimit($a = null)
-        {
-                if ($a === null) {
-        
-                        $this->_limit = '';
-           
-                        return true;
-                }
-            
-                $this->_limit = " LIMIT $a";
-        
-                return true;
-        }
-
-        //telmo
-        function insertRow($set_key = false)
-        {
-                if(!$set_key){
-        
-                        unset($this->id);
-                }
-        
-                $this->_connect();
-
-                $__DB  = &$this->_database;
-                $items = $this->tableDefinition();
-
-                $datasaved = 1;
-                $leftq = '';
-                $rightq = '';
-                $key = false;
-                $keys = $this->_get_keys();
-
-                foreach($items as $k => $v) {
-        
-                        if((!$set_key) && ($k == 'id')){
-            
-                                continue;
-                        }
+		foreach ($items as $k => $v)
+		{        
+			if ($set_key || ($k != 'id'))
+			{            
                         
-                        if(isset($v['LANG']) && ($v['LANG'] == true)){
-            
-                                include_module_once('language');
+				if (isset($v['LANG']) && ($v['LANG'] == true))
+				{
+					include_module_once('language');
 
-                                $lang = new Bloxx_Language();
+					$lang = new Bloxx_Language();
 
-                                $lang->clearWhereCondition();
-                                $lang->runSelect();
+					$lang->clearWhereCondition();
+					$lang->runSelect();
 
-                                while ($lang->nextRow()) {
+					while ($lang->nextRow())
+					{
                 
-                                        $klang = $k . "_LANG_" . $lang->code;
+						$klang = $k . "_LANG_" . $lang->code;
                         
-                                        if (!isset($this->$klang)) {
-                                        
-                                                continue;
-                                        }
-                                        
-                                        if((!$this->needsQuotes($v['TYPE'])) && (!isset($this->$klang))){
-
-                                                continue;
-                                        }
-
+						if ((isset($this->$klang))
+							&& ($this->needsQuotes($v['TYPE']) || isset($this->$klang)))
+						{						
                 
-                                        if ($leftq) {
+							if ($leftq)
+							{
                                 
-                                                $leftq  .= ', ';
-                                                $rightq .= ', ';
-                                        }
+								$leftq  .= ', ';
+								$rightq .= ', ';
+							}
                                 
-                                        $leftq .= "$klang ";
+							$leftq .= "$klang ";
 
-                                        if (strtolower($this->$klang) === 'null') {
-
-                                                $rightq .= " NULL ";
-                                        }
-                                        else{
-                                        
-                                                $rightq .= $this->prepareValue($this->$klang, $v['TYPE']);
-                                        }
-                                }
-                        }
-                        else{
-            
-                                if (!isset($this->$k)) {
-                
-                                        continue;
-                                }
-                                
-                                if((!$this->needsQuotes($v['TYPE'])) && ($this->$k == null)){
-
-                                        continue;
-                                }
-            
-                                if ($leftq) {
+							if (strtolower($this->$klang) === 'null')
+							{
+								$rightq .= " NULL ";
+							}
+							else
+							{
+								$rightq .= $this->prepareValue($this->$klang, $v['TYPE']);
+							}
+						}
+					}
+				}
+				else
+				{
+					if ((isset($this->$k))
+						&& (($this->needsQuotes($v['TYPE'])) || ($this->$k != null)))
+					{
+						            
+						if ($leftq)
+						{                        
+							$leftq  .= ', ';
+							$rightq .= ', ';
+						}
                         
-                                        $leftq  .= ', ';
-                                        $rightq .= ', ';
-                                }
+						$leftq .= "$k ";
+
+						if (strtolower($this->$k) === 'null')
+						{
+							$rightq .= " NULL ";
+						}
+						else
+						{
+							$rightq .= $this->prepareValue($this->$k, $v['TYPE']);
+						}
+					}
+				}
+			}
+		}
+		
+		if ($leftq)
+		{
+			global $DB_CONNECTION;			
+			
+			$sql = 'INSERT INTO ' . $this->_BLOXX_MOD_PARAM['name'] . '(' . $leftq . ') VALUES (' . $rightq . ')';
+			// echo $sql . '<br />';			
+			$r = $DB_CONNECTION->Execute($sql);
+            
+			if (!$r)
+			{
+				echo 'insertRow()';
+				global $BLOXX_ERROR;
+				$BLOXX_ERROR->error('DBObject', 'insertRow(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+				return -1;
+			}						
+		
+			if (!$set_key)
+			{	
+				$this->id = $DB_CONNECTION->Insert_ID();
+			}
+		
+			// Insert blobs	
+			foreach ($items as $k => $v)
+			{
+				// Detect all possible BLOB types in the future
+				if ($v['TYPE'] == 'IMAGE')
+				{										
+					
+					if (!$DB_CONNECTION->UpdateBlob($this->_BLOXX_MOD_PARAM['name'],
+						$k,
+						$this->$k,
+						'id=' . $this->id))
+					{
+						global $BLOXX_ERROR;
+						$BLOXX_ERROR->error('DBObject', 'insertRow: insert blob failed. table: ' . $this->_BLOXX_MOD_PARAM['name'] . ' row: ' . $k);
+						return -1;
+					}
+				}
+			}                        
+
+			return $this->id;			
+		}
+
+		global $BLOXX_ERROR;
+		$BLOXX_ERROR->error('DBObject', 'insertRow: no data');
+		
+		return -1;
+	}
+
+   /**
+	* Updates current row using data in database field methods.
+	* 
+	* @param $lang_complete	use language specific field names.
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function updateRow($lang_complete = false)
+	{    
+		if ($lang_complete)
+		{
+			$items = $this->tableDefinitionLangComplete();
+		}
+		else
+		{
+			$items = $this->tableDefinition();
+		}             
+
+		if (!$items)
+		{
+			return false;
+		}
+
+		$values  = '';
+
+		foreach ($items as $k => $v)
+		{
+        
+			if (!isset($this->$k))
+			{            
+				continue;
+			}
                         
-                                $leftq .= "$k ";
+			//is this a good idea?
+			if ((!$this->needsQuotes($v['TYPE'])) && ($this->$k == null))
+			{
+				$this->$k = 0;
+			}
 
-                                if (strtolower($this->$k) === 'null') {
+			if ($values)
+			{
+				$values .= ', ';
+			}
+
+			if (strtolower($this->$k) === 'null')
+			{
+				$values .= $k . ' = NULL';
+			}
+			else
+			{
+				$values .= $k . '=' . $this->prepareValue($this->$k, $v['TYPE']);
+			}
+		}
+
+		$this->insertWhereCondition('id', '=', $this->id);
+
+		if ($values && $this->_condition)
+		{
+			global $DB_CONNECTION;
+			
+			$sql = 'UPDATE ' . $this->_BLOXX_MOD_PARAM['name'] . ' SET ' . $values . ' ' . $this->_condition;
+			//echo $sql . '<br />';
+			$result = $DB_CONNECTION->Execute($sql);
             
-                                        $rightq .= " NULL ";
-                                }
-                                else{
+			if (!$result)
+			{
+				global $BLOXX_ERROR;
+				$BLOXX_ERROR->error('DBObject', 'updateRow(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+				
+				return false;
+			}
+			
+			// Update blobs	
+			foreach ($items as $k => $v)
+			{
+				// Detect all possible BLOB types in the future
+				if ($v['TYPE'] == 'IMAGE')
+				{
+					if (!$DB_CONNECTION->UpdateBlob($this->_BLOXX_MOD_PARAM['name'],
+						$k,
+						$this->$k,
+						'id=' . $this->id))
+					{
+						global $BLOXX_ERROR;
+						$BLOXX_ERROR->error('DBObject', 'updateRow: update blob failed. table: ' . $this->_BLOXX_MOD_PARAM['name'] . ' row: ' . $k);
+						return false;
+					}
+				}
+			}			
 
-                                        $rightq .= $this->prepareValue($this->$k, $v['TYPE']);
-                                }
-                        }
+			return true;
+		}
 
-                }
-                if ($leftq) {
-        
-                        //echo "INSERT INTO {$this->name} ($leftq) VALUES ($rightq) <br>";
-                        $r = $this->_query("INSERT INTO {$this->name} ($leftq) VALUES ($rightq) ");
+		global $BLOXX_ERROR;
+		$BLOXX_ERROR->error('DBObject', 'updateRow: no data to update');
+			
+		return false;
+	}
+
+
+   /**
+	* Deletes row by it's ID.
+	* 
+	* @param $id	ID of row to delete
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function deleteRowByID($id)
+	{
+		global $DB_CONNECTION;
+		
+    	$sql = 'DELETE FROM ' . $this->_BLOXX_MOD_PARAM['name'] . ' WHERE id=' . $id;     
+		$result = $DB_CONNECTION->Execute($sql);
             
-                        if (PEAR::isError($r)) {
+		if (!$result)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'deleteRowByID(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+			return false;
+		}
 
-                                return false;
-                        }
+		return true;
+	}
+
+   /**
+	* Deletes rows by condition.
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function deleteRows()
+	{
+		global $DB_CONNECTION;
+		
+    	$sql = 'DELETE FROM '
+    			. $this->_BLOXX_MOD_PARAM['name']
+    			. ' '
+    			. $this->_condition;
+    			     
+		$result = $DB_CONNECTION->Execute($sql);
             
-                        if ($r < 1) {
+		if (!$result)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'deleteRows(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+			return false;
+		}
 
-                                return false;
-                        }
-
-                        $this->$key = mysql_insert_id();
-
-                        if (isset($this->$key)) {
-            
-                                return $this->$key;
-                        }
-            
-                        return true;
-                }
-
-                return false;
-        }
-
-
-        //telmo
-        function updateRow($lang_complete = false)
-        {
-                $this->_connect();
-
-                if($lang_complete){
-
-                        $items = $this->tableDefinitionLangComplete();
-                }
-                else{
-
-                        $items = $this->tableDefinition();
-                }
-                
-                $keys  = $this->_get_keys();
-
-                if (!$items) {
-
-                        return false;
-                }
-
-                $values  = '';
-
-                foreach($items as $k => $v) {
-        
-                        if (!isset($this->$k)) {
-                        
-                                continue;
-                        }
-                        
-                        if((!$this->needsQuotes($v['TYPE'])) && ($this->$k == null)){
-
-                                continue;
-                        }
-
-                        if ($values)  {
-            
-                                $values .= ', ';
-                        }
-
-                        if (strtolower($this->$k) === 'null') {
-
-                                $values .= "$k = NULL";
-                        }
-                        else{
-
-                                $values .= "$k = " . $this->prepareValue($this->$k, $v['TYPE']);
-                        }
-                }
-
-
-                $this->_build_condition($items, $keys);
-
-                if ($values && $this->_condition) {
-        
-                        //echo "UPDATE  {$this->name}  SET {$values} {$this->_condition} ";
-                        $numrows = $this->_query("UPDATE  {$this->name}  SET {$values} {$this->_condition} ");
-            
-                        if (PEAR::isError($numrows)) {
-
-                                return false;
-                        }
-                        if ($numrows < 1) {
-
-                                return false;
-                        }
-
-                        return $numrows;
-                }
-
-                return false;
-        }
-
-
-        //telmo
-        function deleteRowByID($id)
-        {
-                $this->_connect();
-        
-                $count = $this->_query("DELETE FROM {$this->name} WHERE id={$id}");
-            
-                if (PEAR::isError($count)) {
-
-                        return false;
-                }
-                if ($count < 1) {
-
-                        return false;
-                }
-
-                return true;
-        }
-
-        function fetchRow($row = null)
-        {
-                if (!$this->name) {
-        
-                        return false;
-                }
-                if ($row === null) {
-
-                        return false;
-                }
-                if (!$this->N) {
-
-                        return false;
-                }
-
-                $result = &$this->_results;
-                $array  = $results->fetchrow(DB_FETCHMODE_ASSOC, $row);
-
-                foreach($array as $k => $v) {
-        
-                        $kk = str_replace(".", "_", $k);
-
-                        $this->$kk = $array[$k];
-                }
-
-                return true;
-        }
-
-        function _get_keys()
-        {
+		return true;
+	}
     
-                return array('id');
-        }
-
-        function _connect()
-        {
-        		global $dbconnection;
-        		
-                if (!$dbconnection)
-                {
-
-                        $dbconnection = DB::connect($this->_database_dsn);
-                        
-                        if (DB::isError($dbconnection)) {
-
-                                echo 'DB connection error.<br>';
-                                return;                                
-                        }
-                }
-                
-                $this->_database = $dbconnection;
-
-                return true;
-        }
-
-        function _query($string)
-        {
-        		//global $query_count;
-        		//$query_count++;
-        		//echo $query_count . ' ';
-        		//echo $string . '<br>';
-        	
-                $this->_connect();
-
-                $result = $this->_database->query($string);
-                
-                //echo $string . ' count: ' . $result->numrows() . '<br>';                
-
-                if (DB::isError($result)) {
-
-                        //echo $result->toString();
-                        return false;
-                }
-
-                switch (strtolower(substr(trim($string),0,6))) {
-                        case 'insert':
-                        case 'update':
-                        case 'delete':
-                                return $this->_database->affectedRows();
-                }
-
-                $this->_results = $result;
-
-                $this->N = 0;
-
-                if (method_exists($result, 'numrows')) {
+   /**
+	* Creates the database table for this class.
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function createTable()
+	{
+		$def = $this->tableDefinition();
         
-                        $this->N = $result->numrows();
-                }
-        }
+		$sql = 'CREATE TABLE ' . $this->_BLOXX_MOD_PARAM['name'] . '(';
+        
+		foreach ($def as $k => $v)
+		{
+			if (isset($v['LANG']) && ($v['LANG'] == true))
+			{
+                
+				include_module_once('language');
+                        
+				$lang = new Bloxx_Language();
+                        
+				$lang->clearWhereCondition();
+				$lang->runSelect();
+
+				while ($lang->nextRow())
+				{
+                        
+					$sql .= $k 
+						. '_LANG_'
+						. $lang->code
+						. ' '
+						. $this->_translateType($v['TYPE'], $v['SIZE']);
+
+					if (isset($v['NOTNULL']))
+					{
+						$sql .= ' NOT NULL';
+					}
+					if ($k == 'id')
+					{
+						$sql .= ' AUTO_INCREMENT';
+					}
+					$sql .= ',';
+				}
+			}
+			else
+			{
+				$sql .= $k . ' ' . $this->_translateType($v['TYPE'], $v['SIZE']);
+                
+				if (isset($v['NOTNULL']))
+				{
+					$sql .= ' NOT NULL';
+				}
+				
+				if ($k == 'id')
+				{
+					$sql .= ' AUTO_INCREMENT';
+				}
+				
+				$sql .= ',';
+			}
+		}
+        
+		$sql .= ' PRIMARY KEY(id))';
+        
+        global $DB_CONNECTION;
+		$result = $DB_CONNECTION->Execute($sql);
+            
+		if (!$result)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'createTable(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+			return false;
+		}
+
+		return true;
+	}
     
-        //telmo
-        function createTable()
-        {
-                $def = $this->tableDefinition();
-        
-                $sql = 'CREATE TABLE ' . $this->name . '(';
-        
-                foreach($def as $k => $v){
-        
-                        if(isset($v['LANG']) && ($v['LANG'] == true)){
-                
-                                include_module_once('language');
-                        
-                                $lang = new Bloxx_Language();
-                        
-                                $lang->clearWhereCondition();
-                                $lang->runSelect();
+   /**
+	* Adds a column to the table.
+	* 
+	* @param $name	column name
+	* @param $def	column parameters
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function addTableColumn($name, $def)
+	{
+		$sql = 'ALTER TABLE ' . $this->_BLOXX_MOD_PARAM['name'] . ' ADD ' . $name;
 
-                                while ($lang->nextRow()) {
-                        
-                                        $sql .= $k . '_LANG_' . $lang->code . ' ' . $this->_translateType($v['TYPE'], $v['SIZE']);
+		$sql .= ' ' . $this->_translateType($def['TYPE'], $def['SIZE']);
 
-                                        if(isset($v['NOTNULL'])){
+		if (isset($def['NOTNULL']))
+		{
+			$sql .= ' NOT NULL';
+		}
+        
+        global $DB_CONNECTION;
+		$result = $DB_CONNECTION->Execute($sql);
+            
+		if (!$result)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'addTableColumn():' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+			return false;
+		}
 
-                                                $sql .= ' NOT NULL';
-                                        }
-                                        if($k == 'id'){
-
-                                                $sql .= ' AUTO_INCREMENT';
-                                        }
-                                        $sql .= ',';
-                                }
-                        }
-                        else{
-        
-                                $sql .= $k . ' ' . $this->_translateType($v['TYPE'], $v['SIZE']);
-                
-                                if(isset($v['NOTNULL'])){
-                
-                                        $sql .= ' NOT NULL';
-                                }
-                                if($k == 'id'){
-                
-                                        $sql .= ' AUTO_INCREMENT';
-                                }
-                                $sql .= ',';
-                        }
-                }
-        
-                $sql .= ' PRIMARY KEY(id))';
-        
-                $ret = $this->_query($sql);
-        
-                return $ret;
-        }
+		return true;
+	}
     
-        //telmo
-        function addTableColumn($name, $def)
-        {
-                $sql = 'ALTER TABLE ' . $this->name . ' ADD ' . $name;
+   /**
+	* Remove a column from the table.
+	* 
+	* @param $name	column name
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function removeTableColumn($name)
+	{
+		$sql = 'ALTER TABLE ' . $this->_BLOXX_MOD_PARAM['name'] . ' DROP ' . $name;
 
-                $sql .= ' ' . $this->_translateType($def['TYPE'], $def['SIZE']);
+		global $DB_CONNECTION;
+        $result = $DB_CONNECTION->Execute($sql);
+            
+		if (!$result)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'removeTableColumn(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+			return false;
+		}
 
-                if(isset($def['NOTNULL'])){
-
-                        $sql .= ' NOT NULL';
-                }
-        
-                return $this->_query($sql);
-        }
+		return true;
+	}
     
-        //telmo
-        function removeTableColumn($name)
-        {
-                $sql = 'ALTER TABLE ' . $this->name . ' DROP ' . $name;
+   /**
+	* Create database.
+	* 
+	* @param $db_name	Database name
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function createDatabase($db_name)
+	{
+		$sql = 'CREATE DATABASE ' . $db_name;
 
-                return $this->_query($sql);
-        }
-    
-        //telmo
-        function dropTable()
-        {
-                $def = $this->tableDefinition();
+		global $DB_CONNECTION;
+		$result = $DB_CONNECTION->Execute($sql);
+            
+		if (!$result)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'createDatabase(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+			return false;
+		}
 
-                $sql = 'DROP TABLE ' . $this->name;
+		return true;
+	}
+	
+	/**
+	* Drop database.
+	* 
+	* @param $db_name	Database name
+	* 
+	* @return true on success, false on failure
+	* 
+    */
+	function dropDatabase($db_name)
+	{
+		$sql = 'DROP DATABASE ' . $db_name;
 
-                return $this->_query($sql);
-        }
-        
-        function _translateType($type, $size)
-        {
-                if($type == 'NUMBER'){
+		global $DB_CONNECTION;
+		$result = $DB_CONNECTION->Execute($sql);
+            
+		if (!$result)
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->error('DBObject', 'dropDatabase(): ' . $DB_CONNECTION->ErrorMsg(), $sql);
+			
+			return false;
+		}
 
-                        return 'INT';
-                }
-                else if($type == 'CREATORID'){
+		return true;
+	}
 
-                        return 'INT';
-                }
-                else if($type == 'STRING'){
+   /**
+	* Get the database type associated with the Bloxx type.
+	* 
+	* @param $type	Bloxx type
+	* @param $size	size parameter
+	* 
+	* @return database type, null on failure
+	* 
+    */        
+	function _translateType($type, $size)
+	{
+		if ($type == 'NUMBER')
+		{
+			return 'INT';
+		}
+		else if ($type == 'CREATORID')
+		{
+			return 'INT';
+		}
+		else if ($type == 'STRING')
+		{
+			return 'VARCHAR(' . $size . ')';
+		}
+		else if ($type == 'PASSWORD')
+		{
+			return 'VARCHAR(255)';
+		}
+		else if ($type == 'TEXT')
+		{
+			return 'TEXT';
+		}
+		else if ($type == 'HTML')
+		{
+			return 'TEXT';
+		}
+		else if ($type == 'DATETIME')
+		{
+			return 'BIGINT';
+		}
+		else if ($type == 'CREATIONDATETIME')
+		{
+			return 'BIGINT';
+		}
+		else if ($type == 'DATE')
+		{
+			return 'BIGINT';
+		}
+		else if (substr($type, 0, 6) == "BLOXX_")
+		{
+			return 'INT';
+		}
+		else if (substr($type, 0, 5) == "ENUM_")
+		{
+			return 'INT';
+		}
+		else if ($type == 'FILE')
+		{
+			return 'VARCHAR(255)';
+		}
+		else if ($type == 'IMAGE')
+		{
+			return 'LONGBLOB';
+		}
+		else if ($type == 'REMOTE_IP')
+		{
+			return 'VARCHAR(15)';
+		}
+		else
+		{
+			global $BLOXX_ERROR;
+			$BLOXX_ERROR->warning('DBObject', '_translateType: unknown type: ' . $type);
+			
+			return null;
+		}
+	}
 
-                        return 'VARCHAR(' . $size . ')';
-                }
-                else if($type == 'PASSWORD'){
-
-                        return 'VARCHAR(255)';
-                }
-                else if($type == 'TEXT'){
-
-                        return 'TEXT';
-                }
-                else if($type == 'HTML'){
-
-                        return 'TEXT';
-                }
-                else if($type == 'DATETIME'){
-
-                        return 'BIGINT';
-                }
-                else if($type == 'CREATIONDATETIME'){
-
-                        return 'BIGINT';
-                }
-                else if($type == 'DATE'){
-
-                        return 'BIGINT';
-                }
-                else if(substr($type, 0, 6) == "BLOXX_"){
-
-                        return 'INT';
-                }
-                else if(substr($type, 0, 5) == "ENUM_"){
-
-                        return 'INT';
-                }
-                else if($type == 'FILE'){
-
-                        return 'VARCHAR(255)';
-                }
-                else if($type == 'IMAGE'){
-
-                        return 'LONGBLOB';
-                }
-        }
-        
-        function prepareValue($value, $type)
-        {
-                if($this->needsQuotes($type)){
-
-                        $out = $this->_database->quote($value) . " ";
-                }
-                else{
-
-                        $out = ' ' . $value . ' ';
-                }
+   /**
+	* Prepare a value for inclusion in the sql query.
+	* 
+	* @param $value	value
+	* @param $type	data type
+	* 
+	* @return prepared value
+	* 
+    */        
+	function prepareValue($value, $type)
+	{
+		if ($this->isBlob($type))
+		{
+			$out = "'null'";
+		}
+		else if ($this->needsQuotes($type))
+		{
+			global $DB_CONNECTION;
+						
+			// Check magic_quotes stuff here
+			$out = $DB_CONNECTION->qstr($value);			
+		} 
+		else
+		{
+			$out = ' ' . $value . ' ';
+		}
                 
-                return $out;
-        }
-        
-        function needsQuotes($type)
-        {
-        
-                if(($type != 'NUMBER')
-                        && ($type != 'DATETIME')
-                        && ($type != 'CREATORID')
-                        && ($type != 'DATE')
-                        && ($type != 'CREATIONDATETIME')
-                        && (substr($type, 0, 6) != "BLOXX_")
-                        && (substr($type, 0, 5) != "ENUM_")){
+		return $out;
+	}
 
-                        return true;
-                }
-                
-                return false;
-        }
-        
-        function _build_condition($keys, $filter = array(), $negative_filter = array())
-        {
-                $this->_connect();
+   /**
+	* Determine if a certains data type needs quotes.
+	* 
+	* @param $type	data type
+	* 
+	* @return true if quotes are needed, false if not
+	* 
+    */        
+	function needsQuotes($type)
+	{    
+		if(($type != 'NUMBER')
+			&& ($type != 'DATETIME')
+			&& ($type != 'CREATORID')
+			&& ($type != 'DATE')
+			&& ($type != 'CREATIONDATETIME')
+			&& (substr($type, 0, 6) != "BLOXX_")
+			&& (substr($type, 0, 5) != "ENUM_")){
 
-                $__DB  = &$this->_database;
+			return true;
+		}
+                
+		return false;
+	}
 
-                foreach($keys as $k => $v) {
-
-                        if ($filter) {
+   /**
+	* Determine if a certains data type is a BLOB.
+	* 
+	* @param $type	data type
+	* 
+	* @return true if BLOB, false if not
+	* 
+    */        
+	function isBlob($type)
+	{ 						   
+		if ($type == 'IMAGE')
+		{			
+			return true;
+		}
                 
-                                if (!in_array($k, $filter)) {
-                        
-                                        continue;
-                                }
-                        }
-                        if ($negative_filter) {
-                
-                                if (in_array($k, $negative_filter)) {
-                        
-                                        continue;
-                                }
-                        }
-                        if (!isset($this->$k)) {
-                
-                                continue;
-                        }
-                        
-                        if (strtolower($this->$k) === 'null') {
-                
-                                $this->insertIsNullCondition($k);
-                        }
-                        else{
-
-                                $this->insertWhereCondition($k, '=', $this->$k);
-                        }
-                }
-        }
+		return false;
+	}
 }
 ?>

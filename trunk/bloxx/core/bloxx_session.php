@@ -19,7 +19,7 @@
 //
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_session.php,v 1.11 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_session.php,v 1.12 2005-08-08 16:38:35 tmenezes Exp $
 
 require_once(CORE_DIR . 'bloxx_module.php');
 
@@ -27,7 +27,7 @@ require_once(CORE_DIR . 'bloxx_module.php');
  * Bloxx_Session Handles everything about user sessions.
  *
  * @package   Bloxx_Core
- * @version   $Id: bloxx_session.php,v 1.11 2005-06-20 11:26:08 tmenezes Exp $
+ * @version   $Id: bloxx_session.php,v 1.12 2005-08-08 16:38:35 tmenezes Exp $
  * @category  Core
  * @copyright Copyright &copy; 2002-2005 The Bloxx Team
  * @license   The GNU General Public License, Version 2
@@ -37,10 +37,10 @@ class Bloxx_Session extends Bloxx_Module
 {        
         function Bloxx_Session() 
         {
-                $this->name = 'session';
-                $this->module_version = 1;
-                $this->use_init_file = false;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'session';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = false;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }

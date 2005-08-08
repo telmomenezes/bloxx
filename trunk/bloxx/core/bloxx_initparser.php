@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_initparser.php,v 1.4 2005-06-22 20:05:35 tmenezes Exp $
+// $Id: bloxx_initparser.php,v 1.5 2005-08-08 16:38:35 tmenezes Exp $
 
 define('PARSE_STATE_FIND_ROW', 0);
 define('PARSE_STATE_FIND_FIELD', 1);
@@ -55,32 +55,41 @@ class Bloxx_InitParser
                 }
 
                 $this->data = fread($fp, filesize($file));
+                
+                return true;
         }
         
         function parse()
-        {
-
+        {        						
+				
 				$def = $this->module->getTableDefinition();
 
                 $mod_block = $this->data;
-                $separator = '[MODULE ' . $this->module->name . ']';
+                $separator = '[MODULE ' . $this->module->_BLOXX_MOD_PARAM['name'] . ']';
+                
+                // If there is no data on file for this module, just exit now.
+                if (substr_count($mod_block, $separator) < 1)
+                {
+                	return;
+                }
+                
                 $pieces = explode($separator, $mod_block);
                 $count = count($pieces);
 
                 if($count < 1){
-                
+                                		
                         return;
                 }
                 else if($count > 1){
-                
+                                		
                         $mod_block = $pieces[1];
                 }
                 else{
-                
+                                
                         $mod_block = $pieces[0];
                 }
                 
-                $separator = '[_' . $this->module->name . ']';
+                $separator = '[_' . $this->module->_BLOXX_MOD_PARAM['name'] . ']';
                 $pieces = explode($separator, $mod_block);
                 $count = count($pieces);
 
@@ -136,9 +145,10 @@ class Bloxx_InitParser
                                         
                                         $field = $parts[0];
                                         $value = $parts[1];
-
-                                        $value = str_replace('$dolar', '$', $value);
+                                        
                                         $value = str_replace('$open_bracket', '[', $value);
+                                        $value = str_replace('$close_bracket', ']', $value);
+                                        $value = str_replace('$dolar', '$', $value);
                                         
                                         //Binary types must be decoded to binary format
                                         $v = $def[$field];

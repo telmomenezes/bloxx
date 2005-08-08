@@ -20,7 +20,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_moduleform.php,v 1.2 2005-06-22 20:05:34 tmenezes Exp $
+// $Id: bloxx_moduleform.php,v 1.3 2005-08-08 16:38:34 tmenezes Exp $
 
 require_once 'defines.php';
 
@@ -37,64 +37,19 @@ class Bloxx_ModuleForm
 		$this->inadmin = $inadmin;
 		$this->owner_module = $owner_module;
 	}
-
-	function renderForm($id, $module_template, $return_id = -1, $command = null)
+	
+	function init()
 	{
-		$this->id = $id;
-
-		include_module_once('admin');
-		include_module_once('moduletemplate');
-
-		$admin = new Bloxx_Admin();
-
+		
 		include_once (CORE_DIR . 'bloxx_form.php');
-
 		$this->form = new Bloxx_Form();
-
-		if ($this->inadmin)
-		{
-
-			$this->form->setView('module');
-			$this->form->setParam($this->owner_module->name);
-		}
-		else
-		{
-
-			$this->form->setFromGlobals();
-		}
-
-		$header = '';
-
-		if (isset($command) && ($command != null))
-		{
-			$header .= $this->form->renderHeader($this->owner_module->name, $command, $return_id);
-		}
-		else if ($id >= 0)
-		{
-
-			$header .= $this->form->renderHeader($this->owner_module->name, 'generic_edit', $return_id);
-		}
-		else
-		{
-
-			$header .= $this->form->renderHeader($this->owner_module->name, 'generic_create', $return_id);
-		}
-
-		if ($id >= 0)
-		{
-
-			$this->owner_module->getRowByID($id, true);
-
-			$header .= $this->form->renderInput('id', 'hidden', $id);
-		}
-
-		$header .= $this->form->renderInput('target_module', 
-												'hidden', 
-												$this->owner_module->name);
-
-		$module_template->setItem('header', $header);
-		$module_template->startLoop('form');
-
+	}
+	
+	function applyFieldInputList($id, &$module_template)
+	{
+		
+		$this->id = $id;
+		
 		$def_in = $this->owner_module->tableDefinitionLangComplete();
 		
 		foreach($def_in as $k => $v)
@@ -110,10 +65,10 @@ class Bloxx_ModuleForm
 			}
 		}
 
-		$footer = '';
+		$this->footer = '';
 
 		foreach ($def as $k => $v)
-		{
+		{			
 
 			$module_template->nextLoopIteration();
 			$hidden = false;
@@ -130,7 +85,7 @@ class Bloxx_ModuleForm
 				if (($k != 'private_content') &&
 					(!((($v['TYPE'] == 'PASSWORD') 
 					|| ($v['TYPE'] == 'PASSWORD2')) 
-					&& ($this->id >= 0))))
+					&& ($id >= 0))))
 				{
 
 					$lang_code = null;
@@ -160,7 +115,7 @@ class Bloxx_ModuleForm
 
 			$length = 0;
 
-			if ((($id >= 0) || (!$this->inadmin)) && (isset ($this->owner_module->$k)))
+			if ((($id >= 0) || (!$this->inadmin)) && (isset ($this->owner_module->$k)))			
 			{
 
 				$value = $this->owner_module->$k;
@@ -171,50 +126,50 @@ class Bloxx_ModuleForm
 				$value = '';
 			}
 			
-			$field = '';
+			$field = '';		
 
 			//Render field acording to type
 			if ($k == 'private_content')
 			{
 				//Don't show this field.
 			}
-			elseif ($v['TYPE'] == 'TEXT')
+			else if ($v['TYPE'] == 'TEXT')
 			{
 				$field = $this->renderTextField($k, $value, $v, $hidden);
 			}
-			elseif ($v['TYPE'] == 'HTML')
+			else if ($v['TYPE'] == 'HTML')
 			{
 				$field = $this->renderHTMLField($k, $value, $v, $hidden);				
 			}
-			elseif (substr($v['TYPE'], 0, 6) == "BLOXX_")
+			else if (substr($v['TYPE'], 0, 6) == "BLOXX_")
 			{
 				$field = $this->renderBloxxField($k, $value, $v, $hidden);
 			}
-			elseif (substr($v['TYPE'], 0, 5) == "ENUM_")
+			else if (substr($v['TYPE'], 0, 5) == "ENUM_")
 			{
 				$field = $this->renderEnumField($k, $value, $v, $hidden);
 			}
-			elseif ($v['TYPE'] == 'PASSWORD')
-			{
+			else if ($v['TYPE'] == 'PASSWORD')
+			{				
 				$field = $this->renderPasswordField($k, $value, $v, $hidden);
 			}
-			elseif ($v['TYPE'] == 'PASSWORD2')
+			else if ($v['TYPE'] == 'PASSWORD2')
 			{
 				$field = $this->renderPassword2Field($k, $value, $v, $hidden);
 			}
-			elseif ($v['TYPE'] == 'FILE')
+			else if ($v['TYPE'] == 'FILE')
 			{
 				$field = $this->renderFileField($k, $value, $v, $hidden);
 			}
-			elseif ($v['TYPE'] == 'IMAGE')
+			else if ($v['TYPE'] == 'IMAGE')
 			{
 				$field = $this->renderImageField($k, $value, $v, $hidden);
 			}
-			elseif ($v['TYPE'] == 'DATE')
+			else if ($v['TYPE'] == 'DATE')
 			{
 				$field = $this->renderDateField($k, $value, $v, $hidden);
 			}
-			elseif ($v['TYPE'] == 'NUMBER')
+			else if ($v['TYPE'] == 'NUMBER')
 			{
 				$field = $this->renderNumberField($k, $value, $v, $hidden);
 			}
@@ -227,7 +182,7 @@ class Bloxx_ModuleForm
 			{
 				if ($hidden)
 				{
-					$footer .= $field;
+					$this->footer .= $field;
 				}
 				else
 				{
@@ -235,13 +190,74 @@ class Bloxx_ModuleForm
 				}
 			}
 		}
+	} 
+
+	function renderForm($id, $module_template, $return_id = -1, $command = null)
+	{
+		$errors = $this->owner_module->render('generic_command_errors', -1);
+		$module_template->setItem('errors', $errors);
+		
+		$this->id = $id;
+
+		include_module_once('admin');
+		include_module_once('moduletemplate');
+
+		$admin = new Bloxx_Admin();
+
+		$this->init();
+
+		if ($this->inadmin)
+		{
+
+			$this->form->setView('module');
+			$this->form->setParam($this->owner_module->_BLOXX_MOD_PARAM['name']);
+		}
+		else
+		{
+
+			$this->form->setFromGlobals();
+		}
+
+		$header = '';
+
+		if (isset($command) && ($command != null))
+		{
+			$header .= $this->form->renderHeader($this->owner_module->_BLOXX_MOD_PARAM['name'], $command, $return_id);
+		}
+		else if ($id >= 0)
+		{
+
+			$header .= $this->form->renderHeader($this->owner_module->_BLOXX_MOD_PARAM['name'], 'generic_edit', $return_id);
+		}
+		else
+		{
+
+			$header .= $this->form->renderHeader($this->owner_module->_BLOXX_MOD_PARAM['name'], 'generic_create', $return_id);
+		}
+
+		if ($id >= 0)
+		{
+
+			$this->owner_module->getRowByID($id, true);
+
+			$header .= $this->form->renderInput('id', 'hidden', $id);
+		}
+
+		$header .= $this->form->renderInput('target_module', 
+												'hidden', 
+												$this->owner_module->_BLOXX_MOD_PARAM['name']);
+
+		$module_template->setItem('header', $header);
+		$module_template->startLoop('form');		
+
+		$this->applyFieldInputList($id, $module_template);
 
 		//Render group selector here...
 		include_module_once('identity');
 		$ident = new Bloxx_Identity();
 
-		if (((!isset ($this->owner_module->no_private)) 
-			|| (!$this->owner_module->no_private)) 
+		if (((!isset ($this->owner_module->_BLOXX_MOD_PARAM['no_private'])) 
+			|| (!$this->owner_module->_BLOXX_MOD_PARAM['no_private'])) 
 			&& (($ident->belongsToGroups()) 
 			|| $this->inadmin))
 		{
@@ -311,8 +327,8 @@ class Bloxx_ModuleForm
 			$module_template->setItem('button', $this->form->renderSubmitButton($text));
 		}
 
-		$footer .= $this->form->renderFooter();
-		$module_template->setItem('footer', $footer);
+		$this->footer .= $this->form->renderFooter();
+		$module_template->setItem('footer', $this->footer);
 
 		return $module_template->renderView();
 	}
@@ -359,13 +375,24 @@ class Bloxx_ModuleForm
 		$typemod = 'bloxx_' . $typemod;
 		$typeinst = new $typemod();
 
+		$labelf = $typeinst->_BLOXX_MOD_PARAM['label_field'];
+		
+		$order_field = $labelf;
+		
+		$targ_def = $typeinst->getTableDefinition();
+		$targ_def_field = $targ_def[$labelf];
+		if ((isset($targ_def_field['LANG'])) && ($targ_def_field['LANG'] == true))
+		{
+			global $G_LANGUAGE;
+			$order_field = $order_field . '_LANG_' . $G_LANGUAGE;
+		}
+
 		$typeinst->clearWhereCondition();
+		$typeinst->setOrderBy($order_field);
 		$typeinst->runSelect();
 
 		while ($typeinst->nextRow())
-		{
-
-			$labelf = $typeinst->label_field;
+		{			
 
 			if ($typeinst->id == $value)
 			{
@@ -462,7 +489,7 @@ class Bloxx_ModuleForm
 		}
 		
 		$image_input = '<img width="100" src="image.php?module='
-			. $this->owner_module->name
+			. $this->owner_module->_BLOXX_MOD_PARAM['name']
 			. '&id='.$this->owner_module->id
 			. '&field='
 			.$name

@@ -20,7 +20,7 @@
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //          Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_identity.php,v 1.9 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_identity.php,v 1.10 2005-08-08 16:38:34 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -32,15 +32,14 @@ class Bloxx_Identity extends Bloxx_Module
 {
         function Bloxx_Identity()
         {
-                $this->name = 'identity';
-                $this->module_version = 1;
-                $this->label_field = 'username';
+                $this->_BLOXX_MOD_PARAM['name'] = 'identity';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'username';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
-                $this->session = new Bloxx_Session();
-                
-                $this->is_loged_in = false;
-                $this->use_init_file = true;
-                $this->no_private = true;
+                $this->session = new Bloxx_Session();                
+                $this->is_loged_in = false;                                
                 
                 $this->Bloxx_Module();
         }
@@ -51,7 +50,7 @@ class Bloxx_Identity extends Bloxx_Module
                         'realname' => array('TYPE' => 'STRING', 'SIZE' => 80, 'NOTNULL' => true, 'USER' => true),
                         'username' => array('TYPE' => 'STRING', 'SIZE' => 10, 'NOTNULL' => true, 'USER' => true),
                         'password' => array('TYPE' => 'PASSWORD', 'SIZE' => -1, 'NOTNULL' => true, 'USER' => true, 'HIDDEN' => true),
-                        'email' => array('TYPE' => 'STRING', 'SIZE' => 50, 'NOTNULL' => true, 'USER' => true, 'CONFIDENTIAL' => true),
+                        'email' => array('TYPE' => 'STRING', 'SIZE' => 255, 'NOTNULL' => true, 'USER' => true, 'CONFIDENTIAL' => true),
                         'confirm_hash' => array('TYPE' => 'STRING', 'SIZE' => 255, 'NOTNULL' => true, 'HIDDEN' => true),
                         'confirmed' => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true, 'HIDDEN' => true),
                         'role' => array('TYPE' => 'BLOXX_ROLE', 'SIZE' => -1, 'NOTNULL' => true, 'CONFIDENTIAL' => true)
@@ -63,6 +62,7 @@ class Bloxx_Identity extends Bloxx_Module
                 return array(
                         'loginbox' => TRUST_GUEST,
                         'logout_button' => TRUST_GUEST,
+                        'logout_link' => TRUST_GUEST,
                         'welcome' => TRUST_GUEST,
                         'register' => TRUST_GUEST,
                         'change_password' => TRUST_USER,
@@ -151,7 +151,8 @@ class Bloxx_Identity extends Bloxx_Module
                 
                 //have we already run the hash checks? 
                 //If so, return the pre-set var
-                if (isset($this->is_loged_in) && $this->is_loged_in) {
+                if (isset($this->is_loged_in) && $this->is_loged_in)
+                {
                 
                         return true;
                 } // WARNING Must check if this is safe
@@ -178,7 +179,7 @@ class Bloxx_Identity extends Bloxx_Module
                         
                 if ($ident->nextRow())
                 {
-                	$warningmessage = 'Lamentamos, o nome de utilizador ja existe.';
+                	$warningmessage = LANG_IDENTITY_USER_EXISTS;
                     return false;
                 }
                 
@@ -189,14 +190,14 @@ class Bloxx_Identity extends Bloxx_Module
                         
                 if ($ident->nextRow())
                 {
-                	$warningmessage = 'Lamentamos, o email ja existe.';
+                	$warningmessage = LANG_IDENTITY_EMAIL_EXISTS;
                     return false;
                 }
 
 
                 $this->username = $_POST['username'];
                 $this->realname = $_POST['realname'];
-                $this->email = $_POST['email'];
+                $this->email = strtolower($_POST['email']);
                 
                 $this->password = md5($_POST['password']);
                 $this->confirm_hash = md5($_POST['email'].$this->hidden_hash_var);
@@ -221,12 +222,12 @@ class Bloxx_Identity extends Bloxx_Module
                 $message .= $site_url . "/index.php?id=" . $confirm_page . "&email=" . $this->email . "&code=" . $this->confirm_hash;
                 
                 $confirm_email = $this->getConfig('confirm_email');
-                
-                //echo $message;
 
                 mail($this->email, LANG_IDENTITY_CONFIRM_EMAIL_SUBJECT, $message, 'From: ' . $confirm_email);                
 
                 $warningmessage = LANG_IDENTITY_CONFIRM_MAIL_SENT;
+                
+                return $res;
         }
         
         function update()
@@ -234,7 +235,7 @@ class Bloxx_Identity extends Bloxx_Module
 
                 //Allow only admins or indentity owners
                 if((!$this->verifyTrust(TRUST_ADMINISTRATOR))
-                && ($this->id() != $_POST['id'])){
+                && ($this->userID() != $_POST['id'])){
 
                         return false;
                 }
@@ -282,7 +283,7 @@ class Bloxx_Identity extends Bloxx_Module
                 return $this->updateRow(true);
         }
         
-        function id()
+        function userID()
         {       
         		$username = $this->session->getLogin();
         		
@@ -309,7 +310,7 @@ class Bloxx_Identity extends Bloxx_Module
         
         function groups()
         {
-                $id = $this->id();
+                $id = $this->userID();
         
                 include_module_once('grouplink');
                 
@@ -337,7 +338,7 @@ class Bloxx_Identity extends Bloxx_Module
         
         function belongsToGroups()
         {
-                $id = $this->id();
+                $id = $this->userID();
 
                 include_module_once('grouplink');
 
@@ -356,7 +357,7 @@ class Bloxx_Identity extends Bloxx_Module
         
         function belongsToGroup($group_id)
         {
-                $id = $this->id();
+                $id = $this->userID();
 
                 include_module_once('grouplink');
 
@@ -375,6 +376,37 @@ class Bloxx_Identity extends Bloxx_Module
 
                 return false;
         }
+        
+        function getPersonalInfo()
+        {
+        	
+        	$personal_info_module = $this->getConfig('personal_info_module');
+		
+			if ($personal_info_module != null)
+			{
+				
+				include_module_once($personal_info_module);
+				$personal_info_module = 'Bloxx_' . $personal_info_module; 
+				$pi = new $personal_info_module();
+				
+				$pi->clearWhereCondition();
+				$pi->insertWhereCondition('identity_id', '=', $this->id);
+				$pi->runSelect();
+                        
+				if ($pi->nextRow())
+				{
+					return $pi;                   
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return null;
+			}
+        }
 
 //  Render methods .............................................................
 
@@ -384,7 +416,7 @@ class Bloxx_Identity extends Bloxx_Module
     	include_once(CORE_DIR . 'bloxx_form.php');
                 	                        
         $form = new Bloxx_Form();
-        $html_out = $form->renderHeader($this->name, 'login');
+        $html_out = $form->renderHeader($this->_BLOXX_MOD_PARAM['name'], 'login');
         $mt->setItem('header', $html_out);
 
         $html_out =  LANG_IDENTITY_USERNAME;
@@ -415,11 +447,26 @@ class Bloxx_Identity extends Bloxx_Module
                 	                        
 		$form = new Bloxx_Form();
                         
-		$html_out = $form->renderHeader($this->name, 'logout', $this->getCurrentPageID());
+		$html_out = $form->renderHeader($this->_BLOXX_MOD_PARAM['name'], 'logout', $this->getCurrentPageID());
 		$html_out .= $form->renderSubmitButton(LANG_IDENTITY_LOGOUT);
 		$html_out .= $form->renderFooter();
                         
 		$mt->setItem('button', $html_out);
+		return $mt->renderView();
+	}
+	
+	function doRenderLogout_Link($param, $target, $jump, $other_params, $mt)
+    {
+    	
+		include_once(CORE_DIR . 'bloxx_form.php');
+                	                        
+		$form = new Bloxx_Form();
+                        
+		$html_out = $form->renderHeader($this->_BLOXX_MOD_PARAM['name'], 'logout', $this->getCurrentPageID());
+		$html_out .= $form->renderFooter();
+		$html_out .= $form->renderSubmitLink(LANG_IDENTITY_LOGOUT);
+                        
+		$mt->setItem('link', $html_out);
 		return $mt->renderView();
 	}
 	
@@ -450,14 +497,14 @@ class Bloxx_Identity extends Bloxx_Module
 	function doRenderChange_Password($param, $target, $jump, $other_params, $mt)
 	{
 		
-		$id = $this->id();
+		$id = $this->userID();
 
 		if ($id != -1)
 		{
 			include_once(CORE_DIR . 'bloxx_form.php');
                         	
 			$form = new Bloxx_Form();
-			$html_out = $form->renderHeader($this->name, 'change_password');
+			$html_out = $form->renderHeader($this->_BLOXX_MOD_PARAM['name'], 'change_password');
 			$mt->setItem('header', $html_out);
 
 			$html_out =  LANG_IDENTITY_OLD_PASSWORD;
@@ -490,13 +537,48 @@ class Bloxx_Identity extends Bloxx_Module
 	}
 	
 	function doRenderRegister($param, $target, $jump, $other_params, $mt)
-	{                        
-		return $this->renderForm(-1, false, $mt, $this->getMainPageID(), 'register');
+	{
+		
+		include_once (CORE_DIR . 'bloxx_form.php');
+		$form = new Bloxx_Form();
+		
+		$form->setFromGlobals();
+		
+		$header = $form->renderHeader('identity', 'register', $this->getMainPageID());		
+		$mt->setItem('header', $header);
+		
+		$mt->startLoop('form');
+
+		include_once (CORE_DIR . 'bloxx_moduleform.php');
+		$mf = new Bloxx_ModuleForm($this, false);
+		$mf->init();
+		$mf->applyFieldInputList(-1, $mt);
+		
+		$personal_info_module = $this->getConfig('personal_info_module');
+		
+		if ($personal_info_module != null)
+		{
+			include_module_once($personal_info_module);
+			$personal_info_module = 'Bloxx_' . $personal_info_module; 
+			$pi = new $personal_info_module();
+			$mf = new Bloxx_ModuleForm($pi, false);
+			$mf->init();
+			$mf->applyFieldInputList(-1, $mt);
+		}
+		
+		include_module_once('admin');
+		$text = LANG_ADMIN_CREATE;
+		$mt->setItem('button', $form->renderSubmitButton($text));
+		
+		$footer = $form->renderFooter();
+		$mt->setItem('footer', $footer);
+
+		return $mt->renderView();
 	}
 	
 	function doRenderChange_Data($param, $target, $jump, $other_params, $mt)
 	{                        
-		return $this->renderForm($this->id(), false, $mt, $this->getMainPageID());
+		return $this->renderForm($this->userID(), false, $mt, $this->getMainPageID());
 	}
 	
 	function doRenderConfirm($param, $target, $jump, $other_params, $mt)
@@ -512,6 +594,16 @@ class Bloxx_Identity extends Bloxx_Module
 			
 			$this->confirmed = 1;
 			$this->updateRow();
+			
+			$personal_info_module = $this->getConfig('personal_info_module');
+		
+			if ($personal_info_module != null)
+			{
+				include_module_once($personal_info_module);
+				$personal_info_module = 'Bloxx_' . $personal_info_module;
+				$pi = new $personal_info_module();
+				$pi->onConfirmation($this->id);
+			}
 
 			$html_out = LANG_IDENTITY_CONFIRMATION_MESSAGE;
 			$mt->setItem('message', $html_out);
@@ -540,7 +632,23 @@ class Bloxx_Identity extends Bloxx_Module
 	function execCommandRegister()
 	{
 		
-		$this->create();
+		$identity_id = $this->create();		
+		
+		if ($identity_id === false)
+		{
+			return;
+		}
+		
+		$personal_info_module = $this->getConfig('personal_info_module');
+		
+		if ($personal_info_module != null)
+		{
+			include_module_once($personal_info_module);
+			$personal_info_module = 'Bloxx_' . $personal_info_module;
+			$pi = new $personal_info_module();
+			$_POST['identity_id'] = $identity_id; 
+			$pi->create();
+		}
 	}
 	
 	function execCommandChange_Password()
@@ -548,7 +656,7 @@ class Bloxx_Identity extends Bloxx_Module
 		
 		global $warningmessage;
 
-		if (!$this->checkPassword($this->id(), $_POST['old_password']))
+		if (!$this->checkPassword($this->userID(), $_POST['old_password']))
 		{
                         
 			$warningmessage = LANG_IDENTITY_ERROR_WRONG_PASSWORD;

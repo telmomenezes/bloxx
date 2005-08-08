@@ -19,192 +19,193 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_photonews.php,v 1.6 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_photonews.php,v 1.7 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
 
 class Bloxx_PhotoNews extends Bloxx_Module
 {
-        function Bloxx_PhotoNews()
-        {
-                $this->name = 'photonews';
-                $this->module_version = 1;
-                $this->label_field = 'title';
-
-                $this->use_init_file = true;
-
-                $this->default_mode = 'news';
+	function Bloxx_PhotoNews()
+	{
+		$this->_BLOXX_MOD_PARAM['name'] = 'photonews';
+		$this->_BLOXX_MOD_PARAM['module_version'] = 1;
+		$this->_BLOXX_MOD_PARAM['label_field'] = 'title';
+		$this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+		$this->_BLOXX_MOD_PARAM['default_view'] = 'news';                
+		$this->_BLOXX_MOD_PARAM['order_field'] = 'publish_date';
                 
-                $this->order_field = 'publish_date';
-                
-                $this->Bloxx_Module();
-        }
+		$this->Bloxx_Module();
+	}
 
-        function getTableDefinition()
-        {
-                return array(
-                        'title' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true, 'LANG' => true, 'USER' => true),
-                        'intro' => array('TYPE' => 'TEXT', 'SIZE' => -1, 'NOTNULL' => true, 'LANG' => true, 'USER' => true),
-                        'extended' => array('TYPE' => 'TEXT', 'SIZE' => -1, 'NOTNULL' => false, 'LANG' => true, 'USER' => true),
-                        'image' => array('TYPE' => 'IMAGE', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => true),
-                        'small_image' => array('TYPE' => 'IMAGE', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => false),
-                        'thumb' => array('TYPE' => 'IMAGE', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => false),
-                        'topic' => array('TYPE' => 'BLOXX_TOPICALNEWSTOPIC', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => true),
-                        'importance' => array('TYPE' => 'ENUM_PHOTONEWS_IMPORTANCE', 'SIZE' => -1, 'NOTNULL' => true, 'USER' => true),
-                        'publish_date' => array('TYPE' => 'CREATIONDATETIME', 'SIZE' => -1, 'NOTNULL' => false)
-                );
-        }
+	function getTableDefinition()
+	{
+		return array(
+			'title' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true, 'LANG' => true, 'USER' => true),
+			'intro' => array('TYPE' => 'TEXT', 'SIZE' => -1, 'NOTNULL' => true, 'LANG' => true, 'USER' => true),
+			'extended' => array('TYPE' => 'TEXT', 'SIZE' => -1, 'NOTNULL' => false, 'LANG' => true, 'USER' => true),
+			'image' => array('TYPE' => 'IMAGE', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => true),
+			'small_image' => array('TYPE' => 'IMAGE', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => false),
+			'thumb' => array('TYPE' => 'IMAGE', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => false),
+			'topic' => array('TYPE' => 'BLOXX_TOPICALNEWSTOPIC', 'SIZE' => -1, 'NOTNULL' => false, 'USER' => true),
+			'importance' => array('TYPE' => 'ENUM_PHOTONEWS_IMPORTANCE', 'SIZE' => -1, 'NOTNULL' => true, 'USER' => true),
+			'publish_date' => array('TYPE' => 'CREATIONDATETIME', 'SIZE' => -1, 'NOTNULL' => false)
+		);
+	}
 
-        function getLocalRenderTrusts()
-        {
-                return array(
-                        'news_header' => TRUST_GUEST,
-                        'main_news_header' => TRUST_GUEST,
-                        'news' => TRUST_GUEST,
-                        'news_line' => TRUST_GUEST,
-                        'topic_list' => TRUST_GUEST,                        
-                        'news_form' => TRUST_EDITOR
-                );
-        }       
+	function getLocalRenderTrusts()
+	{
+		return array(
+			'news_header' => TRUST_GUEST,
+			'main_news_header' => TRUST_GUEST,
+			'news' => TRUST_GUEST,
+			'news_line' => TRUST_GUEST,
+			'topic_list' => TRUST_GUEST,
+			'list' => TRUST_GUEST,                        
+			'news_form' => TRUST_EDITOR
+		);
+	}       
         
-        function create()
-        {
+	function create()
+	{
 
-                global $_FILES;
+		global $_FILES;
 
-                if (isset($_FILES['image']['tmp_name'])
-                	&& ($_FILES['image']['tmp_name'] != '')) {
+		if (isset($_FILES['image']['tmp_name'])
+			&& ($_FILES['image']['tmp_name'] != ''))
+		{
 
-                        include_once(CORE_DIR . 'bloxx_image_utils.php');
+			include_once(CORE_DIR . 'bloxx_image_utils.php');
 
-                        $or_width = getJpegWidth($_FILES['image']['tmp_name']);
-                        $or_height = getJpegHeight($_FILES['image']['tmp_name']);
+			$or_width = getJpegWidth($_FILES['image']['tmp_name']);
+			$or_height = getJpegHeight($_FILES['image']['tmp_name']);
                         
-                        $max_image_width = $this->getConfig('max_image_width');
-                        $max_image_height = $this->getConfig('max_image_height');
-                        $max_small_image_width = $this->getConfig('max_small_image_width');
-                        $max_small_image_height = $this->getConfig('max_small_image_height');
-                        $max_thumb_width = $this->getConfig('max_thumb_width');
-                        $max_thumb_height = $this->getConfig('max_thumb_height');
+			$max_image_width = $this->getConfig('max_image_width');
+			$max_image_height = $this->getConfig('max_image_height');
+			$max_small_image_width = $this->getConfig('max_small_image_width');
+			$max_small_image_height = $this->getConfig('max_small_image_height');
+			$max_thumb_width = $this->getConfig('max_thumb_width');
+			$max_thumb_height = $this->getConfig('max_thumb_height');
 
-                        if($or_width > $or_height){
+			if ($or_width > $or_height)
+			{
 
-                                //if($or_width > $max_thumb_width){
+				//if($or_width > $max_thumb_width){
                                 
-                                        $this->thumb = scaleJpegWidth($_FILES['image']['tmp_name'], $max_thumb_width);
-                                //}
-                                if($or_width > $max_image_width){
+					$this->thumb = scaleJpegWidth($_FILES['image']['tmp_name'], $max_thumb_width);
+				//}
+			if ($or_width > $max_image_width)
+			{
+				$this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_image_width);
+			}
+			else
+			{
+				$this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $or_width);
+			}
+			//if($or_width > $max_small_image_width){
 
-                                        $this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_image_width);
-                                }
-                                else
-                                {
-                                	$this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $or_width);
-                                }
-                                //if($or_width > $max_small_image_width){
+				$this->small_image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_small_image_width);
+			//}
+			}
+			else
+			{
+				//if($or_height > $max_thumb_height){
 
-                                        $this->small_image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_small_image_width);
-                                //}
-                        }
-                        else{
-
-                                //if($or_height > $max_thumb_height){
-
-                                        $this->thumb = scaleJpegHeight($_FILES['image']['tmp_name'], $max_thumb_height);
-                                //}
-                                if($or_height > $max_image_height)
-                                {
-
-                                        $this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_image_height);
-                                }
-                                else
-                                {
-
-                                        $this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $or_height);
-                                }
+					$this->thumb = scaleJpegHeight($_FILES['image']['tmp_name'], $max_thumb_height);
+				//}
+				if($or_height > $max_image_height)
+				{
+					$this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_image_height);
+				}
+				else
+				{
+					$this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $or_height);
+				}
                                 
-                                //if($or_height > $max_small_image_height){
+				//if($or_height > $max_small_image_height){
 
-                                        $this->small_image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_small_image_height);
-                                //}
-                        }
-                }
-                else {
-                	
-                	$this->image = 'empty';
-                	$this->small_image = 'empty';
-                	$this->thumb = 'empty';
-                }
+					$this->small_image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_small_image_height);
+				//}
+			}
+		}
+		else
+		{       	
+			$this->image = 'empty';
+			$this->small_image = 'empty';
+			$this->thumb = 'empty';
+		}
 
-                $new_id = Bloxx_Module::create();
-        }
+		$new_id = Bloxx_Module::create();
+	}
         
-        function update()
-        {
+	function update()
+	{
         	
-        		$this->assignValuesFromPost(false);        		
+		$this->assignValuesFromPost(false);        		
 
-                global $_FILES;
+		global $_FILES;
 
-                if (isset($_FILES['image']['tmp_name'])
-                	&& ($_FILES['image']['tmp_name'] != '')) {                								
+		if (isset($_FILES['image']['tmp_name'])
+			&& ($_FILES['image']['tmp_name'] != ''))
+		{                								
 
-                        include_once(CORE_DIR . 'bloxx_image_utils.php');
+			include_once(CORE_DIR . 'bloxx_image_utils.php');
 
-                        $or_width = getJpegWidth($_FILES['image']['tmp_name']);
-                        $or_height = getJpegHeight($_FILES['image']['tmp_name']);
+			$or_width = getJpegWidth($_FILES['image']['tmp_name']);
+			$or_height = getJpegHeight($_FILES['image']['tmp_name']);
                         
-                        $max_image_width = $this->getConfig('max_image_width');
-                        $max_image_height = $this->getConfig('max_image_height');
-                        $max_small_image_width = $this->getConfig('max_small_image_width');
-                        $max_small_image_height = $this->getConfig('max_small_image_height');
-                        $max_thumb_width = $this->getConfig('max_thumb_width');
-                        $max_thumb_height = $this->getConfig('max_thumb_height');
+			$max_image_width = $this->getConfig('max_image_width');
+			$max_image_height = $this->getConfig('max_image_height');
+			$max_small_image_width = $this->getConfig('max_small_image_width');
+			$max_small_image_height = $this->getConfig('max_small_image_height');
+			$max_thumb_width = $this->getConfig('max_thumb_width');
+			$max_thumb_height = $this->getConfig('max_thumb_height');
 
-                        if($or_width > $or_height){
+			if ($or_width > $or_height)
+			{
 
-                                //if($or_width > $max_thumb_width){
+				//if($or_width > $max_thumb_width){
                                 
-                                        $this->thumb = scaleJpegWidth($_FILES['image']['tmp_name'], $max_thumb_width);
-                                //}
-                                if($or_width > $max_image_width){
+					$this->thumb = scaleJpegWidth($_FILES['image']['tmp_name'], $max_thumb_width);
+				//}
+				if ($or_width > $max_image_width)
+				{
+					$this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_image_width);
+				}
+				else
+				{
+					$this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $or_width);
+				}
+				//if($or_width > $max_small_image_width){
 
-                                        $this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_image_width);
-                                }
-                                else
-                                {
-                                	$this->image = scaleJpegWidth($_FILES['image']['tmp_name'], $or_width);
-                                }
-                                //if($or_width > $max_small_image_width){
+					$this->small_image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_small_image_width);
+				//}
+			}
+			else
+			{
 
-                                        $this->small_image = scaleJpegWidth($_FILES['image']['tmp_name'], $max_small_image_width);
-                                //}
-                        }
-                        else{
+				//if($or_height > $max_thumb_height){
 
-                                //if($or_height > $max_thumb_height){
+					$this->thumb = scaleJpegHeight($_FILES['image']['tmp_name'], $max_thumb_height);
+				//}
+				if ($or_height > $max_image_height)
+				{
+					$this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_image_height);
+				}
+				else
+				{
+					$this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $or_height);
+				}
+				//if($or_height > $max_small_image_height){
 
-                                        $this->thumb = scaleJpegHeight($_FILES['image']['tmp_name'], $max_thumb_height);
-                                //}
-                                if($or_height > $max_image_height){
+					$this->small_image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_small_image_height);
+				//}
+			}
+		}
 
-                                        $this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_image_height);
-                                }
-                                else
-                                {
-
-                                        $this->image = scaleJpegHeight($_FILES['image']['tmp_name'], $or_height);
-                                }
-                                //if($or_height > $max_small_image_height){
-
-                                        $this->small_image = scaleJpegHeight($_FILES['image']['tmp_name'], $max_small_image_height);
-                                //}
-                        }
-                }
-
-                $this->updateRow(true);
-        }
+		$this->updateRow(true);
+	}
+	
 
 //  Render methods .............................................................
         
@@ -306,8 +307,7 @@ class Bloxx_PhotoNews extends Bloxx_Module
 	}
 	
 	function doRenderNews($param, $target, $jump, $other_params, $mt)                
-	{
-
+	{		
 		$this->getRowByID($param);
                         
 		$html_out = $this->title;
@@ -354,7 +354,38 @@ class Bloxx_PhotoNews extends Bloxx_Module
 		$this->clearWhereCondition();
 		$this->insertWhereCondition('topic', '=', $param);
 		$this->setOrderBy('publish_date', true);
+		$this->setListQueryLimits(15);
 		$this->runSelect();
+
+		include_module_once('list');
+		$list = new Bloxx_List();
+		$html_out = $list->render('navigator', -1, -1);
+		$mt->setItem('navigator', $html_out);
+
+		$mt->startLoop('list');
+
+		while ($this->nextRow())
+		{
+			
+			$mt->nextLoopIteration();
+			$mt->setLoopItem('news', $this->render('news_line', $this->id));
+		}
+                    
+		return $mt->renderView();
+	}
+	
+	function doRenderList($param, $target, $jump, $other_params, $mt)
+	{
+		
+		$this->clearWhereCondition();		
+		$this->setOrderBy('publish_date', true);
+		$this->setListQueryLimits(15);
+		$this->runSelect();
+		
+		include_module_once('list');
+		$list = new Bloxx_List();
+		$html_out = $list->render('navigator', -1, -1);
+		$mt->setItem('navigator', $html_out);
 
 		$mt->startLoop('list');
 

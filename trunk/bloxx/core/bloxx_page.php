@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_page.php,v 1.9 2005-06-22 20:05:34 tmenezes Exp $
+// $Id: bloxx_page.php,v 1.10 2005-08-08 16:38:33 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -29,10 +29,10 @@ class Bloxx_Page extends Bloxx_Module
 {
         function Bloxx_Page()
         {
-                $this->name = 'page';
-                $this->module_version = 1;
-                $this->label_field = 'title';
-                $this->use_init_file = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'page';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'title';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
                 
                 $this->Bloxx_Module();
         }
@@ -66,17 +66,33 @@ class Bloxx_Page extends Bloxx_Module
         $tokenizer = new Bloxx_Tokenizer();
                 
         $this->getRowByID($param);                
-                                                
-        $html_part_1 = '<html><head>';
+
+		$html_part_1 = '';
+
+		//Transactional XHTML doctype
+		//$html_part_1 = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+
+		global $G_LANGUAGE;		                                                
+        $html_part_1 .= '<html lang="' . $G_LANGUAGE . '"><head>';        
                 
         include_module_once('config');
-        $config = new Bloxx_Config();
-                
+        $config = new Bloxx_Config();        
         $site_name = $config->getConfig('site_name');
         $config = new Bloxx_Config();
         $page_title_separator = $config->getConfig('page_title_separator');
+        $config = new Bloxx_Config();
+        $description = $config->getConfig('description');
+        $config = new Bloxx_Config();
+        $keywords = $config->getConfig('keywords');
                 
         $html_part_1 .= '<title>' . $site_name . $page_title_separator . $this->title . '</title>';
+        
+        $html_part_1 .= '<meta name="description" content="' . $description . '" />';
+        $html_part_1 .= '<meta name="keywords" content="' . $keywords . '" />';		
+		
+		$html_part_1 .= '
+		<meta name="Generator" content="Bloxx" />
+		<meta name="robots" content="index, follow" />';
                 
         $javascript_part = '';
         $body_part = '';
@@ -91,7 +107,11 @@ class Bloxx_Page extends Bloxx_Module
         $html_part_2 = $style->renderStyleSheet();
 
         $hf = new Bloxx_HeaderFooter();
-        $hf->getRowByID($this->headerfooter);
+       
+        if (isset($this->headerfooter))
+        {        	        
+        	$hf->getRowByID($this->headerfooter);
+        }
                 
         //Fist Pass---------------------------------------------
         $content = $hf->header_html . $this->content . $hf->footer_html;
@@ -217,6 +237,9 @@ class Bloxx_Page extends Bloxx_Module
         }
                 
         $body = '<body ' . $body_part . ' ' . $hf->bodytag_params . '>';
+        
+        $body .= '<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />';
+        
         $html_part_2 = '</head>'
         	. $body
             . $html_part_2
@@ -242,7 +265,7 @@ class Bloxx_Page extends Bloxx_Module
                         ereg('(.*)="(.*)"', $p2, $regs);
                         $$regs[1] = $regs[2];
                         
-                        $mname = 'Bloxx_'.$module;
+                        $mname = 'Bloxx_' . $module;
 
                         include_module_once($module);
 
@@ -268,7 +291,7 @@ class Bloxx_Page extends Bloxx_Module
                         ereg('(.*)="(.*)"', $p2, $regs);
                         $$regs[1] = $regs[2];
 
-                        $mname = 'Bloxx_'.$module;
+                        $mname = 'Bloxx_' . $module;
 
                         include_module_once($module);
 
@@ -340,7 +363,12 @@ class Bloxx_Page extends Bloxx_Module
                                 }                                
                         }
 
-                        $mname = 'Bloxx_' . $module;
+						/*if ($module == '')
+						{
+							return false;
+						}*/
+
+                        $mname = 'Bloxx_' . $module;						
 
                         include_module_once($module);
 
@@ -356,7 +384,7 @@ class Bloxx_Page extends Bloxx_Module
                                 }
                                 else{
 
-                                        $view = $module_inst->default_mode;
+                                        $view = $module_inst->_BLOXX_MOD_PARAM['default_view'];
                                 }
                         }
 
@@ -425,7 +453,7 @@ class Bloxx_Page extends Bloxx_Module
                                 else if (substr($param, 0, 10) == "targetlast")
                                 {
 
-                                        $tname = 'Bloxx_'.$target;
+                                        $tname = 'Bloxx_' . $target;
                                         include_module_once($target);
                                         $target_module = new $tname();
 

@@ -19,23 +19,83 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_search.php,v 1.5 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_search.php,v 1.6 2005-08-08 16:38:34 tmenezes Exp $
 
 require_once 'defines.php';
 include_once(CORE_DIR.'bloxx_module.php');
 
 class Bloxx_Search extends Bloxx_Module
 {
-		// To be done yet...
 	
-        function Bloxx_Search()
-        {
-                $this->name = 'search';
-                $this->module_version = 1;
-                $this->label_field = 'id';
-                $this->use_init_file = true;
+	function Bloxx_Search()
+	{
+		$this->_BLOXX_MOD_PARAM['name'] = 'search';
+		$this->_BLOXX_MOD_PARAM['module_version'] = 1;
+		$this->_BLOXX_MOD_PARAM['label_field'] = 'id';
+		$this->_BLOXX_MOD_PARAM['use_init_file'] = true;
                 
-                $this->Bloxx_Module();
-        }        
+		$this->Bloxx_Module();
+	}
+        
+	function getTableDefinition()
+	{
+		return array(
+			'title' => array('TYPE' => 'STRING', 'SIZE' => 255, 'NOTNULL' => true, 'USER' => true),				
+			'definition' => array('TYPE' => 'TEXT', 'SIZE' => -1, 'NOTNULL' => true, 'USER' => true)				
+		);
+	}
+
+	function getLocalRenderTrusts()
+	{
+		return array(
+			'search_input' => TRUST_GUEST,
+			'search_results' => TRUST_GUEST
+		);
+	}
+        
+	function getLocalCommandTrusts()
+	{
+		return array(
+			'dummy' => TRUST_GUEST
+		);
+	}
+	
+	
+//  Render methods .............................................................
+
+	function doRenderSearch_Input($param, $target, $jump, $other_params, $mt)
+	{
+		include_once(CORE_DIR . 'bloxx_form.php');
+                	                        
+        $form = new Bloxx_Form();
+        $html_out = $form->renderHeader('search', 'dummy');
+        $mt->setItem('header', $html_out);
+		
+		$html_out = $form->renderInput('address', '', '');
+		$mt->setItem('input', $html_out);		
+
+		$html_out = $form->renderSubmitButton('Search');
+		$mt->setItem('button', $html_out);
+                        
+		$html_out = $form->renderFooter();
+		$mt->setItem('footer', $html_out);
+                                
+		return $mt->renderView();
+	}
+	
+	function doRenderSearch_Results($param, $target, $jump, $other_params, $mt)
+	{
+		$this->getRowByID($param);
+		
+		
+	}
+
+
+//  Command methods ............................................................
+
+	function execCommandDummy()
+	{
+		// do nothing
+	}
 }
 ?>

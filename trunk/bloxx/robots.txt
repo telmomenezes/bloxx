@@ -1,0 +1,17 @@
+User-agent: * 
+Disallow: /core/
+Disallow: /docs/
+Disallow: /enums/
+Disallow: /init/
+Disallow: /javascript/
+Disallow: /lang/
+Disallow: /mods/
+Disallow: /res/
+Disallow: /third_party/
+Disallow: /bloxx.php
+Disallow: /defines.php
+Disallow: /functions.php
+Disallow: /image.php
+Disallow: /install.php
+Disallow: /readmail.php
+ 

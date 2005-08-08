@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_pollvote.php,v 1.4 2005-06-20 11:26:09 tmenezes Exp $
+// $Id: bloxx_pollvote.php,v 1.5 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,11 +28,10 @@ class Bloxx_PollVote extends Bloxx_Module
 {
         function Bloxx_PollVote()
         {
-                $this->name = 'pollvote';
-                $this->module_version = 1;
-                $this->label_field = 'id';
-
-                $this->use_init_file = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'pollvote';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'id';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
                 
                 $this->Bloxx_Module();
         }

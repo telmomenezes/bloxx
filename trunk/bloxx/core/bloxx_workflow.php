@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_workflow.php,v 1.7 2005-06-22 20:05:34 tmenezes Exp $
+// $Id: bloxx_workflow.php,v 1.8 2005-08-08 16:38:33 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,12 +28,11 @@ class Bloxx_Workflow extends Bloxx_Module
 {
         function Bloxx_Workflow()
         {
-                $this->name = 'workflow';
-                $this->module_version = 1;
-                //$this->label_field = '';
-                $this->default_mode = 'module_list';
-                $this->use_init_file = false;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'workflow';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;                
+                $this->_BLOXX_MOD_PARAM['default_view'] = 'module_list';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = false;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }
@@ -144,7 +143,7 @@ class Bloxx_Workflow extends Bloxx_Module
 		$mm->getRowByID($param);
 		$mod = $mm->getModuleInstance();
 
-		$html_out .= $mod->render($mod->default_mode, $target);
+		$html_out .= $mod->render($mod->_BLOXX_MOD_PARAM['default_view'], $target);
 
 		include_once(CORE_DIR.'bloxx_form.php');
 		$form = new Bloxx_Form();

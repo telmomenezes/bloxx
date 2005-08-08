@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_quotation.php,v 1.1 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_quotation.php,v 1.2 2005-08-08 16:38:35 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_Quotation extends Bloxx_Module
 {
         function Bloxx_Quotation()
         {
-                $this->name = 'quotation';
-                $this->module_version = 1;
-                $this->label_field = 'email';
-
-                $this->use_init_file = true;
-
-                $this->default_mode = 'ask_quotation';
+                $this->_BLOXX_MOD_PARAM['name'] = 'quotation';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'email';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'ask_quotation';
                 
                 $this->Bloxx_Module();
         }

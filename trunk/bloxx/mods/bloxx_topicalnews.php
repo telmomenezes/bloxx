@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_topicalnews.php,v 1.4 2005-06-20 11:26:09 tmenezes Exp $
+// $Id: bloxx_topicalnews.php,v 1.5 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_TopicalNews extends Bloxx_Module
 {
         function Bloxx_TopicalNews()
         {
-                $this->name = 'topicalnews';
-                $this->module_version = 1;
-                $this->label_field = 'title';
-
-                $this->use_init_file = true;
-
-                $this->default_mode = 'news';
+                $this->_BLOXX_MOD_PARAM['name'] = 'topicalnews';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'title';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'news';
                 
                 $this->Bloxx_Module();
         }
@@ -118,7 +116,7 @@ class Bloxx_TopicalNews extends Bloxx_Module
                         include_module_once('identity');
                         $identity = new Bloxx_Identity();
                         
-                        $this->author = $identity->id();
+                        $this->author = $identity->userID();
                         
                         $html_out .= $this->renderForm(-1, false);
 
@@ -221,7 +219,7 @@ class Bloxx_TopicalNews extends Bloxx_Module
                 
                 include_module_once('identity');
                 $identity = new Bloxx_Identity();
-                $this->author = $identity->id();
+                $this->author = $identity->userID();
 
                 parent::create(false);
         }

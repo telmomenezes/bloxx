@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_style.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_style.php,v 1.5 2005-08-08 16:38:34 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,11 +28,11 @@ class Bloxx_Style extends Bloxx_Module
 {
         function Bloxx_Style()
         {
-                $this->name = 'style';
-                $this->module_version = 1;
-                $this->label_field = 'title';
-                $this->use_init_file = true;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'style';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'title';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }

@@ -19,153 +19,142 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_list.php,v 1.5 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_list.php,v 1.6 2005-08-08 16:38:33 tmenezes Exp $
 
 require_once 'defines.php';
 include_once(CORE_DIR.'bloxx_module.php');
 
 class Bloxx_List extends Bloxx_Module
 {
-        function Bloxx_List()
-        {
-                $this->name = 'list';
-                $this->module_version = 1;
-                $this->label_field = 'id';
-                $this->use_init_file = true;
+	function Bloxx_List()
+	{
+		$this->_BLOXX_MOD_PARAM['name'] = 'list';
+		$this->_BLOXX_MOD_PARAM['module_version'] = 1;                
+		$this->_BLOXX_MOD_PARAM['use_init_file'] = false;
                 
-                $this->Bloxx_Module();
-        }
+		$this->Bloxx_Module();
+	}
         
-        function getTableDefinition()
-        {
-                return array(
-                        'module_id' => array('TYPE' => 'BLOXX_MODULEMANAGER', 'SIZE' => -1, 'NOTNULL' => true),
-                        'view' => array('TYPE' => 'STRING', 'SIZE' => 100, 'NOTNULL' => true),
-                        'num_rows' => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
-                        'num_columns' => array('TYPE' => 'NUMBER', 'SIZE' => -1, 'NOTNULL' => true),
-                        'html_header' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false),
-                        'html_footer' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false),
-                        'html_after_row' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false),
-                        'html_after_column' => array('TYPE' => 'HTML', 'SIZE' => -1, 'NOTNULL' => false)
-                );
-        }
+	function getTableDefinition()
+	{
+		return array();
+	}
         
-        function getLocalRenderTrusts()
-        {
-                return array(
-                        'list' => TRUST_GUEST,
-                        'prev' => TRUST_GUEST,
-                        'next' => TRUST_GUEST
-                );
-        }        
-        
-        function renderLabel()
-        {
-
-                include_module_once('modulemanager');
-                $mm = new Bloxx_ModuleManager();
-                $mm->getRowByID($this->module_id);
-
-                $label = $mm->module_name . ' (' . $this->view . ')';
-                return $label;
-        }
+	function getLocalRenderTrusts()
+	{
+		return array(
+			'navigator' => TRUST_GUEST			
+		);
+	}
+	
+	function buildLink($label, $page_num)
+	{
+		$html_out = '<a href="index.php?';
+		
+		foreach ($_GET as $k => $v)
+		{
+			if ($k != 'list_current_page')
+			{
+				$html_out .= $k . '=' . $v . '&';
+			}
+		}
+		
+		$html_out .= 'list_current_page=' . $page_num . '">';
+		$html_out .= $label;
+		$html_out .= '</a>';
+		
+		return $html_out; 
+	}                
         
 //  Render methods .............................................................
         
-	function doRenderList($param, $target, $jump, $other_params, $mt)
-	{
-		                	
-		$this->getRowByID($param);
-
-		$html_out = $this->html_header;
-                
-		include_module_once('modulemanager');
-		$mm = new Bloxx_ModuleManager();
-		$mm->getRowByID($this->module_id);
-		$mname = $mm->module_name;
-		include_module_once($mname);
-		$mname = 'Bloxx_' . $mname;
-		$inst = new $mname();
-                        
-		$html_out .= $inst->renderList($target,
-			$this->num_columns,
-			$this->num_rows,
-			$this->view,
-			$this->html_after_row,
-			$this->html_after_column);
-                                
-		$html_out .= $this->html_footer;
-                        
-		return $html_out;
-	}
-	
-	function doRenderNext($param, $target, $jump, $other_params, $mt)
-	{
-                	
-		$this->getRowByID($param);
-                        
-		include_module_once('modulemanager');
-		$mm = new Bloxx_ModuleManager();
-		$mm->getRowByID($this->module_id);
-		$mname = $mm->module_name;
-		include_module_once($mname);
-		$mname = 'Bloxx_' . $mname;
-		$inst = new $mname();
-                        
-		$next_id = $inst->nextListID($target, $this->num_columns * $this->num_rows);
-
-		if($next_id != -1)
+	function doRenderNavigator($param, $target, $jump, $other_params, $mt)
+	{		
+		
+		$pages_in_navigator = 10;
+		
+		$count = 1;
+		
+		if (isset($_GET['list_count']))
 		{
-                
-		$html_out = build_link($_GET['id'],
-			null,
-			null,
-			$next_id,
-			'next >',
-			false,
-			getExtraGetVars());
-                                                
-			return $html_out;
+			$count = $_GET['list_count'];
 		}
-		else{
-                        
+		
+		$results_per_page = 10;
+		
+		if (isset($_GET['list_results_per_page']))
+		{
+			$results_per_page = $_GET['list_results_per_page'];
+		}
+		
+		$current = 1;
+		
+		if (isset($_GET['list_current_page']))
+		{
+			$current = $_GET['list_current_page'];
+		}
+		
+		$page_count = ceil($count / $results_per_page);		
+		
+		if ($page_count < 2)
+		{
 			return '';
+		}		
+		
+		if ($current > 1)
+		{
+			$html_out = $this->buildLink('< prev', $current - 1) . '&nbsp;&nbsp;'; 
+			$mt->setItem('previous', $html_out);
 		}
+		
+		if ($current < $page_count)
+		{
+			$html_out = $this->buildLink('next >', $current + 1) . '&nbsp;&nbsp;';
+			$mt->setItem('next', $html_out);
+		}
+		
+		$page_start = 1;
+		$page_end = $page_count;
+		
+		if ($page_count > $pages_in_navigator)
+		{
+			$half_navigator = ceil($pages_in_navigator / 2);
+			
+			if ($current < $half_navigator)
+			{
+				$page_start = 1;
+				$page_end = $pages_in_navigator;
+			}
+			else if($current > ($page_count - $half_navigator))
+			{
+				$page_start = $page_count - $pages_in_navigator + 1;
+				$page_end = $page_count;
+			}
+			else
+			{
+				$page_start = $current - $half_navigator + 1;
+				$page_end = $current + $half_navigator; 
+			}
+		}
+		
+		$mt->startLoop('pages');
+		for ($n = $page_start; $n <= $page_end; $n++)
+		{
+			$mt->nextLoopIteration();
+			
+			$html_out = '';
+			if ($current == $n)
+			{
+				$html_out = $n . '&nbsp;&nbsp;';
+			}
+			else
+			{
+				$html_out = $this->buildLink($n, $n) . '&nbsp;&nbsp;';
+			}
+			$mt->setLoopItem('page', $html_out);
+		}
+                        
+		return $mt->renderView();
 	}
-
-	function doRenderPrev($param, $target, $jump, $other_params, $mt)
-	{
-
-		$this->getRowByID($param);
-
-		include_module_once('modulemanager');
-		$mm = new Bloxx_ModuleManager();
-		$mm->getRowByID($this->module_id);
-		$mname = $mm->module_name;
-		include_module_once($mname);
-		$mname = 'Bloxx_' . $mname;
-		$inst = new $mname();
-                        
-		$prev_id = $inst->previousListID($target, $this->num_columns * $this->num_rows);
-                        
-		if($prev_id != $target)
-		{
-
-			$html_out = build_link($_GET['id'],
-				null,
-				null,
-				$prev_id,
-				'< prev',
-				false,
-				getExtraGetVars());
-                                                
-			return $html_out;
-		}
-		else
-		{
-                        
-			return '';
-		}
-	}        
 }
 ?>

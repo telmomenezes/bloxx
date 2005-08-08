@@ -3,8 +3,28 @@ BLOXX CHANGELOG
 Version 0.8 -
 =========================
 
-- more API uniformaztion: Bloxx_Form->setMode() changes to Boxx_Form->setView();
-- jump parameter in <bloxx_mod> created;
+- More API uniformaztion: Bloxx_Form->setMode() changes to Boxx_Form->setView();
+- Jump parameter in <bloxx_mod> created - this allows for the definition of the page
+  to jump to after a form post on bloxx_mods.
+- Bloxx_Identity now can be extended with modules so that more information is associated
+  with users;
+- Solved bug that caused the insertion of empty entries when a module with no associated
+  data on installation file was installed;
+- Bloxx_Country created with a complete coutry list and flag images resource;
+- Language code now included in <html> tag;
+- redirectTo() method added to Bloxx_Module;
+- PHPMailer included in Bloxx in third_party;
+- AdoDB included in Bloxx in third_party;
+- Bloxx_DBObject now uses AdoDB;
+- Bloxx_Error created;
+- Bloxx_DBObject refactored and commented;
+- Bloxx_List done and working;
+- Custom render trust and custom command trust;
+- Support for "description", "keywords", "generator" and "robots" meta info;
+- Changed doc format to phpdoc;
+- Module parameters now contained in the _BLOXX_MOD_PARAM member array;
+- REMOTE_IP type creted;
+- Install tool revamped;
 - 
 
 Version 0.7 - 20/Jun/2005

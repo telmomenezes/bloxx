@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_config.php,v 1.4 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_config.php,v 1.5 2005-08-08 16:38:35 tmenezes Exp $
 
 //require_once 'defines.php';
 include_once(CORE_DIR.'bloxx_module.php');
@@ -28,11 +28,11 @@ class Bloxx_Config extends Bloxx_Module
 {
         function Bloxx_Config()
         {
-                $this->name = 'config';
-                $this->module_version = 1;
-                $this->label_field = 'item_name';
-                $this->use_init_file = true;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'config';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'item_name';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }

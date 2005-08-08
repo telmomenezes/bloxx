@@ -1,0 +1,130 @@
+<style TYPE="text/css">
+<!--
+body{
+	background-color:#474646;
+    margin:0px;
+	padding:0px;
+}
+
+#left_bar {
+	padding:0px;
+	float:left;
+	width:180px;
+    position: absolute;
+    height:300px;
+	background-image:url(res/system/bloxx_logo.gif);
+	background-position:top;
+	background-repeat:no-repeat;
+}
+
+#right_bar {
+	padding-left:20px;
+	padding-right:20px;
+	padding-top:14px;
+	padding-bottom:20px;
+    margin-left:180px;
+    margin-top:0px;
+    margin-bottom:0px;
+    margin-right:0px;
+    background-color:#DDEEDD;
+}
+
+.normal {
+	color:#440000;	
+	font-family:'Trebuchet MS', Arial, Verdana;
+	font-size:11px;
+	line-height:20px;
+}
+
+.normal p{
+	color:#440000;	
+	font-family:'Trebuchet MS', Arial, Verdana;
+	font-size:11px;
+	line-height:20px;
+}
+
+.normal h2{
+	color:#440000;	
+	font-family:'Trebuchet MS', Arial, Verdana;
+	font-size:11px;
+	margin:0px;
+	padding:0px;
+}
+
+.normal a {
+	color:#9a80ff;
+	text-decoration:none;
+	font-weight:bold;
+}
+
+.normal h1 {
+	font-family:'Trebuchet MS', Verdana, Arial, Sans-Serif;
+	font-size:14px;	
+	margin:0px;
+	padding:0px;
+	color:#888888;
+	margin-bottom:10px;
+	text-align:left;
+	border-bottom:1px solid #888888;
+	text-transform:uppercase;
+}
+
+.normal td {
+	color:#444444;	
+	font-family:'Trebuchet MS', Arial, Verdana;
+	font-size:11px;
+	line-height:20px;
+}
+
+.normal input {
+	background-color:#FFFFFF;
+	padding:3px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	color:#555555;
+	border:1px solid #728c40;
+	margin-bottom:2px;
+}
+
+.normal select {
+	background-color:#FFFFFF;
+	padding:3px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	color:#555555;
+	border:1px solid #728c40;
+	margin-bottom:2px;
+}
+
+.normal input[type=submit] {
+	background-color:#FFFFFF;
+	padding:3px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	color:#666666;
+	border:1px solid #728c40;
+	margin-bottom:2px;
+}
+
+.introduction {
+	font-family:Helvetica, Arial, sans-serif;
+	line-height:20px;
+	font-size:12px;
+	color:#555555;
+	padding-left:25px;
+	padding-right:25px;
+	padding-bottom:25px;
+	padding-top:25px;
+	background-color:#ffd2ba;
+}
+
+.error {
+	color:#FF0000;	
+	font-family:'Trebuchet MS', Arial, Verdana;
+	font-size:11px;
+	line-height:20px;
+}
+
+-->
+</style>
+                

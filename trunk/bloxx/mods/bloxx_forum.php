@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_forum.php,v 1.6 2005-06-20 11:26:09 tmenezes Exp $
+// $Id: bloxx_forum.php,v 1.7 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_Forum extends Bloxx_Module
 {
         function Bloxx_Forum()
         {
-                $this->name = 'forum';
-                $this->module_version = 1;
-                $this->label_field = 'title';
-
-                $this->use_init_file = true;
-
-                $this->default_mode = 'default_view';
+                $this->_BLOXX_MOD_PARAM['name'] = 'forum';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'title';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['default_view'] = 'default_view';
                 
                 $this->Bloxx_Module();
         }

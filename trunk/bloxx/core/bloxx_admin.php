@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_admin.php,v 1.11 2005-06-22 20:05:34 tmenezes Exp $
+// $Id: bloxx_admin.php,v 1.12 2005-08-08 16:38:33 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,12 +28,11 @@ class Bloxx_Admin extends Bloxx_Module
 {
         function Bloxx_Admin()
         {
-                $this->name = 'admin';
-                $this->module_version = 1;
-                //$this->label_field = '';
-                $this->default_mode = 'module_list';
-                $this->use_init_file = false;
-                $this->no_private = true;
+                $this->_BLOXX_MOD_PARAM['name'] = 'admin';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;               
+                $this->_BLOXX_MOD_PARAM['default_view'] = 'module_list';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = false;
+                $this->_BLOXX_MOD_PARAM['no_private'] = true;
                 
                 $this->Bloxx_Module();
         }
@@ -105,7 +104,7 @@ class Bloxx_Admin extends Bloxx_Module
                                 $inst = new $modname();
                                 
                                 $inst->getRowByID($item);
-                                $labelname = $inst->label_field;
+                                $labelname = $inst->_BLOXX_MOD_PARAM['label_field'];
 
                                 if(isset($inst->$labelname)){
                                 
@@ -208,7 +207,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('new_row');
-        $form->setParam($item->name);
+        $form->setParam($item->_BLOXX_MOD_PARAM['name']);
         $new_button = $form->renderHeader('admin', 'edit');
         $new_button .= $form->renderSubmitButton(LANG_ADMIN_NEW);
         $new_button .= $form->renderFooter();
@@ -225,7 +224,7 @@ class Bloxx_Admin extends Bloxx_Module
                         
         	$mt->nextLoopIteration();
 
-            $label = $item->label_field;
+            $label = $item->_BLOXX_MOD_PARAM['label_field'];
                                 
             if (isset($item->$label))
             {
@@ -236,7 +235,7 @@ class Bloxx_Admin extends Bloxx_Module
                                 
             $form = new Bloxx_Form();
             $form->setView('edit_row');
-            $form->setParam($item->name);
+            $form->setParam($item->_BLOXX_MOD_PARAM['name']);
             $edit_item = $form->renderHeader('admin', 'edit');
             $edit_item .= $form->renderInput('item', 'hidden', $item->id);
             $edit_item .= $form->renderSubmitLink($label);
@@ -246,7 +245,7 @@ class Bloxx_Admin extends Bloxx_Module
                                 
             $form = new Bloxx_Form();
             $form->setView('delete_row');
-            $form->setParam($item->name);
+            $form->setParam($item->_BLOXX_MOD_PARAM['name']);
             $delete_item = $form->renderHeader('admin', 'edit');
             $delete_item .= $form->renderInput('item', 'hidden', $item->id);
             $delete_item .= $form->renderSubmitLink('X');
@@ -277,7 +276,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('saveall');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
 
         $html_out = $form->renderHeader('admin', 'save_db');
         $mt->setItem('header', $html_out);
@@ -305,7 +304,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('saveall');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
         $html_out = $form->renderHeader('admin', 'saveall');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_SAVE_ALL);
         $html_out .= $form->renderFooter();
@@ -314,7 +313,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('module_list');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
         $html_out = $form->renderHeader('admin', 'module_list');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_HOME);
         $html_out .= $form->renderFooter();
@@ -335,7 +334,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('change_password');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_CHANGE_PASSWORD);
         $html_out .= $form->renderFooter();
@@ -344,7 +343,7 @@ class Bloxx_Admin extends Bloxx_Module
 
 		$form = new Bloxx_Form();
         $form->setView('install_mod');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_INSTALL_MOD);
         $html_out .= $form->renderFooter();
@@ -353,7 +352,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('uninstall_mod');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_UNINSTALL_MOD);
         $html_out .= $form->renderFooter();
@@ -362,7 +361,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('update_mod');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_UPDATE_MOD);
         $html_out .= $form->renderFooter();
@@ -371,7 +370,7 @@ class Bloxx_Admin extends Bloxx_Module
 
         $form = new Bloxx_Form();
         $form->setView('about');
-        $form->setParam($this->name);
+        $form->setParam($this->_BLOXX_MOD_PARAM['name']);
         $html_out = $form->renderHeader('admin', 'dummy');
         $html_out .= $form->renderSubmitButton(LANG_ADMIN_ABOUT);
         $html_out .= $form->renderFooter();
@@ -413,7 +412,7 @@ class Bloxx_Admin extends Bloxx_Module
                                 
         $modinst = new $modname();
         $modinst->getRowByID($_POST['item'], false);
-        $label_field = $modinst->label_field;
+        $label_field = $modinst->_BLOXX_MOD_PARAM['label_field'];
 
         $html_out = LANG_ADMIN_WARNING1;
         

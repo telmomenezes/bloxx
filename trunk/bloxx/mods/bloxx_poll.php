@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_poll.php,v 1.8 2005-06-20 11:26:09 tmenezes Exp $
+// $Id: bloxx_poll.php,v 1.9 2005-08-08 16:38:37 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -28,13 +28,11 @@ class Bloxx_Poll extends Bloxx_Module
 {
         function Bloxx_Poll()
         {
-                $this->name = 'poll';
-                $this->module_version = 1;
-                $this->label_field = 'question';
-
-                $this->use_init_file = true;
-
-                $this->default_mode = 'results';
+                $this->_BLOXX_MOD_PARAM['name'] = 'poll';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'question';
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'results';
                 
                 $this->Bloxx_Module();
         }
@@ -84,7 +82,7 @@ class Bloxx_Poll extends Bloxx_Module
                         $vote->insertWhereCondition('vote', '=', $opt);
                 }
                 
-                return $vote->runSelect();
+                return $vote->getCount();
         }
         
         function voted($user_id, $poll_id)
@@ -235,14 +233,14 @@ class Bloxx_Poll extends Bloxx_Module
 		include_module_once('identity');
 		$ident = new Bloxx_Identity();
                         
-		if ($ident->id() <= 0)
+		if ($ident->userID() <= 0)
 		{
                         
 			$warningmessage = LANG_POLL_ERROR_MUST_BE_REGISTERED;
 			return false;
 		}
                         
-		if ($this->voted($ident->id(), $_POST['poll_id']))
+		if ($this->voted($ident->userID(), $_POST['poll_id']))
 		{
 
 			$warningmessage = LANG_POLL_ERROR_CANT_VOTE_TWICE;
@@ -253,7 +251,7 @@ class Bloxx_Poll extends Bloxx_Module
 		$vote = new Bloxx_PollVote();
                         
 		$vote->poll_id = $_POST['poll_id'];
-		$vote->user_id = $ident->id();
+		$vote->user_id = $ident->userID();
 		$vote->vote = $_POST['option'];
                         
 		$vote->insertRow();

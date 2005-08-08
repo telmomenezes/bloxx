@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_mailcomment.php,v 1.7 2005-06-20 11:26:08 tmenezes Exp $
+// $Id: bloxx_mailcomment.php,v 1.8 2005-08-08 16:38:36 tmenezes Exp $
 
 require_once(CORE_DIR.'bloxx_module.php');
 
@@ -53,13 +53,11 @@ class Bloxx_MailComment extends Bloxx_Module
 
         function Bloxx_MailComment()
         {
-                $this->name = 'mailcomment';
-                $this->module_version = 1;
-                $this->label_field = 'subject';
-                
-                $this->use_init_file = true;
-                
-                $this->default_mode = 'comment';
+                $this->_BLOXX_MOD_PARAM['name'] = 'mailcomment';
+                $this->_BLOXX_MOD_PARAM['module_version'] = 1;
+                $this->_BLOXX_MOD_PARAM['label_field'] = 'subject';                
+                $this->_BLOXX_MOD_PARAM['use_init_file'] = true;                
+                $this->_BLOXX_MOD_PARAM['default_mode'] = 'comment';
                 
                 $this->Bloxx_Module();
         }
@@ -205,18 +203,18 @@ class Bloxx_MailComment extends Bloxx_Module
                 }
                 else if($mode == 'new_comment'){
                 
-                        $tname = 'Bloxx_'.$target;
+                        $tname = 'Bloxx_' . $target;
                         include_module_once($target);
                         $target_module = new $tname();
 
-                        $html_out .= $target_module->render($target_module->default_mode, $id);
+                        $html_out .= $target_module->render($target_module->_BLOXX_MOD_PARAM['default_mode'], $id);
                 
                         $this->parent_id = $id;
                         $this->parent_type = $target;
                         
                         include_module_once('identity');
                         $ident = new Bloxx_Identity();
-                        $this->user_id = $ident->id();
+                        $this->user_id = $ident->userID();
                         
                         $html_out .= $this->renderForm(-1, false);
 
@@ -228,7 +226,7 @@ class Bloxx_MailComment extends Bloxx_Module
                         include_module_once('MailComment');
                         $target_module = new Bloxx_MailComment();
                         
-                        $html_out .= $target_module->render($target_module->default_mode, $id);
+                        $html_out .= $target_module->render($target_module->_BLOXX_MOD_PARAM['default_mode'], $id);
 
                         $html_out .= '<br>';
                                         
@@ -243,14 +241,15 @@ class Bloxx_MailComment extends Bloxx_Module
 
                         $file_name = 'bloxx_' . strtolower($target) . '.php';
 
-                        if(file_exists(CORE_DIR . $file_name)){
+                        if (file_exists(CORE_DIR . $file_name))
+                        {
 
                                 include_module_once($target);
                                 $target_module = new $tname();
 
-                                $html_out .= $target_module->render($target_module->default_mode, $id);
+                                $html_out .= $target_module->render($target_module->_BLOXX_MOD_PARAM['default_mode'], $id);
 
-                                $html_out .= '<br>';
+                                $html_out .= '<br />';
                         }
 
                         $html_out .= $this->renderCommentsTree($id, $target, 0, true);

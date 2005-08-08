@@ -20,18 +20,22 @@
 // Authors: Silas Francisco <draft@dog.kicks-ass.net>
 //			Telmo Menezes	<telmo@cognitiva.net>
 //
-// $Id: install.php,v 1.10 2005-06-22 20:05:29 tmenezes Exp $
+// $Id: install.php,v 1.11 2005-08-08 16:38:33 tmenezes Exp $
+
+require_once('core/bloxx_error.php');
+require_once('core/bloxx_dbobject.php');
  
-require_once 'DB.php';
-require_once 'PEAR.php';
+global $BLOXX_ERROR;
+$BLOXX_ERROR = new Bloxx_Error(ERROR_REPORT_MODE_PRINT_SENSITIVE, WARNING_REPORT_MODE_PRINT, DEBUG_REPORT_MODE_PRINT);
 
 $bloxxCoreVersion = '0.8';
 
-if (!file_exists('defines.php')) {
+if (!file_exists('defines.php'))
+{
 
 	if (isset($_POST['username']) && isset($_POST['password']) 
-		&& isset($_POST['host']) && isset($_POST['database']) && isset($_POST['initfile'])) {
-
+		&& isset($_POST['host']) && isset($_POST['database']) && isset($_POST['initfile']))
+	{
 		$hostDSN     = 'mysql://' . $_POST['username'] . ':' . $_POST['password'] . '@' . $_POST['host'];	
 		$databaseDSN = $hostDSN . '/' . $_POST['database'];
 					
@@ -43,33 +47,41 @@ if (!file_exists('defines.php')) {
 				. "define('MODS_DIR', MAIN_DIR . 'mods/');\n"
 				. "define('LANG_DIR', MAIN_DIR . 'lang/');\n"
 				. "define('JAVASCRIPT_DIR', MAIN_DIR . 'javascript/');\n"
+				. "define('THIRD_PARTY_DIR', MAIN_DIR . 'third_party/');\n"
 				. "define('ENUM_DIR', MAIN_DIR . 'enums/');\n\n"
 				. "define('BLOXX_CORE_VERSION', '". $bloxxCoreVersion . "');\n?>\n"; 
 
-		$mysqlHost = DB::connect($hostDSN);
-		if (DB::isError($mysqlHost)) {
-					
-			echo $mysqlHost->toString();
+		// We use the hostDSN because the database may not exist yet.		
+		$db = new Bloxx_DBObject($hostDSN);
+		
+		global $DB_CONNECTION;
+		if (!$DB_CONNECTION)
+		{			
+			// DB Connection failed.
 		}
-		else {
-
-			if (isset($_POST['overwritedb'])) {
-
-				$mysqlHost->query('DROP DATABASE ' . $_POST['database']);
+		else
+		{
+			if (isset($_POST['overwritedb']))
+			{
+				
+				$db->dropDatabase($_POST['database']);
 			}
 					
-			$result = $mysqlHost->query('CREATE DATABASE ' . $_POST['database']);
-			if (DB::isError($result)) {
+			if (!$db->createDatabase($_POST['database']))
+			{
 					
-				echo $result->toString();
+				// Error creating database
 			}
-			else {
+			else
+			{	
+				// Don't use the databaseless connection from now on.
+				$DB_CONNECTION = false;
 				
 				$defines = fopen('defines.php', 'x');
-				if ($defines !== FALSE) {
-			
-					if (fwrite($defines, $buffer) !== FALSE) {
-									
+				if ($defines !== FALSE)
+				{
+					if (fwrite($defines, $buffer) !== FALSE)
+					{
 						bloxxInstall();
 						bloxxInstallMods();
 					}
@@ -78,66 +90,13 @@ if (!file_exists('defines.php')) {
 				}
 			}
 		}
+		
+		//Goto main page
+		header("Location: index.php");
 	} 
-	else {
-
-		$html_out = '<html><body>';
-		$html_out .= 'You are about to install bloxx <br>'
-					.'bla bla bla, bla bla bla <br>';
-					
-		$html_out .= '<form enctype="multipart/form-data"';
-		$html_out .= ' name="' . 'wizard' . '"';
-		$html_out .= ' action="install.php';
-		$html_out .=  '" method="POST">';
-
-		$size = '10';
-		$maxlengh = '255';
-		$type = 'text';
-
-		$html_out .= 'mysql://
-    	<input name="' . 'username' . '" type="' . $type . '" value="' . '' .
-    	'" size="' . $size . '" maxlength="' . $maxlength . '">';
-                
-    	$html_out .= ':
-    	<input name="' . 'password' . '" type="' . 'password' . '" value="' . '' .
-    	'" size="' . $size . '" maxlength="' . $maxlength . '">';
-                
-    	$html_out .= '@
-    	<input name="' . 'host' . '" type="' . $type . '" value="' . 'localhost' .
-    	'" size="' . '20' . '" maxlength="' . $maxlength . '">';
-    	
-    	$html_out .= '/
-    	<input name="' . 'database' . '" type="' . $type . '" value="' . 'test' .
-    	'" size="' . $size . '" maxlength="' . $maxlength . '">';
-                
-    	$html_out .= 'Init File:
-    	<select name="initfile">';
-    	
-    	$dh = opendir('init/');
-
-		while (($file = readdir($dh)) !== false) 
-		{
-    	    if (!is_dir($file) && ($file != '.') && ($file != '..'))
-    	    {
-    	    	$html_out .= '<option value="' . 'init/' . $file . '"' . '>' . $file;
-        	}
-		}
-
-		closedir($dh);
-
-		$html_out .= '</select>';
-		                
-    	$html_out .= '
-    	<input type="SUBMIT" name="submit" value="' . 'Install' . '">
-    	';
-    	
-    	$html_out .= '<br>
-    	<input name="' . 'overwritedb' . '" type="checkbox"> overwrite old database';
-    	
-                
-		$html_out .= '</form></body></html>';
-
-		echo $html_out;
+	else
+	{
+		echo renderInstallForm();
 	}
 }
 
@@ -256,5 +215,79 @@ function bloxxInstallMods()
 	}
 
 	closedir($dh);
+}
+
+function renderInstallForm()
+{
+	$html_out = '
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">			
+<html lang="EN">
+<head>
+<title>Bloxx Install Tool</title>
+</head>
+<body>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="install.css" type="text/css" />
+
+<div id="left_bar">
+
+</div>
+
+<div id="right_bar" class="normal">
+<h1>Bloxx Install Tool</h1>
+
+<p>
+You are about to install Bloxx, the open source web framework / content management system.
+To install Bloxx you must have a working account with sufficient permissions on a database server.
+</p>
+
+<p><strong>Note:</strong> Bloxx currently supports MySQL only.</p>
+					
+<form enctype="multipart/form-data" name="wizard" action="install.php" method="POST">
+
+<h2>Database account username</h2>
+<input name="username" type="text" value="" size="20" maxlength="255">
+<br /><br />
+<h2>Database account password</h2>
+<input name="password" type="password" value="" size="20" maxlength="255">
+<br /><br />    
+<h2>Database host</h2>
+<input name="host" type="text" value="localhost" size="20" maxlength="255">
+<br /><br />          
+<h2>Database name</h2>
+<input name="database" type="text" value="demo" size="20" maxlength="255">
+<br /><br />          
+<h2>Init File</h2>
+<select name="initfile">
+	';
+    	
+	$dh = opendir('init/');
+
+	while (($file = readdir($dh)) !== false) 
+	{
+		if (!is_dir($file) && ($file != '.') && ($file != '..'))
+		{
+			$html_out .= '<option value="' . 'init/' . $file . '"' . '>' . $file;
+		}
+	}
+
+	closedir($dh);
+
+	$html_out .= '
+
+</select>
+<br /><br />
+<input name="overwritedb" type="checkbox">
+Overwrite old database?
+<br /><br />
+<input type="SUBMIT" name="submit" value="Install">
+</form>
+
+</div>
+
+</body></html>
+	';
+		
+	return $html_out;
 }
 ?>

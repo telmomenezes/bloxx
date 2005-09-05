@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_comment.php,v 1.9 2005-08-08 16:38:36 tmenezes Exp $
+// $Id: bloxx_comment.php,v 1.10 2005-09-05 22:55:40 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR.'bloxx_module.php');
@@ -189,17 +189,17 @@ class Bloxx_Comment extends Bloxx_Module
 	}
 	
 	function doRenderRead_Comments($param, $target, $jump, $other_params, $mt)
-    {
+    {		    	
 
 		$tname = 'Bloxx_'.$target;
 		include_module_once($target);
 		$target_module = new $tname();
                         
 		$html_out = $target_module->render($target_module->_BLOXX_MOD_PARAM['default_view'], $param);
-		$mt->setItem('target_view', $html_out);
+		$mt->setItem('target_view', $html_out);	
 
-		$html_out = $this->render('comment_link', $param, $target_module->_BLOXX_MOD_PARAM['name']);
-		$mt->setItem('comment_link', $html_out);
+		$html_out = $this->render('comment_link', $param, $target_module->_BLOXX_MOD_PARAM['name']);		
+		$mt->setItem('comment_link', $html_out);		
                         
 		$mt->startLoop('comments_tree');
 		$this->renderCommentsTree($param, $target, 0, &$mt);

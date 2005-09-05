@@ -20,7 +20,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_module.php,v 1.15 2005-08-08 16:38:33 tmenezes Exp $
+// $Id: bloxx_module.php,v 1.16 2005-09-05 22:55:40 tmenezes Exp $
 
 require_once 'defines.php';
 require_once CORE_DIR . 'bloxx_dbobject.php';
@@ -1361,6 +1361,7 @@ class Bloxx_Module extends Bloxx_DBObject
 						$this->addValidationError('Field '
 													. $field_label
 													. ' must not be empty.');
+																			
 						$valid = false;
 					}
 				} 

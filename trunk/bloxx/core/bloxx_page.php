@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_page.php,v 1.10 2005-08-08 16:38:33 tmenezes Exp $
+// $Id: bloxx_page.php,v 1.11 2005-09-05 22:55:40 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -71,9 +71,8 @@ class Bloxx_Page extends Bloxx_Module
 
 		//Transactional XHTML doctype
 		//$html_part_1 = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
-
-		global $G_LANGUAGE;		                                                
-        $html_part_1 .= '<html lang="' . $G_LANGUAGE . '"><head>';        
+				                                                
+        $html_part_1 .= '<html><head>';        
                 
         include_module_once('config');
         $config = new Bloxx_Config();        

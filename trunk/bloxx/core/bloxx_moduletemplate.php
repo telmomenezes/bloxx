@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_moduletemplate.php,v 1.9 2005-08-08 16:38:35 tmenezes Exp $
+// $Id: bloxx_moduletemplate.php,v 1.10 2005-09-05 22:55:40 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -112,18 +112,24 @@ class Bloxx_ModuleTemplate extends Bloxx_Module
                 
                 $html_out = '';
                 
-                foreach($this->loops as $loop_key => $loop_val){
+                foreach($this->loops as $loop_key => $loop_val)
+                {
 
-                        if($loop_val['name'] == null){
+                        if($loop_val['name'] == null)
+                        {
                         
                                 $html_out .= $this->parseItems($loop_val['content']);
                         }
-                        else{
-
-                                foreach($this->items[$loop_val['name']] as $item_array){
+                        else
+                        {
+							if (isset($this->items[$loop_val['name']]))
+							{
+                                foreach ($this->items[$loop_val['name']] as $item_array)
+                                {
 
                                         $html_out .= $this->parseItems($loop_val['content'], $item_array);
                                 }
+							}
                         }
                 }
 

@@ -1,5 +1,6 @@
 Core Functionalities
 
+- Receive $other_params[] from $_GET;
 - AJAX system!;
 - General search system;
 - Better module file structure;

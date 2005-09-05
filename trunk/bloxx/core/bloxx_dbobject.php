@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_dbobject.php,v 1.5 2005-08-08 16:38:34 tmenezes Exp $
+// $Id: bloxx_dbobject.php,v 1.6 2005-09-05 22:55:40 tmenezes Exp $
 
 require_once 'adodb/adodb.inc.php';
 
@@ -224,12 +224,15 @@ class Bloxx_DBObject
         
 		$ret = $this->runSelect();
                 
-		if ($ret > 0)
+		if ($ret)
 		{
-			$this->nextRow(!$all_lang_fields);
+			if ($this->nextRow(!$all_lang_fields))
+			{
+				return true;
+			}
 		}
                 
-		return $ret;
+		return false;
 	}
 	
    /**
@@ -241,7 +244,7 @@ class Bloxx_DBObject
 	function getCount()
 	{
 		if (!$this->query('SELECT '
-			. 'COUNT(id) as value'
+			. 'COUNT(' . $this->_BLOXX_MOD_PARAM['name'] . '.id) as value'
 			. ' FROM '
 			. $this->_BLOXX_MOD_PARAM['name']
 			. ' '

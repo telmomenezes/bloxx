@@ -19,7 +19,7 @@
 //
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //
-// $Id: bloxx_form.php,v 1.8 2005-08-08 16:38:34 tmenezes Exp $
+// $Id: bloxx_form.php,v 1.9 2005-09-05 22:55:40 tmenezes Exp $
 
 class Bloxx_Form
 {
@@ -171,9 +171,19 @@ class Bloxx_Form
                 $html_out .=  '" method="POST">';                
                 $html_out .= '
                 <input name="module" type="hidden" value="'.$module.'">
-                <input name="command" type="hidden" value="'.$command.'">';                
+                <input name="command" type="hidden" value="'.$command.'">';
+                
+                if (isset ($_POST['QUERY_STRING']))
+                {
+                	$qs = $_POST['QUERY_STRING'];
+                }
+                else
+                {
+                	$qs = $_SERVER['QUERY_STRING'];
+                }
+                                
                 $html_out .= '<input name="QUERY_STRING" type="hidden" value="'
-                			. $_SERVER['QUERY_STRING']
+                			. $qs
                 			. '">';
                 
                 return $html_out;

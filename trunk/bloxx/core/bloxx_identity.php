@@ -20,7 +20,7 @@
 // Authors: Telmo Menezes <telmo@cognitiva.net>
 //          Silas Francisco <draft@dog.kicks-ass.net>
 //
-// $Id: bloxx_identity.php,v 1.10 2005-08-08 16:38:34 tmenezes Exp $
+// $Id: bloxx_identity.php,v 1.11 2005-09-05 22:55:40 tmenezes Exp $
 
 require_once 'defines.php';
 require_once(CORE_DIR . 'bloxx_module.php');
@@ -67,7 +67,8 @@ class Bloxx_Identity extends Bloxx_Module
                         'register' => TRUST_GUEST,
                         'change_password' => TRUST_USER,
                         'change_data' => TRUST_USER,
-                        'confirm' => TRUST_GUEST
+                        'confirm' => TRUST_GUEST,
+                        'confirm_email' => TRUST_GUEST
                 );
         }
         
@@ -200,30 +201,36 @@ class Bloxx_Identity extends Bloxx_Module
                 $this->email = strtolower($_POST['email']);
                 
                 $this->password = md5($_POST['password']);
-                $this->confirm_hash = md5($_POST['email'].$this->hidden_hash_var);
+                $this->confirm_hash = md5($_POST['email'] . $this->hidden_hash_var);
                 $this->confirmed = 0;
                 
                 $this->role = $this->getConfig('base_role');
 
                 $res = $this->insertRow();
                 
-                if($res === false){
-                
-                        return false;
-                }
-                
-                $message = LANG_IDENTITY_CONFIRM_EMAIL . "\n\n";
-                $message .= 'Username: ' . $_POST['username'] . "\n";
-                $message .= 'Password: ' . $_POST['password'] . "\n\n";
-                
-                $config = new Bloxx_Config();
-                $site_url = $config->getConfig('site_url');
-                $confirm_page = $this->getConfig('confirm_page');
-                $message .= $site_url . "/index.php?id=" . $confirm_page . "&email=" . $this->email . "&code=" . $this->confirm_hash;
+                if ($res === false)
+                {                
+					return false;
+                }                
                 
                 $confirm_email = $this->getConfig('confirm_email');
-
-                mail($this->email, LANG_IDENTITY_CONFIRM_EMAIL_SUBJECT, $message, 'From: ' . $confirm_email);                
+                $ident = new Bloxx_Identity();
+                $message = $ident->render('confirm_email', $this->id, $_POST['password']);
+                
+                include_module_once('config');
+                $config = new Bloxx_Config();
+                $site_name = $config->getConfig('site_name');
+                
+                include_once(THIRD_PARTY_DIR . 'phpmailer/class.phpmailer.php');
+				$mail = new PHPMailer();
+				$mail->From = $confirm_email;
+				$mail->FromName = $site_name;
+				$mail->Subject = LANG_IDENTITY_CONFIRM_EMAIL_SUBJECT; 
+				$mail->IsMail();
+				$mail->Body = $message;
+    			$mail->AltBody = 'Sorry, your mail client must support HTML mails to use this feature.';
+    			$mail->AddAddress($this->email);
+    			$mail->Send();
 
                 $warningmessage = LANG_IDENTITY_CONFIRM_MAIL_SENT;
                 
@@ -611,6 +618,27 @@ class Bloxx_Identity extends Bloxx_Module
                         
 		//Give no information on failure type for security reasons.
                         
+		return $mt->renderView();
+	}
+	
+	function doRenderConfirm_Email($param, $target, $jump, $other_params, $mt)
+	{
+		$ident = new Bloxx_Identity();
+		$ident->getRowByID($param);
+
+		$mt->setItem('realname', $ident->realname);
+		$mt->setItem('username', $ident->username);				
+		$mt->setItem('password', $target);		
+                
+		$config = new Bloxx_Config();
+		$site_url = $config->getConfig('site_url');
+		$confirm_page = $this->getConfig('confirm_page');
+		
+		$link = $site_url . "/index.php?id=" . $confirm_page . "&email=" . $ident->email . "&code=" . $ident->confirm_hash;
+		
+		$html_out = '<a href="' . $link . '">' . $link . '</a>';
+		$mt->setItem('link', $html_out);
+                
 		return $mt->renderView();
 	}
 
